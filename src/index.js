@@ -6,6 +6,8 @@ const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><r
 
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
+// Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
+const VERSAO = '2026-10-05 · em análise + classe + unidade';
 const SESSAO_HORAS = 12;
 const MAX_FALHAS = 10;          // a fábrica sai por um IP só: limite folgado para um erro não travar todo mundo
 const BLOQUEIO_MS = 5 * 60 * 1000;
@@ -114,6 +116,7 @@ async function rotear(req, env) {
   if (p === '/favicon.svg' || p === '/favicon.ico') {
     return new Response(LOGO_SVG, { headers: { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'public, max-age=86400' } });
   }
+  if (p === '/versao') return json({ versao: VERSAO });
   if (p === '/login' && m === 'GET') return html(LOGIN_HTML);
   if (p === '/login' && m === 'POST') return login(req, env);
   if (p === '/logout') return logout(url);
