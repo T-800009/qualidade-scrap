@@ -67,6 +67,12 @@ Entre com a senha de admin → aba **BOMs** → escolha o Excel. O site detecta 
 ## Atualizar depois
 Edite ou reenvie os arquivos no GitHub. Cada commit publica sozinho.
 
+**Configuração do build no Cloudflare** (Settings → Builds):
+- Build command: `pnpm run build` ou vazio (o script de build não faz nada, o Worker usa `src/` direto)
+- Deploy command: `npx wrangler deploy`
+- Os arquivos do site ficam **só** em `src/`. Não suba cópias na raiz nem em outras pastas.
+- Se o repositório for apagado e criado de novo, é preciso desconectar e conectar o Git de novo no Cloudflare. Depois disso, o build só roda no **próximo commit**.
+
 ## Em análise
 Todo scrap registrado entra como **Em análise**. A Qualidade (ou o admin) dá o parecer na aba **Em análise**:
 Scrap confirmado, Retrabalho, Devolver ao fornecedor ou Liberado para uso, sempre com um texto de parecer.
