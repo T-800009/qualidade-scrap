@@ -2,6 +2,7 @@
   "name": "qualidade-scrap",
   "private": true,
   "scripts": {
+    "build": "echo \"Sem etapa de build: o Worker usa os arquivos de src/ direto.\"",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
   },
