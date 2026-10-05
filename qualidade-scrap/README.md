@@ -67,11 +67,6 @@ Entre com a senha de admin → aba **BOMs** → escolha o Excel. O site detecta 
 ## Atualizar depois
 Edite ou reenvie os arquivos no GitHub. Cada commit publica sozinho.
 
-## Em análise
-Todo scrap registrado entra como **Em análise**. A Qualidade (ou o admin) dá o parecer na aba **Em análise**:
-Scrap confirmado, Retrabalho, Devolver ao fornecedor ou Liberado para uso, sempre com um texto de parecer.
-Itens com mais de 2 dias aparecem em vermelho. O número na aba mostra quantos estão pendentes.
-
 ## Filtro de palavras
 O site bloqueia palavrões e ofensas em "O que aconteceu", no nome do operador e nos campos de material fora da BOM.
 Para acrescentar palavras, edite `src/palavras.js` no GitHub (instruções no topo do arquivo).

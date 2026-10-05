@@ -1,0 +1,19 @@
+{
+  // Worker de registro de scrap da Qualidade
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "qualidade-scrap",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "observability": { "enabled": true },
+
+  // Sem database_id: no primeiro deploy o Cloudflare cria (ou liga) o banco
+  // "qualidade-scrap-db" da conta onde o Worker for publicado.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "qualidade-scrap-db" }
+  ],
+
+  // Deixa importar as páginas .html como texto dentro do Worker
+  "rules": [
+    { "type": "Text", "globs": ["**/*.html"], "fallthrough": true }
+  ]
+}
