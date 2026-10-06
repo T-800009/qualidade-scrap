@@ -78,6 +78,14 @@ Todo scrap registrado entra como **Em análise**. A Qualidade (ou o admin) dá o
 Scrap confirmado, Retrabalho, Devolver ao fornecedor ou Liberado para uso, sempre com um texto de parecer.
 Itens com mais de 2 dias aparecem em vermelho. O número na aba mostra quantos estão pendentes.
 
+## Editar BOM pelo site
+Admin → aba **BOMs** → **Editar** no projeto.
+- Classe A, B, C ou sem classe em um clique, ou para vários itens de uma vez (marque os itens ou "selecionar todos do filtro").
+- Filtro "Sem classe" mostra o que falta classificar. A busca aceita SAP ou descrição.
+- Quando a classe de uma peça muda, os registros dessa peça naquele projeto passam a ter a classe nova.
+- Classe "vem de outra BOM": a BOM do projeto não informa, e o site usa a classe da mesma peça em outro projeto. Clique na letra para gravar nesta BOM.
+- Também dá para adicionar, corrigir (descrição/unidade) e excluir itens, e exportar a BOM em Excel (MATERIAL, DESCRIÇÃO, UNIDADE, CLASSIFICAÇÃO), que pode ser importada de volta.
+
 ## Corrigir SAP digitado errado
 Admin → aba **Em análise** ou **Registros** → **Editar registro** → digite o SAP certo.
 - SAP da BOM: descrição, projeto, unidade e classe vêm sozinhos. Se o SAP estiver em mais de um projeto, escolha o projeto.

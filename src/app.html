@@ -408,6 +408,54 @@ td .proj{height:22px;font-size:13px}
 .prog div{height:100%;width:0;background:var(--red);transition:width .2s}
 .btn-del{height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--mut);font-size:13px;font-weight:600}
 .btn-del:hover{color:var(--red-h);border-color:var(--red-line)}
+.btn-ed{height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);background:var(--s2);color:var(--txt);font-size:13px;font-weight:600;margin-right:6px}
+.btn-ed:hover{border-color:var(--red);color:var(--red-h)}
+#bProjetos tr.editando td{background:var(--red-soft)}
+/* edição da BOM */
+.bom-ed{margin-top:18px;padding:20px 22px;scroll-margin-top:80px}
+.bom-ed-topo{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.bom-ed-topo h2{display:flex;align-items:center;gap:10px;margin:0;font-size:17px;font-weight:600}
+.bom-ed-topo p{margin:6px 0 0;color:var(--mut);font-size:13px}
+.bom-ed-topo p b{color:var(--txt)}
+.bom-ed-topo p b.falta{color:var(--red-h)}
+.bom-ed-acoes{display:flex;gap:8px;flex-wrap:wrap}
+.bom-ed-acoes .btn{height:38px;font-size:13px}
+.bom-ed-filtros{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.bom-busca{position:relative;flex:1;min-width:220px;max-width:420px}
+.bom-busca svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mut)}
+.bom-busca input{padding:10px 12px 10px 36px;font-size:14px}
+.bom-lote{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;margin-top:14px;padding:10px 14px;border-radius:var(--r-sm);background:var(--red-soft);border:1px solid var(--red-line);font-size:14px;animation:surge .18s ease-out}
+.bom-lote-cls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.bom-lote-cls button{height:32px;min-width:38px;padding:0 10px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);color:var(--txt);font:700 15px/1 var(--cond)}
+.bom-lote-cls button:hover{border-color:var(--red);color:var(--red-h)}
+.bom-lote-cls button[data-lote=""]{font:600 13px Barlow,sans-serif}
+.bom-lote .link-btn{margin:0}
+.bom-ed-tab{max-height:min(70vh,720px);margin-top:12px;border:1px solid var(--line);border-radius:var(--r-sm)}
+.bom-ed-tab th{padding:10px 12px;z-index:1}
+.bom-ed-tab td{padding:7px 12px;vertical-align:middle}
+.bom-ed-tab tr:hover td{background:var(--s2)}
+.bom-ed-tab tr.sel-row td{background:var(--red-soft)}
+.bom-ed-tab .ck{width:34px;padding-right:0}
+.bom-ed-tab input[type=checkbox]{width:17px;height:17px;margin:0;padding:0;accent-color:var(--red);cursor:pointer}
+.bom-ed-tab td.cod{font-size:15px}
+.bom-ed-tab .bom-desc{min-width:220px;line-height:1.35}
+.bom-ed-tab td.un{color:var(--mut);white-space:nowrap}
+.acoes-bom{display:flex;justify-content:flex-end;gap:2px}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden;background:var(--bg)}
+.seg button{width:34px;height:30px;border:0;border-left:1px solid var(--line2);background:none;color:var(--mut);font:700 15px/1 var(--cond);transition:background .12s,color .12s}
+.seg button:first-child{border-left:0}
+.seg button:hover{color:var(--txt);background:var(--s3)}
+.seg button.sel{background:var(--inv);color:var(--inv-txt)}
+.seg button.sel.cA{background:var(--red);color:#fff}
+.seg button.sel.sem{background:var(--s3);color:var(--txt)}
+.seg button.herd{color:var(--txt);box-shadow:inset 0 0 0 2px var(--mut2)}
+.seg.salvando{opacity:.45;pointer-events:none}
+.herd-txt{display:block;margin-top:3px;color:var(--mut);font-size:11px}
+.bom-ed-mais{display:flex;justify-content:center;margin-top:12px}
+#formBom select{font-size:17px;padding:14px 36px 14px 14px}
+#mbMat,#mbUn{text-transform:uppercase}
+#mbMat[readonly]{color:var(--mut);background:var(--s2)}
+@media (max-width:720px){.bom-ed{padding:16px}.bom-ed-acoes{width:100%}.bom-ed-acoes .btn{flex:1 1 auto;justify-content:center;padding:0 12px;white-space:nowrap}.bom-busca{max-width:none}}
 
 /* ---------- modal / toast ---------- */
 .modal{position:fixed;inset:0;z-index:30;display:flex;overflow-y:auto;overscroll-behavior:contain;padding:16px;background:var(--vidro);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fade .18s ease-out}
@@ -673,6 +721,34 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
         </div>
       </div>
     </div>
+
+    <!-- edição da BOM de um projeto -->
+    <div class="painel bom-ed" id="bEd" hidden>
+      <div class="bom-ed-topo">
+        <div>
+          <h2>Editar BOM <span class="proj" id="bEdProj"></span></h2>
+          <p id="bEdResumo"></p>
+        </div>
+        <div class="bom-ed-acoes">
+          <button class="btn" id="bEdNovo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Adicionar material</button>
+          <button class="btn" id="bEdExport"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0-4-4m4 4 4-4M4 20h16"/></svg>Exportar Excel</button>
+          <button class="btn" id="bEdFechar">Fechar</button>
+        </div>
+      </div>
+      <div class="bom-ed-filtros">
+        <div class="bom-busca"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="bEdBusca" placeholder="Buscar por SAP ou descrição" autocomplete="off" spellcheck="false"></div>
+        <div class="atalhos" id="bEdFiltro">
+          <button class="atalho sel" data-f="">Todas</button><button class="atalho" data-f="sem">Sem classe</button><button class="atalho" data-f="A">Classe A</button><button class="atalho" data-f="B">Classe B</button><button class="atalho" data-f="C">Classe C</button>
+        </div>
+      </div>
+      <div class="bom-lote" id="bEdLote" hidden>
+        <span><b id="bEdSelN">0</b> selecionado(s)</span>
+        <span class="bom-lote-cls">Mudar classe para <button data-lote="A">A</button><button data-lote="B">B</button><button data-lote="C">C</button><button data-lote="">Sem classe</button></span>
+        <button class="link-btn" id="bEdLimpar">Limpar seleção</button>
+      </div>
+      <div class="tabela bom-ed-tab" id="bEdTabela"></div>
+      <div class="bom-ed-mais" id="bEdMaisBox" hidden><button class="btn" id="bEdMais"></button></div>
+    </div>
   </section>
 </main>
 
@@ -733,6 +809,25 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
     <div class="modal-acoes">
       <button type="button" class="btn" id="decCancelar">Cancelar</button>
       <button type="submit" class="btn-prim" id="decSalvar">Salvar parecer</button>
+    </div>
+  </form>
+</div>
+
+<!-- item da BOM (admin) -->
+<div class="modal" id="modalBom" hidden>
+  <form class="modal-caixa" id="formBom" autocomplete="off">
+    <div class="linha-sinal"></div>
+    <h2 id="mbTit">Adicionar material</h2>
+    <p id="mbInfo"></p>
+    <label>Material (SAP)<input id="mbMat" maxlength="40" autocapitalize="characters" spellcheck="false" placeholder="Código SAP"></label>
+    <label>Descrição<input id="mbDesc" maxlength="200" placeholder="Descrição da peça"></label>
+    <div class="grid2">
+      <label>Unidade<input id="mbUn" maxlength="6" placeholder="PC, UN, M…" autocapitalize="characters"></label>
+      <label>Classe<select id="mbCls"></select></label>
+    </div>
+    <div class="modal-acoes">
+      <button type="button" class="btn" id="mbCancelar">Cancelar</button>
+      <button type="submit" class="btn-prim" id="mbSalvar">Salvar</button>
     </div>
   </form>
 </div>
@@ -1854,23 +1949,253 @@ async function carregarPainel() {
 $('#pAtualizar').addEventListener('click', carregarPainel);
 
 /* ---------- BOMs (admin) ---------- */
+const ED = { projeto: '', itens: [], mapa: new Map(), filtro: '', busca: '', limite: 200, sel: new Set() };   // BOM em edição
 async function carregarProjetosBom() {
   try {
     const d = await api('/api/bom/projetos');
     $('#bProjetos').innerHTML = d.projetos.length ? `<table><thead><tr><th>Projeto</th><th style="text-align:right">Itens</th><th>Com classe</th><th>Atualizado</th><th></th></tr></thead><tbody>
-      ${d.projetos.map((p) => `<tr><td><span class="proj">${esc(p.projeto)}</span></td><td class="n">${fmt(p.itens)}</td>
+      ${d.projetos.map((p) => `<tr class="${p.projeto === ED.projeto ? 'editando' : ''}"><td><span class="proj">${esc(p.projeto)}</span></td><td class="n">${fmt(p.itens)}</td>
         <td style="white-space:nowrap${p.comClasse ? '' : ';color:var(--red-h);font-weight:600'}" title="${p.comClasse ? 'Materiais com classe A/B/C' : 'Importe a BOM com a coluna CLASSIFICAÇÃO'}">${fmt(p.comClasse)} de ${fmt(p.itens)}</td>
         <td class="hora">${dataHora(p.atualizado)}</td>
-        <td style="text-align:right"><button class="btn-del" data-delproj="${esc(p.projeto)}">Excluir</button></td></tr>`).join('')}
+        <td style="text-align:right;white-space:nowrap"><button class="btn-ed" data-edproj="${esc(p.projeto)}">Editar</button><button class="btn-del" data-delproj="${esc(p.projeto)}">Excluir</button></td></tr>`).join('')}
       </tbody></table>` : '<div class="vazio"><b>Nenhuma BOM ainda</b>Importe o Excel ao lado para o site reconhecer os materiais.</div>';
   } catch (e) { $('#bProjetos').innerHTML = `<div class="vazio">${esc(e.message)}</div>`; }
 }
 $('#bProjetos').addEventListener('click', async (e) => {
+  const ed = e.target.closest('button[data-edproj]');
+  if (ed) return abrirEditorBom(ed.dataset.edproj);
   const b = e.target.closest('button[data-delproj]');
   if (!b) return;
   if (!await confirmar(`Excluir a BOM ${b.dataset.delproj}?`, 'Os materiais desse projeto deixam de ser reconhecidos. Os scraps já registrados continuam.', 'Excluir BOM')) return;
-  try { await api('/api/bom/projeto/' + encodeURIComponent(b.dataset.delproj), { method: 'DELETE' }); toast('BOM excluída'); CACHE_MAT.clear(); carregarProjetosBom(); carregarProjetos(); }
-  catch (err) { toast(err.message, true); }
+  try {
+    await api('/api/bom/projeto/' + encodeURIComponent(b.dataset.delproj), { method: 'DELETE' });
+    toast('BOM excluída'); CACHE_MAT.clear();
+    if (ED.projeto === b.dataset.delproj) fecharEditorBom();
+    carregarProjetosBom(); carregarProjetos();
+  } catch (err) { toast(err.message, true); }
+});
+
+/* ---------- editar BOM (admin) ----------
+   Lista os itens de um projeto; a classe muda com um clique (A, B, C ou sem classe) ou para
+   vários itens de uma vez. Os registros dessas peças no projeto acompanham a classe nova. */
+const CLASSES = ['A', 'B', 'C'];
+const POR_PAGINA = 200;
+const efetivaEd = (it) => it.classe || it.herdada;
+const txtRegs = (n) => (n ? ` · ${fmt(n)} ${n === 1 ? 'registro atualizado' : 'registros atualizados'}` : '');
+
+async function abrirEditorBom(projeto, rolar = true) {
+  Object.assign(ED, { projeto, itens: [], mapa: new Map(), busca: '', limite: POR_PAGINA, sel: new Set() });
+  marcarFiltroBom('');
+  $('#bEd').hidden = false;
+  $('#bEdProj').textContent = projeto;
+  $('#bEdBusca').value = '';
+  $('#bEdResumo').textContent = 'Carregando…';
+  $('#bEdTabela').innerHTML = '';
+  $('#bEdLote').hidden = $('#bEdMaisBox').hidden = true;
+  document.querySelectorAll('#bProjetos tr').forEach((tr) => tr.classList.toggle('editando', !!tr.querySelector(`[data-edproj="${CSS.escape(projeto)}"]`)));
+  if (rolar) $('#bEd').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  try {
+    const d = await api('/api/bom/itens?' + qs({ projeto }));
+    if (ED.projeto !== projeto) return;
+    ED.itens = d.itens;
+    ED.mapa = new Map(d.itens.map((it) => [it.material, it]));
+    renderEditorBom();
+  } catch (e) { $('#bEdResumo').textContent = e.message; }
+}
+function fecharEditorBom() {
+  $('#bEd').hidden = true;
+  ED.projeto = '';
+  document.querySelectorAll('#bProjetos tr.editando').forEach((tr) => tr.classList.remove('editando'));
+}
+
+function itensFiltradosBom() {
+  const termo = ED.busca.trim().toUpperCase(), chave = chaveCod(termo);
+  return ED.itens.filter((it) => {
+    const c = efetivaEd(it);
+    if (ED.filtro === 'sem' ? c : (ED.filtro && c !== ED.filtro)) return false;
+    return !termo || (chave && chaveCod(it.material).includes(chave)) || it.descricao.toUpperCase().includes(termo);
+  });
+}
+
+function segClasse(it) {
+  const own = it.classe, herd = own ? '' : it.herdada;
+  const opcoes = own && !CLASSES.includes(own) ? [...CLASSES, own] : CLASSES;
+  return `<div class="seg" role="group" aria-label="Classe">${opcoes.map((c) => `<button type="button" data-cls="${esc(c)}"
+      class="${own === c ? 'sel c' + esc(c) : ''}${herd === c ? ' herd' : ''}"
+      title="${herd === c ? `Classe ${esc(c)} vinda de outra BOM. Clique para gravar nesta BOM.` : `Classe ${esc(c)}`}">${esc(c)}</button>`).join('')}<button type="button"
+      data-cls="" class="${!own && !herd ? 'sel sem' : ''}" title="Sem classe">–</button></div>${herd ? `<small class="herd-txt">${esc(herd)} vem de outra BOM</small>` : ''}`;
+}
+
+function renderEditorBom() {
+  const total = ED.itens.length;
+  const com = ED.itens.filter(efetivaEd).length, herd = ED.itens.filter((it) => !it.classe && it.herdada).length;
+  $('#bEdResumo').innerHTML = `${fmt(total)} itens · <b>${fmt(com)}</b> com classe${herd ? ` (${fmt(herd)} pela classe de outra BOM)` : ''} · <b class="${total - com ? 'falta' : ''}">${fmt(total - com)}</b> sem classe`;
+  const lista = itensFiltradosBom(), vis = lista.slice(0, ED.limite);
+  const todos = lista.length > 0 && lista.every((it) => ED.sel.has(it.material));
+  $('#bEdTabela').innerHTML = lista.length ? `<table><thead><tr>
+      <th class="ck"><input type="checkbox" id="bEdTodos" ${todos ? 'checked' : ''} title="Selecionar os ${fmt(lista.length)} itens do filtro" aria-label="Selecionar todos do filtro"></th>
+      <th>Material</th><th>Descrição</th><th>Un.</th><th>Classe</th><th></th></tr></thead><tbody>
+    ${vis.map((it) => `<tr data-mat="${esc(it.material)}" class="${ED.sel.has(it.material) ? 'sel-row' : ''}">
+      <td class="ck"><input type="checkbox" data-sel ${ED.sel.has(it.material) ? 'checked' : ''} aria-label="Selecionar ${esc(it.material)}"></td>
+      <td class="cod">${esc(it.material)}</td>
+      <td class="bom-desc">${it.descricao ? esc(it.descricao) : '<span class="mut">sem descrição</span>'}</td>
+      <td class="un">${esc(it.unidade) || '–'}</td>
+      <td>${segClasse(it)}</td>
+      <td><div class="acoes-bom"><button class="editar" data-editbom title="Editar item" aria-label="Editar ${esc(it.material)}">${ICONE_LAPIS}</button><button class="apagar" data-delbom title="Excluir da BOM" aria-label="Excluir ${esc(it.material)}">${ICONE_LIXO}</button></div></td>
+    </tr>`).join('')}</tbody></table>`
+    : `<div class="vazio"><b>${total ? 'Nenhum item nesse filtro' : 'BOM vazia'}</b>${total ? 'Mude a busca ou o filtro de classe.' : 'Adicione materiais pelo botão acima.'}</div>`;
+  const resto = lista.length - vis.length;
+  $('#bEdMaisBox').hidden = resto <= 0;
+  $('#bEdMais').textContent = `Mostrar mais ${fmt(Math.min(resto, POR_PAGINA))} (faltam ${fmt(resto)})`;
+  atualizarLoteBom();
+}
+function atualizarLoteBom() {
+  $('#bEdLote').hidden = !ED.sel.size;
+  $('#bEdSelN').textContent = fmt(ED.sel.size);
+}
+function marcarFiltroBom(f) {
+  ED.filtro = f;
+  document.querySelectorAll('#bEdFiltro .atalho').forEach((b) => b.classList.toggle('sel', b.dataset.f === f));
+}
+
+async function classeBom(materiais, classe) {
+  const d = await api('/api/bom/classe', { method: 'POST', body: JSON.stringify({ projeto: ED.projeto, materiais, classe }) });
+  for (const x of d.itens || []) { const it = ED.mapa.get(x.material); if (it) Object.assign(it, x); }
+  CACHE_MAT.clear();
+  renderEditorBom();
+  carregarProjetosBom();
+  return d;
+}
+
+let tBuscaBom;
+$('#bEdBusca').addEventListener('input', () => {
+  clearTimeout(tBuscaBom);
+  tBuscaBom = setTimeout(() => { ED.busca = $('#bEdBusca').value; ED.limite = POR_PAGINA; renderEditorBom(); }, 150);
+});
+$('#bEdFiltro').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-f]');
+  if (!b) return;
+  marcarFiltroBom(b.dataset.f); ED.limite = POR_PAGINA; renderEditorBom();
+});
+$('#bEdMais').addEventListener('click', () => { ED.limite += POR_PAGINA; renderEditorBom(); });
+$('#bEdFechar').addEventListener('click', fecharEditorBom);
+$('#bEdLimpar').addEventListener('click', () => { ED.sel.clear(); renderEditorBom(); });
+
+$('#bEdTabela').addEventListener('change', (e) => {
+  if (e.target.id === 'bEdTodos') {
+    for (const it of itensFiltradosBom()) e.target.checked ? ED.sel.add(it.material) : ED.sel.delete(it.material);
+    return renderEditorBom();
+  }
+  if (!e.target.matches('input[data-sel]')) return;
+  const tr = e.target.closest('tr');
+  e.target.checked ? ED.sel.add(tr.dataset.mat) : ED.sel.delete(tr.dataset.mat);
+  tr.classList.toggle('sel-row', e.target.checked);
+  const lista = itensFiltradosBom();
+  $('#bEdTodos').checked = lista.length > 0 && lista.every((it) => ED.sel.has(it.material));
+  atualizarLoteBom();
+});
+
+$('#bEdTabela').addEventListener('click', async (e) => {
+  const tr = e.target.closest('tr[data-mat]');
+  const it = tr && ED.mapa.get(tr.dataset.mat);
+  if (!it) return;
+  const c = e.target.closest('button[data-cls]');
+  if (c) {
+    if (c.dataset.cls === it.classe) return;
+    const seg = c.closest('.seg');
+    seg.classList.add('salvando');
+    try {
+      const d = await classeBom([it.material], c.dataset.cls);
+      toast(`${it.material}: ${c.dataset.cls ? 'classe ' + c.dataset.cls : 'sem classe'}${txtRegs(d.registros)}`);
+    } catch (err) { toast(err.message, true); seg.classList.remove('salvando'); }
+    return;
+  }
+  if (e.target.closest('button[data-editbom]')) return abrirItemBom(it);
+  if (e.target.closest('button[data-delbom]')) return excluirItemBomTela(it);
+});
+
+$('#bEdLote').addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-lote]');
+  if (!b) return;
+  const mats = [...ED.sel], cls = b.dataset.lote;
+  if (!await confirmar(`Mudar a classe de ${fmt(mats.length)} ${mats.length === 1 ? 'item' : 'itens'}?`,
+    `Nova classe: ${cls || 'sem classe'}. Os registros dessas peças no projeto ${ED.projeto} também são atualizados.`, 'Mudar classe')) return;
+  try {
+    const d = await classeBom(mats, cls);
+    ED.sel.clear();
+    renderEditorBom();
+    toast(`${fmt(d.alterados)} ${d.alterados === 1 ? 'item ficou' : 'itens ficaram'} ${cls ? 'com classe ' + cls : 'sem classe'}${txtRegs(d.registros)}`);
+  } catch (err) { toast(err.message, true); }
+});
+
+let ITEM_ED = null;   // item em edição no modal (null = material novo)
+function abrirItemBom(it) {
+  ITEM_ED = it || null;
+  $('#mbTit').textContent = it ? 'Editar item da BOM' : 'Adicionar material';
+  $('#mbInfo').textContent = it ? `Projeto ${ED.projeto}.` : `Entra na BOM do projeto ${ED.projeto} e passa a ser reconhecido no Registrar.`;
+  $('#mbMat').value = it ? it.material : '';
+  $('#mbMat').readOnly = !!it;
+  $('#mbDesc').value = it ? it.descricao : '';
+  $('#mbUn').value = it ? it.unidade : '';
+  const cls = it ? it.classe : '';
+  preencherSelect($('#mbCls'), [{ v: '', t: it?.herdada ? `Sem classe (usa ${it.herdada} de outra BOM)` : 'Sem classe' },
+    ...[...new Set([...CLASSES, ...(cls ? [cls] : [])])].map((c) => ({ v: c, t: 'Classe ' + c }))]);
+  $('#mbCls').value = cls;
+  document.querySelectorAll('#formBom .invalido').forEach(limparInvalido);
+  $('#modalBom').hidden = false;
+  setTimeout(() => (it ? $('#mbDesc') : $('#mbMat')).focus(), 50);
+}
+$('#bEdNovo').addEventListener('click', () => abrirItemBom(null));
+$('#mbCancelar').addEventListener('click', () => { $('#modalBom').hidden = true; });
+$('#formBom').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('#mbSalvar');
+  btn.disabled = true;
+  try {
+    const d = await api('/api/bom/item', { method: 'POST', body: JSON.stringify({
+      projeto: ED.projeto, novo: !ITEM_ED, material: $('#mbMat').value.trim(), descricao: $('#mbDesc').value.trim(),
+      unidade: $('#mbUn').value.trim(), classe: $('#mbCls').value }) });
+    if (ITEM_ED) Object.assign(ITEM_ED, d.item);
+    else {
+      ED.itens.push(d.item);
+      ED.itens.sort((a, b) => a.material.localeCompare(b.material));
+      ED.mapa.set(d.item.material, d.item);
+      carregarProjetos();
+    }
+    $('#modalBom').hidden = true;
+    CACHE_MAT.clear();
+    renderEditorBom();
+    carregarProjetosBom();
+    toast(`${ITEM_ED ? 'Item atualizado' : 'Material adicionado'}: ${d.item.material}${txtRegs(d.registros)}`);
+  } catch (err) {
+    const alvo = { material: '#mbMat', descricao: '#mbDesc', unidade: '#mbUn' }[err.campo];
+    alvo ? marcarInvalido($(alvo), err.message) : toast(err.message, true);
+  }
+  btn.disabled = false;
+});
+
+async function excluirItemBomTela(it) {
+  if (!await confirmar(`Excluir ${it.material} da BOM ${ED.projeto}?`, 'O material deixa de ser reconhecido nesse projeto. Os scraps já registrados continuam.', 'Excluir item')) return;
+  try {
+    await api('/api/bom/item?' + qs({ projeto: ED.projeto, material: it.material }), { method: 'DELETE' });
+    ED.itens = ED.itens.filter((x) => x !== it);
+    ED.mapa.delete(it.material);
+    ED.sel.delete(it.material);
+    CACHE_MAT.clear();
+    renderEditorBom();
+    carregarProjetosBom();
+    toast(`${it.material} excluído da BOM`);
+  } catch (err) { toast(err.message, true); }
+}
+
+$('#bEdExport').addEventListener('click', () => {
+  if (!ED.itens.length) return toast('BOM vazia', true);
+  const ws = XLSX.utils.json_to_sheet(ED.itens.map((it) => ({
+    MATERIAL: it.material, 'DESCRIÇÃO': it.descricao, UNIDADE: it.unidade, 'CLASSIFICAÇÃO': efetivaEd(it) })));
+  ws['!cols'] = [16, 56, 9, 15].map((w) => ({ wch: w }));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'BOM');
+  XLSX.writeFile(wb, `BOM ${ED.projeto}.xlsx`);
 });
 
 let WB = null, LINHAS = [];
@@ -1989,6 +2314,7 @@ $('#bImportar').addEventListener('click', async () => {
     toast(`BOM importada: ${fmt(gravados)} materiais` + (classificados ? `. ${fmt(classificados)} registro(s) receberam a classe` : ''));
     CACHE_MAT.clear();
     carregarProjetosBom(); carregarProjetos();
+    if (ED.projeto && projs.includes(ED.projeto)) abrirEditorBom(ED.projeto, false);   // editor aberto: mostra a BOM nova
   } catch (e) { toast(e.message, true); }
   btn.disabled = false;
 });
@@ -1997,6 +2323,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !$('#modalConf').hidden) $('#confNao').click();
   else if (e.key === 'Escape' && !$('#modalEdit').hidden) $('#modalEdit').hidden = true;
   else if (e.key === 'Escape' && !$('#modalDec').hidden) $('#modalDec').hidden = true;
+  else if (e.key === 'Escape' && !$('#modalBom').hidden) $('#modalBom').hidden = true;
   else if (!$('#galeria').hidden) {
     if (e.key === 'Escape') fecharGaleria();
     if (e.key === 'ArrowLeft' && GAL.lista.length > 1) passoGaleria(-1);

@@ -8,7 +8,7 @@ const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><d
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-06 · galeria de fotos';
+const VERSAO = '2026-10-06 · editar BOM';
 const SESSAO_HORAS = 12;
 const MAX_FALHAS = 10;          // a fábrica sai por um IP só: limite folgado para um erro não travar todo mundo
 const BLOQUEIO_MS = 5 * 60 * 1000;
@@ -176,6 +176,10 @@ async function rotear(req, env) {
     if (role !== 'admin') return json({ erro: 'Apenas admin' }, 403);
     if (p === '/api/bom/projetos' && m === 'GET') return listarProjetosBom(env);
     if (p === '/api/bom/import' && m === 'POST') return importarBom(req, env);
+    if (p === '/api/bom/itens' && m === 'GET') return listarItensBom(url, env);
+    if (p === '/api/bom/classe' && m === 'POST') return definirClasseBom(req, env);
+    if (p === '/api/bom/item' && m === 'POST') return salvarItemBom(req, env);
+    if (p === '/api/bom/item' && m === 'DELETE') return excluirItemBom(url, env);
     const mProj = p.match(/^\/api\/bom\/projeto\/(.+)$/);
     if (mProj && m === 'DELETE') {
       const proj = decodeURIComponent(mProj[1]).toUpperCase();
@@ -333,56 +337,69 @@ async function novaVersaoBom(env) {
     .bind(Date.now() + '-' + Math.random().toString(36).slice(2, 8)).run();
 }
 
-async function bomIndex(env) {
+async function bomIndex(env, conferirAgora = false) {
   const agora = Date.now();
-  if (BOM && agora - BOM.checado < CHECAR_VERSAO_MS) return BOM;
+  if (BOM && !conferirAgora && agora - BOM.checado < CHECAR_VERSAO_MS) return BOM;
   const v = (await env.DB.prepare("SELECT valor FROM meta WHERE chave = 'bom_versao'").first())?.valor || '0';
   if (BOM && BOM.versao === v) { BOM.checado = agora; return BOM; }
   if (!carregandoBom) {
     carregandoBom = (async () => {
       const rows = (await env.DB.prepare('SELECT projeto, material, descricao, unidade, classe, updated_at FROM bom').all()).results;
-      const porMaterial = new Map();
-      const projetos = new Map();
-      for (const r of rows) {
-        let m = porMaterial.get(r.material);
-        if (!m) { m = { material: r.material, descricao: '', busca: '', linhas: [] }; porMaterial.set(r.material, m); }
-        m.linhas.push({ projeto: r.projeto, material: r.material, descricao: r.descricao || '', unidade: normUn(r.unidade), classe: r.classe || '' });
-        if (!m.descricao && r.descricao) { m.descricao = r.descricao; m.busca = r.descricao.toUpperCase(); }
-        const pj = projetos.get(r.projeto) || { projeto: r.projeto, itens: 0, comClasse: 0, atualizado: '' };
-        pj.itens++;
-        if (r.updated_at > pj.atualizado) pj.atualizado = r.updated_at;
-        projetos.set(r.projeto, pj);
-      }
-      const porChave = new Map();
-      // A classe (A/B/C) é do material. Se uma BOM não informa, usa a das outras BOMs do mesmo
-      // código (com ou sem hífen), desde que todas concordem.
-      const grupos = new Map();
-      for (const m of porMaterial.values()) {
-        m.linhas.sort((a, b) => a.projeto.localeCompare(b.projeto));
-        m.chave = chaveCodigo(m.material);
-        if (!grupos.has(m.chave)) grupos.set(m.chave, []);
-        grupos.get(m.chave).push(m);
-        if (!porChave.has(m.chave)) porChave.set(m.chave, m);
-      }
-      const unica = (lista) => { const u = [...new Set(lista.filter(Boolean))]; return u.length === 1 ? u[0] : ''; };
-      for (const ms of grupos.values()) {
-        const doGrupo = unica(ms.flatMap((m) => m.linhas.map((l) => l.classe)));
-        for (const m of ms) {
-          const proprias = m.linhas.map((l) => l.classe).filter(Boolean);
-          m.classe = proprias.length ? unica(proprias) : doGrupo;
-          for (const l of m.linhas) if (!l.classe) l.classe = m.classe;
-        }
-      }
-      for (const m of porMaterial.values()) for (const l of m.linhas) if (l.classe) projetos.get(l.projeto).comClasse++;
-      return {
-        versao: v, checado: Date.now(), porMaterial, porChave,
-        materiais: [...porMaterial.values()].sort((a, b) => a.material.localeCompare(b.material)),
-        projetos: [...projetos.values()].sort((a, b) => a.projeto.localeCompare(b.projeto)),
-      };
+      return montarIndice(rows, v);
     })().finally(() => { carregandoBom = null; });
   }
   BOM = await carregandoBom;
   return BOM;
+}
+
+// Edição feita na tela de BOMs: aplica a mudança nas linhas que já estão na memória desta
+// instância (sem reler a BOM inteira a cada clique) e muda a versão para as outras instâncias.
+async function bomEditada(env, alterar) {
+  const atual = (await env.DB.prepare("SELECT valor FROM meta WHERE chave = 'bom_versao'").first())?.valor || '0';
+  const v = Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+  await env.DB.prepare("INSERT OR REPLACE INTO meta (chave, valor) VALUES ('bom_versao', ?)").bind(v).run();
+  BOM = BOM && BOM.versao === atual && !carregandoBom ? montarIndice(alterar(BOM.rows), v) : null;
+}
+
+function montarIndice(rows, v) {
+  const porMaterial = new Map();
+  const projetos = new Map();
+  for (const r of rows) {
+    let m = porMaterial.get(r.material);
+    if (!m) { m = { material: r.material, descricao: '', busca: '', linhas: [] }; porMaterial.set(r.material, m); }
+    m.linhas.push({ projeto: r.projeto, material: r.material, descricao: r.descricao || '', unidade: normUn(r.unidade), classe: r.classe || '', propria: r.classe || '' });
+    if (!m.descricao && r.descricao) { m.descricao = r.descricao; m.busca = r.descricao.toUpperCase(); }
+    const pj = projetos.get(r.projeto) || { projeto: r.projeto, itens: 0, comClasse: 0, atualizado: '' };
+    pj.itens++;
+    if (r.updated_at > pj.atualizado) pj.atualizado = r.updated_at;
+    projetos.set(r.projeto, pj);
+  }
+  const porChave = new Map();
+  // A classe (A/B/C) é do material. Se uma BOM não informa, usa a das outras BOMs do mesmo
+  // código (com ou sem hífen), desde que todas concordem.
+  const grupos = new Map();
+  for (const m of porMaterial.values()) {
+    m.linhas.sort((a, b) => a.projeto.localeCompare(b.projeto));
+    m.chave = chaveCodigo(m.material);
+    if (!grupos.has(m.chave)) grupos.set(m.chave, []);
+    grupos.get(m.chave).push(m);
+    if (!porChave.has(m.chave)) porChave.set(m.chave, m);
+  }
+  const unica = (lista) => { const u = [...new Set(lista.filter(Boolean))]; return u.length === 1 ? u[0] : ''; };
+  for (const ms of grupos.values()) {
+    const doGrupo = unica(ms.flatMap((m) => m.linhas.map((l) => l.classe)));
+    for (const m of ms) {
+      const proprias = m.linhas.map((l) => l.classe).filter(Boolean);
+      m.classe = proprias.length ? unica(proprias) : doGrupo;
+      for (const l of m.linhas) if (!l.classe) l.classe = m.classe;
+    }
+  }
+  for (const m of porMaterial.values()) for (const l of m.linhas) if (l.classe) projetos.get(l.projeto).comClasse++;
+  return {
+    versao: v, checado: Date.now(), rows, porMaterial, porChave,
+    materiais: [...porMaterial.values()].sort((a, b) => a.material.localeCompare(b.material)),
+    projetos: [...projetos.values()].sort((a, b) => a.projeto.localeCompare(b.projeto)),
+  };
 }
 
 async function buscarMaterial(url, env) {
@@ -469,6 +486,121 @@ async function importarBom(req, env) {
   await novaVersaoBom(env);
   const classificados = await completarClasses(env);
   return json({ ok: true, gravados: lote.length, ignorados, classificados });
+}
+
+/* ---------------- edição da BOM pela tela (admin) ---------------- */
+
+// Itens de um projeto, direto da memória. "herdada" é a classe que o site usa quando esta BOM
+// não informa a classe, vinda de outra BOM com o mesmo código.
+async function listarItensBom(url, env) {
+  const projeto = texto(url.searchParams.get('projeto'), 40).toUpperCase();
+  if (!projeto) return json({ erro: 'Informe o projeto' }, 400);
+  const idx = await bomIndex(env, true);
+  const itens = [];
+  for (const m of idx.materiais) {
+    const l = m.linhas.find((x) => x.projeto === projeto);
+    if (l) itens.push({ material: l.material, descricao: l.descricao, unidade: l.unidade, classe: normClasse(l.propria), herdada: l.propria ? '' : normClasse(l.classe) });
+  }
+  return json({ projeto, itens });
+}
+
+// Classe que o site usava para a peça nesse projeto: a da própria BOM ou a herdada de outra BOM
+function classeEfetiva(idx, projeto, material, propria) {
+  return normClasse(propria) || normClasse(idx.porMaterial.get(material)?.linhas.find((l) => l.projeto === projeto)?.classe);
+}
+
+// Classe corrigida na BOM: os registros dessa peça nesse projeto que tinham a classe antiga
+// (ou nenhuma) passam a ter a nova. Depois, quem ficou sem classe pega a das outras BOMs.
+async function classeNosRegistros(env, projeto, mudancas) {
+  const stmts = mudancas.filter((x) => x.antes !== x.depois).map((x) => env.DB.prepare(
+    `UPDATE scrap SET classe = ? WHERE excluido_em IS NULL AND projeto = ? AND material = ?
+       AND (classe IS NULL OR classe = '' OR classe = ?)`
+  ).bind(x.depois, projeto, x.material, x.antes || ''));
+  let n = 0;
+  for (let i = 0; i < stmts.length; i += 100) {
+    for (const r of await env.DB.batch(stmts.slice(i, i + 100))) n += r.meta?.changes || 0;
+  }
+  return n + await completarClasses(env);
+}
+
+// Classe de um ou vários itens de uma vez
+async function definirClasseBom(req, env) {
+  const b = await req.json().catch(() => null);
+  const projeto = texto(b?.projeto, 40).toUpperCase();
+  const classe = normClasse(b?.classe);
+  const materiais = [...new Set((Array.isArray(b?.materiais) ? b.materiais : []).map((x) => normCodigo(x).slice(0, 40)).filter(Boolean))];
+  if (!projeto || !materiais.length) return json({ erro: 'Escolha os itens' }, 400);
+  if (materiais.length > 3000) return json({ erro: 'Máximo de 3000 itens por vez' }, 400);
+  const idx = await bomIndex(env, true);
+  const antes = new Map();     // material -> classe que o site usava (própria ou herdada)
+  const mudar = [];            // só os itens cuja classe na BOM muda de fato
+  for (let i = 0; i < materiais.length; i += 90) {   // D1 aceita até 100 parâmetros por consulta
+    const lote = materiais.slice(i, i + 90);
+    const rs = (await env.DB.prepare(
+      `SELECT material, classe FROM bom WHERE projeto = ? AND material IN (${lote.map(() => '?').join(',')})`
+    ).bind(projeto, ...lote).all()).results;
+    for (const r of rs) {
+      if (normClasse(r.classe) === classe) continue;
+      antes.set(r.material, classeEfetiva(idx, projeto, r.material, r.classe));
+      mudar.push(r.material);
+    }
+  }
+  if (!mudar.length) return json({ ok: true, alterados: 0, registros: 0 });
+  const agora = new Date().toISOString();
+  const ups = mudar.map((mat) =>
+    env.DB.prepare('UPDATE bom SET classe = ?, updated_at = ? WHERE projeto = ? AND material = ?').bind(classe, agora, projeto, mat));
+  for (let i = 0; i < ups.length; i += 100) await env.DB.batch(ups.slice(i, i + 100));
+  await bomEditada(env, (rows) => rows.map((r) =>
+    r.projeto === projeto && antes.has(r.material) ? { ...r, classe, updated_at: agora } : r));
+  const idx2 = await bomIndex(env);
+  const registros = await classeNosRegistros(env, projeto,
+    mudar.map((material) => ({ material, antes: antes.get(material), depois: classeEfetiva(idx2, projeto, material, classe) })));
+  const itens = mudar.map((material) => ({ material, classe, herdada: classe ? '' : classeEfetiva(idx2, projeto, material, '') }));
+  return json({ ok: true, alterados: mudar.length, registros, itens });
+}
+
+// Adicionar um material na BOM ou corrigir descrição, unidade e classe de um item
+async function salvarItemBom(req, env) {
+  const b = await req.json().catch(() => null);
+  if (!b) return json({ erro: 'Dados inválidos' }, 400);
+  const projeto = texto(b.projeto, 40).toUpperCase();
+  const material = normCodigo(b.material).slice(0, 40);
+  const descricao = texto(b.descricao, 200);
+  const unidade = normUn(b.unidade);
+  const classe = normClasse(b.classe);
+  if (!projeto) return json({ erro: 'Informe o projeto', campo: 'projeto' }, 400);
+  if (!material) return json({ erro: 'Informe o SAP do material', campo: 'material' }, 400);
+  if (String(b.unidade ?? '').trim() && !unidade) return json({ erro: 'Unidade inválida. Use letras, ex.: PC, UN, M, KG.', campo: 'unidade' }, 400);
+  if (temPalavrao(descricao)) return json({ erro: MSG_PALAVRAO, campo: 'descricao' }, 422);
+  const atual = await env.DB.prepare('SELECT classe FROM bom WHERE projeto = ? AND material = ?').bind(projeto, material).first();
+  const classeAntes = classeEfetiva(await bomIndex(env, true), projeto, material, atual?.classe);
+  if (b.novo && atual) return json({ erro: 'Esse SAP já está nessa BOM. Procure na lista para editar.', campo: 'material' }, 409);
+  if (!b.novo && !atual) return json({ erro: 'Esse item não está mais nessa BOM.', campo: 'material' }, 404);
+  const agora = new Date().toISOString();
+  await env.DB.prepare(
+    `INSERT INTO bom (projeto, material, descricao, unidade, classe, updated_at) VALUES (?, ?, ?, ?, ?, ?)
+     ON CONFLICT(projeto, material) DO UPDATE SET descricao = excluded.descricao, unidade = excluded.unidade,
+       classe = excluded.classe, updated_at = excluded.updated_at`
+  ).bind(projeto, material, descricao, unidade, classe, agora).run();
+  const linha = { projeto, material, descricao, unidade, classe, updated_at: agora };
+  await bomEditada(env, (rows) => atual
+    ? rows.map((r) => (r.projeto === projeto && r.material === material ? linha : r))
+    : [...rows, linha]);
+  const idx2 = await bomIndex(env);
+  const registros = await classeNosRegistros(env, projeto,
+    [{ material, antes: classeAntes, depois: classeEfetiva(idx2, projeto, material, classe) }]);
+  const herdada = classe ? '' : classeEfetiva(idx2, projeto, material, '');
+  return json({ ok: true, item: { material, descricao, unidade, classe, herdada }, registros });
+}
+
+async function excluirItemBom(url, env) {
+  const projeto = texto(url.searchParams.get('projeto'), 40).toUpperCase();
+  const material = normCodigo(url.searchParams.get('material')).slice(0, 40);
+  if (!projeto || !material) return json({ erro: 'Informe projeto e material' }, 400);
+  const r = await env.DB.prepare('DELETE FROM bom WHERE projeto = ? AND material = ?').bind(projeto, material).run();
+  if (!r.meta?.changes) return json({ erro: 'Esse item não está mais nessa BOM.' }, 404);
+  await bomEditada(env, (rows) => rows.filter((x) => !(x.projeto === projeto && x.material === material)));
+  return json({ ok: true });
 }
 
 /* ---------------- scrap ---------------- */
