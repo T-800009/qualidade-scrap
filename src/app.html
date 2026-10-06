@@ -239,16 +239,28 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .add-foto.enviando{opacity:.6;pointer-events:none}
 .sem-foto{display:inline-block;margin-top:6px;padding:2px 8px;border-radius:999px;border:1px dashed var(--red-line);color:var(--red-h);font-size:11px;font-weight:700}
 .fotos-linha{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.galeria-acoes{display:flex;justify-content:center;gap:10px;padding:0 16px 16px}
-.galeria-acoes button{height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:none;color:#fff;font-weight:600}
-.galeria-acoes button:hover{background:var(--red);border-color:var(--red)}
-.galeria{position:fixed;inset:0;z-index:35;display:grid;grid-template-rows:auto 1fr auto;background:rgba(0,0,0,.92);animation:fade .18s ease-out}
-.galeria-topo{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;color:#fff;font-weight:600}
-.galeria-topo button,.galeria-nav button{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#fff;font-size:22px}
-.galeria-topo button:hover,.galeria-nav button:hover{background:var(--red);border-color:var(--red)}
-.galeria-img{display:grid;place-items:center;min-height:0;padding:0 16px}
-.galeria-img img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-.galeria-nav{display:flex;justify-content:center;gap:14px;padding:16px}
+/* galeria de fotos: a foto sempre cabe na tela; tocar/clicar amplia e aí dá para arrastar.
+   Com a galeria aberta o site atrás fica parado (html.trava). */
+html.trava,html.trava body{overflow:hidden}
+.galeria{position:fixed;inset:0;z-index:35;display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:rgba(6,6,8,.97);color:#fff;animation:fade .18s ease-out}
+.galeria-topo{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;font-weight:600}
+.galeria-topo>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.galeria-botoes{display:flex;gap:8px;flex:none}
+.galeria .gal-bt{display:grid;place-items:center;width:44px;height:44px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#fff;font-size:22px;line-height:1}
+.galeria .gal-bt:hover{background:var(--red);border-color:var(--red)}
+.galeria .gal-bt svg{width:20px;height:20px}
+.galeria-img{position:relative;min-height:0;overflow:hidden;overscroll-behavior:contain}
+.galeria-img img{position:absolute;inset:0;margin:auto;max-width:calc(100% - 32px);max-height:100%;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.6);cursor:zoom-in;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;transition:opacity .15s}
+.galeria-img.carregando img{opacity:.25}
+.galeria-img.zoom{display:flex;overflow:auto;cursor:grab}
+.galeria-img.zoom img{position:static;flex:none;margin:auto;max-width:none;max-height:none;border-radius:0;box-shadow:none;cursor:inherit}
+.galeria-img.zoom.arrastando{cursor:grabbing}
+.galeria-rodape{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px 14px;padding:12px 16px calc(14px + env(safe-area-inset-bottom))}
+.galeria-dica{color:rgba(255,255,255,.62);font-size:13px;text-align:center}
+.gal-remover{height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:none;color:#fff;font-weight:600}
+.gal-remover:hover{background:var(--red);border-color:var(--red)}
+html.trava #toast{bottom:96px}   /* aviso não cobre os botões da galeria */
+@media (max-width:560px){.galeria-dica{flex-basis:100%;order:-1}html.trava #toast{bottom:124px}}
 .item-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .item-top b{font:600 17px/1 var(--cond);letter-spacing:.4px}
 .item-top .proj{height:20px;font-size:12px;padding:0 7px;border-radius:4px}
@@ -740,11 +752,16 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
 
 <input type="file" id="fotoIn" accept="image/*" capture="environment" hidden aria-label="Tirar foto da peça">
 
-<div class="galeria" id="galeria" hidden role="dialog" aria-label="Fotos do registro">
-  <div class="galeria-topo"><span id="galInfo"></span><button id="galFechar" aria-label="Fechar">×</button></div>
-  <div class="galeria-img"><img id="galImg" alt="Foto do scrap"></div>
-  <div class="galeria-nav"><button id="galAnt" aria-label="Foto anterior">‹</button><button id="galProx" aria-label="Próxima foto">›</button></div>
-  <div class="galeria-acoes" id="galAcoes" hidden><button id="galRemover">Remover esta foto</button></div>
+<div class="galeria" id="galeria" hidden role="dialog" aria-modal="true" aria-label="Fotos do registro">
+  <div class="galeria-topo"><span id="galInfo"></span>
+    <div class="galeria-botoes"><button class="gal-bt" id="galZoom" aria-label="Ampliar foto"></button><button class="gal-bt" id="galFechar" aria-label="Fechar">×</button></div></div>
+  <div class="galeria-img" id="galArea"><img id="galImg" alt="Foto do scrap" draggable="false"></div>
+  <div class="galeria-rodape">
+    <button class="gal-bt" id="galAnt" aria-label="Foto anterior">‹</button>
+    <span class="galeria-dica" id="galDica"></span>
+    <span id="galAcoes" hidden><button class="gal-remover" id="galRemover">Remover esta foto</button></span>
+    <button class="gal-bt" id="galProx" aria-label="Próxima foto">›</button>
+  </div>
 </div>
 
 <div id="toast" role="status" aria-live="polite"><i></i><span></span></div>
@@ -1182,15 +1199,51 @@ function atualizarListas() {
 }
 
 /* ---------- galeria ---------- */
-const GAL = { lista: [], i: 0, titulo: '' };
+// A foto sempre cabe na tela. Tocar/clicar na foto (ou na lupa) amplia; ampliada, dá para
+// arrastar ou rolar para ver os detalhes. Enquanto a galeria está aberta o site atrás fica parado.
+const GAL = { lista: [], i: 0, titulo: '', zoom: false };
+const ICONE_ZOOM = (mais) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M8 11h6${mais ? 'M11 8v6' : ''}"/></svg>`;
+const TOQUE = matchMedia('(pointer: coarse)').matches ? 'Toque' : 'Clique';
+function galeriaVisivel(v) {
+  $('#galeria').hidden = !v;
+  document.documentElement.classList.toggle('trava', v);
+}
 function abrirGaleria(lista, i = 0, titulo = '') {
   Object.assign(GAL, { lista, i, titulo });
-  $('#galeria').hidden = false;
+  galeriaVisivel(true);
   mostrarGaleria();
   $('#galFechar').focus();
 }
+function fecharGaleria() {
+  zoomGaleria(false);
+  galeriaVisivel(false);
+  $('#galImg').removeAttribute('src');
+}
+// x, y: ponto da foto (0 a 1) que fica no meio da tela depois de ampliar
+function zoomGaleria(liga, x = .5, y = .5) {
+  const area = $('#galArea'), img = $('#galImg');
+  const r = img.getBoundingClientRect();
+  if (liga && r.width) {
+    const larg = Math.round(Math.max(img.naturalWidth || 0, r.width * 2));
+    GAL.zoom = true;
+    area.classList.add('zoom');
+    img.style.width = larg + 'px';
+    area.scrollLeft = x * larg - area.clientWidth / 2;
+    area.scrollTop = y * larg * (r.height / r.width) - area.clientHeight / 2;
+  } else {
+    GAL.zoom = false;
+    area.classList.remove('zoom', 'arrastando');
+    img.style.width = '';
+    area.scrollLeft = area.scrollTop = 0;
+  }
+  $('#galZoom').innerHTML = ICONE_ZOOM(!GAL.zoom);
+  $('#galZoom').setAttribute('aria-label', GAL.zoom ? 'Diminuir foto' : 'Ampliar foto');
+  $('#galDica').textContent = GAL.zoom ? `Arraste para ver a peça. ${TOQUE} na foto para voltar.` : `${TOQUE} na foto para ampliar`;
+}
 function mostrarGaleria() {
   const src = GAL.lista[GAL.i];
+  zoomGaleria(false);
+  $('#galArea').classList.add('carregando');
   $('#galImg').src = /^\d+$/.test(String(src)) ? '/api/foto/' + src : src;
   $('#galInfo').textContent = `${GAL.titulo ? GAL.titulo + ' · ' : ''}Foto ${GAL.i + 1} de ${GAL.lista.length}`;
   $('#galAnt').hidden = $('#galProx').hidden = GAL.lista.length < 2;
@@ -1201,18 +1254,59 @@ $('#galAnt').addEventListener('click', () => passoGaleria(-1));
 $('#galProx').addEventListener('click', () => passoGaleria(1));
 $('#galRemover').addEventListener('click', async () => {
   const id = GAL.lista[GAL.i];
-  $('#galeria').hidden = true;
-  if (!await confirmar('Remover esta foto?', 'A foto será apagada do registro. Essa ação não pode ser desfeita.', 'Remover foto')) { $('#galeria').hidden = false; return; }
+  galeriaVisivel(false);
+  if (!await confirmar('Remover esta foto?', 'A foto será apagada do registro. Essa ação não pode ser desfeita.', 'Remover foto')) { galeriaVisivel(true); return; }
   try {
     await api('/api/foto/' + id, { method: 'DELETE' });
     toast('Foto removida');
     GAL.lista.splice(GAL.i, 1);
-    if (GAL.lista.length) { GAL.i = Math.min(GAL.i, GAL.lista.length - 1); $('#galeria').hidden = false; mostrarGaleria(); }
+    if (GAL.lista.length) { GAL.i = Math.min(GAL.i, GAL.lista.length - 1); galeriaVisivel(true); mostrarGaleria(); }
     atualizarListas();
   } catch (err) { toast(err.message, true); }
 });
-$('#galFechar').addEventListener('click', () => { $('#galeria').hidden = true; $('#galImg').removeAttribute('src'); });
-$('#galeria').addEventListener('click', (e) => { if (e.target.id === 'galeria' || e.target.classList.contains('galeria-img')) $('#galFechar').click(); });
+$('#galFechar').addEventListener('click', fecharGaleria);
+$('#galZoom').addEventListener('click', () => zoomGaleria(!GAL.zoom));
+$('#galImg').addEventListener('load', () => $('#galArea').classList.remove('carregando'));
+$('#galImg').addEventListener('error', () => {
+  $('#galArea').classList.remove('carregando');
+  if ($('#galImg').getAttribute('src')) toast('Não foi possível abrir a foto', true);
+});
+$('#galeria').addEventListener('click', (e) => { if (e.target.id === 'galeria') fecharGaleria(); });
+// mouse: arrastar a foto ampliada (no celular o próprio dedo rola)
+const ARR = { on: false, moveu: false, x: 0, y: 0, sl: 0, st: 0 };
+$('#galArea').addEventListener('pointerdown', (e) => {
+  if (!GAL.zoom || e.pointerType !== 'mouse' || e.button !== 0) return;
+  const a = $('#galArea');
+  Object.assign(ARR, { on: true, moveu: false, x: e.clientX, y: e.clientY, sl: a.scrollLeft, st: a.scrollTop });
+  a.setPointerCapture(e.pointerId);
+});
+$('#galArea').addEventListener('pointermove', (e) => {
+  if (!ARR.on) return;
+  const a = $('#galArea'), dx = e.clientX - ARR.x, dy = e.clientY - ARR.y;
+  if (!ARR.moveu && Math.abs(dx) + Math.abs(dy) > 4) { ARR.moveu = true; a.classList.add('arrastando'); }
+  a.scrollLeft = ARR.sl - dx; a.scrollTop = ARR.st - dy;
+});
+const fimArraste = () => { ARR.on = false; $('#galArea').classList.remove('arrastando'); };
+$('#galArea').addEventListener('pointerup', fimArraste);
+$('#galArea').addEventListener('pointercancel', fimArraste);
+$('#galArea').addEventListener('click', (e) => {
+  if (ARR.moveu) { ARR.moveu = false; return; }        // foi arraste, não clique
+  if (GAL.zoom) return zoomGaleria(false);
+  if (e.target.id !== 'galImg') return fecharGaleria(); // clicou fora da foto
+  const r = e.target.getBoundingClientRect();
+  zoomGaleria(true, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
+});
+// celular: deslizar para o lado troca de foto
+let toque = null;
+$('#galArea').addEventListener('touchstart', (e) => {
+  toque = GAL.zoom || e.touches.length > 1 ? null : { x: e.touches[0].clientX, y: e.touches[0].clientY };
+}, { passive: true });
+$('#galArea').addEventListener('touchend', (e) => {
+  if (!toque || GAL.lista.length < 2) return;
+  const t = e.changedTouches[0], dx = t.clientX - toque.x, dy = t.clientY - toque.y;
+  toque = null;
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) passoGaleria(dx < 0 ? 1 : -1);
+});
 const REG_POR_ID = new Map();
 const botaoFotos = (r) => {
   REG_POR_ID.set(String(r.id), r);
@@ -1904,9 +1998,9 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'Escape' && !$('#modalEdit').hidden) $('#modalEdit').hidden = true;
   else if (e.key === 'Escape' && !$('#modalDec').hidden) $('#modalDec').hidden = true;
   else if (!$('#galeria').hidden) {
-    if (e.key === 'Escape') $('#galFechar').click();
-    if (e.key === 'ArrowLeft') passoGaleria(-1);
-    if (e.key === 'ArrowRight') passoGaleria(1);
+    if (e.key === 'Escape') fecharGaleria();
+    if (e.key === 'ArrowLeft' && GAL.lista.length > 1) passoGaleria(-1);
+    if (e.key === 'ArrowRight' && GAL.lista.length > 1) passoGaleria(1);
   }
 });
 
