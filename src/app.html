@@ -79,6 +79,27 @@ nav button.ativo::after{content:"";position:absolute;left:14px;right:14px;bottom
 .editar{display:grid;place-items:center;width:34px;height:34px;border-radius:8px;border:1px solid transparent;background:none;color:var(--mut2)}
 .editar:hover{color:var(--txt);border-color:var(--line2);background:var(--s2)}
 .tag-edit{display:inline-block;margin-top:4px;padding:1px 7px;border-radius:4px;background:var(--s3);color:var(--mut);font-size:11px;font-weight:600}
+.tag-sap{display:inline-block;padding:2px 7px;border-radius:4px;background:var(--s3);color:var(--mut);font:600 11px/1.3 Barlow,sans-serif;letter-spacing:0;white-space:nowrap}
+.tag-sap s{color:var(--txt);opacity:.75}
+.mat-cel .tag-sap{margin-top:4px}
+/* SAP no modal de edição */
+.ed-mat{margin:-4px 0 14px;font-size:13px;line-height:1.45;color:var(--mut)}
+.ed-mat:empty{display:none}
+.ed-st{display:flex;align-items:flex-start;gap:8px}
+.ed-st i{flex:none;display:grid;place-items:center;width:18px;height:18px;margin-top:1px;border-radius:50%;background:var(--ok);color:#000}
+.ed-st.alerta i{background:var(--red);color:#fff}
+.ed-st i svg{width:11px;height:11px}
+.ed-mat b{color:var(--txt);font-weight:700}
+.ed-mat .chips{gap:6px;margin-top:8px}
+.ed-mat .proj.op{height:34px;padding:0 12px;font-size:15px}
+.ed-mat .sug{margin-top:6px;padding:8px 10px}
+.ed-mat .sug b{font-size:15px}
+.ed-mat .sug .proj{height:22px;font-size:12px;padding:0 7px}
+#edMat{font:600 18px/1.2 var(--cond);letter-spacing:.6px}
+#formEdit input[readonly]{color:var(--mut);background:var(--s2);cursor:default}
+#formEdit input[readonly]:focus{border-color:var(--line);box-shadow:none}
+.an-botoes{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.an-botoes .editar-sit{margin-top:0}
 .modal-caixa.larga{width:min(560px,100%)}
 .modal-caixa.larga label{margin-bottom:12px}
 .modal-caixa.larga input,.modal-caixa.larga select,.modal-caixa.larga textarea{font-size:15px;padding:11px 12px}
@@ -302,7 +323,7 @@ html[data-tema="claro"] .st-analise{color:#975a16}
 .dec-opcoes [data-dec="retrabalho"]{color:#3b82f6}
 .dec-opcoes [data-dec="devolucao"]{color:#9b6bf2}
 .dec-opcoes [data-dec="liberado"]{color:var(--ok)}
-@media (max-width:720px){.an-card{grid-template-columns:1fr}.an-dir{align-items:stretch;text-align:left}.decisoes{width:auto}.decisoes button{font-size:12px}.an-resumo{display:grid;grid-template-columns:repeat(3,1fr)}.an-resumo .kpi-mini{min-width:0;padding:10px 12px}.kpi-mini b{font-size:24px}}
+@media (max-width:720px){.an-card{grid-template-columns:1fr}.an-dir{align-items:stretch;text-align:left}.an-botoes{justify-content:flex-start}.decisoes{width:auto}.decisoes button{font-size:12px}.an-resumo{display:grid;grid-template-columns:repeat(3,1fr)}.an-resumo .kpi-mini{min-width:0;padding:10px 12px}.kpi-mini b{font-size:24px}}
 .cls{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;border:1.5px solid var(--line2);color:var(--txt);font:700 12px/1 Barlow,sans-serif;white-space:nowrap}
 .cls b{font:700 14px/1 var(--cond)}
 .cls.cA{border-color:var(--red);background:var(--red);color:#fff}
@@ -438,7 +459,7 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
 <body>
 <header class="topo">
   <div class="marca">
-    <svg class="logo" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#e4002b"/><circle cx="29" cy="29" r="14.5" fill="none" stroke="#fff" stroke-width="7"/><path d="M38.5 38.5 49 49" stroke="#fff" stroke-width="7.5" stroke-linecap="round"/></svg>
+    <svg class="logo" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="qaFundo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1d22"/><stop offset="1" stop-color="#09090b"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#qaFundo)"/><rect x="1" y="1" width="62" height="62" rx="14" fill="none" stroke="#e4002b" stroke-width="2"/><g fill="none" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="17.9" width="15.8" height="28.2" rx="7.9" stroke="#fff"/><path d="M43 17.9 50 46.1M38.2 37.3h9.6" stroke="#fff"/><path d="M25.4 35.5 36 46.1 43 17.9" stroke="#ff1f47"/></g></svg>
     <div><strong>Qualidade</strong><small>Registro de scrap</small></div>
   </div>
   <nav id="nav">
@@ -661,14 +682,18 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
     <div class="linha-sinal"></div>
     <h2>Editar registro</h2>
     <p id="editInfo"></p>
+    <label>Material (SAP)<input id="edMat" maxlength="40" autocapitalize="characters" spellcheck="false" placeholder="Código SAP da peça"></label>
+    <div class="ed-mat" id="edMatRes" aria-live="polite"></div>
+    <label>Descrição do material<input id="edDesc" maxlength="200"></label>
     <div class="grid2">
+      <label>Projeto<input id="edProjeto" maxlength="40" list="edProjLista"></label>
       <label>Posto<select id="edPosto"></select></label>
-      <label>Projeto<input id="edProjeto" maxlength="40"></label>
       <label>Quantidade<input id="edQtd" type="number" min="0" step="any" inputmode="decimal"></label>
       <label>Unidade<input id="edUn" maxlength="6" placeholder="PC, UN, M…" autocapitalize="characters"></label>
       <label>Classe<input id="edClasse" maxlength="10" placeholder="A, B ou C" autocapitalize="characters"></label>
       <label>Defeito<select id="edDefeito"></select></label>
     </div>
+    <datalist id="edProjLista"></datalist>
     <label>O que aconteceu<textarea id="edProblema" rows="2" maxlength="1000"></textarea></label>
     <div class="secao-modal">Análise da Qualidade</div>
     <label>Situação<select id="edStatus"></select></label>
@@ -1260,6 +1285,8 @@ const acoesAdmin = (r) => ROLE !== 'admin' ? '<span></span>' : `<div class="acoe
   <button class="editar" data-edit="${r.id}" title="Editar registro" aria-label="Editar registro">${ICONE_LAPIS}</button>
   <button class="apagar" data-del="${r.id}" title="Apagar registro" aria-label="Apagar registro">${ICONE_LIXO}</button></div>`;
 const tagEditado = (r) => r.editado_em ? `<span class="tag-edit" title="Editado em ${dataHora(r.editado_em)}">editado</span>` : '';
+const tagSap = (r) => r.material_anterior
+  ? `<span class="tag-sap" title="O operador registrou com o SAP ${esc(r.material_anterior)}">SAP corrigido · era <s>${esc(r.material_anterior)}</s></span>` : '';
 
 async function apagarRegistro(id, rotulo, depois) {
   const ok = await confirmar('Apagar este registro?', `${rotulo} sai dos registros e do painel. A exclusão fica registrada no histórico.`, 'Apagar');
@@ -1283,7 +1310,7 @@ async function carregarUltimos() {
       <div class="item">
         <div class="item-hora">${hora(r.created_at)}</div>
         <div>
-          <div class="item-top"><b>${esc(r.material)}</b><span class="proj">${esc(r.projeto)}</span>${clsHtml(r.classe)}${r.fora_bom ? '<span class="proj fora">fora BOM</span>' : ''}</div>
+          <div class="item-top"><b>${esc(r.material)}</b><span class="proj">${esc(r.projeto)}</span>${clsHtml(r.classe)}${r.fora_bom ? '<span class="proj fora">fora BOM</span>' : ''}${tagSap(r)}</div>
           <p>${esc(r.defeito)} · ${esc(qtdTxt(r.quantidade, r.unidade))}</p>
           <small>${esc(r.registrado_por || '')}${r.matricula ? ' (' + esc(r.matricula) + ')' : ''}</small>${tagEditado(r)}<div style="margin-top:6px">${stHtml(r.status)}</div>${botaoFotos(r)}
         </div>
@@ -1304,16 +1331,18 @@ $('#ultimos').addEventListener('click', (e) => {
 /* ---------- edição (admin) ---------- */
 preencherSelect($('#edPosto'), Array.from({ length: 10 }, (_, i) => ({ v: i + 1, t: 'Posto ' + (i + 1) })));
 let EDIT = null;
+const chaveCod = (s) => String(s ?? '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 function abrirEdicao(r, depois) {
   if (!r || ROLE !== 'admin') return;
-  EDIT = { id: r.id, depois };
+  EDIT = { id: r.id, depois, r };
   const defs = DEFEITOS.includes(r.defeito) ? DEFEITOS : [r.defeito, ...DEFEITOS];
   preencherSelect($('#edDefeito'), defs);
+  document.querySelectorAll('#formEdit .invalido').forEach(limparInvalido);
+  $('#edMat').value = r.material;
+  sapOriginal();   // descrição, projeto, unidade e classe do registro
+  $('#edProjLista').innerHTML = PROJETOS.map((p) => `<option value="${esc(p)}">`).join('');
   $('#edPosto').value = String(r.posto);
-  $('#edProjeto').value = r.projeto || '';
   $('#edQtd').value = r.quantidade;
-  $('#edUn').value = unOk(r.unidade);
-  $('#edClasse').value = r.classe || '';
   $('#edDefeito').value = r.defeito;
   $('#edProblema').value = r.descricao_problema || '';
   preencherSelect($('#edStatus'), Object.entries(ST_NOME).map(([v, t]) => ({ v, t })));
@@ -1322,11 +1351,107 @@ function abrirEdicao(r, depois) {
   $('#edStatus').value = EDIT.status0;
   $('#edParecer').value = EDIT.parecer0;
   $('#edParecer').disabled = EDIT.status0 === 'analise';
-  $('#editInfo').textContent = `Material ${r.material}, registrado por ${r.registrado_por || 'sem nome'} em ${dataHora(r.created_at)}.`;
-  document.querySelectorAll('#formEdit .invalido').forEach(limparInvalido);
+  $('#editInfo').textContent = `Registrado por ${r.registrado_por || 'sem nome'}${r.matricula ? ' (' + r.matricula + ')' : ''} em ${dataHora(r.created_at)}, posto P${r.posto}.`;
   $('#modalEdit').hidden = false;
-  setTimeout(() => $('#edQtd').focus(), 50);
+  setTimeout(() => $('#edMat').focus(), 50);
 }
+
+/* SAP no modal de edição: quando o operador digitou o código errado, o admin troca aqui.
+   SAP achado na BOM traz descrição, projeto, unidade e classe; fora da BOM, o admin preenche. */
+function sapOriginal() {
+  const r = EDIT.r;
+  EDIT.sap = { chave: chaveCod(r.material), estado: r.fora_bom ? 'fora' : 'bom', linhas: [], sug: [], projeto: null, msg: '' };
+  // o que veio da BOM (e não foi digitado por alguém): some se o SAP novo estiver fora da BOM
+  EDIT.daBom = r.fora_bom ? { desc: null, cls: null } : { desc: r.descricao_material || '', cls: r.classe || '' };
+  $('#edDesc').value = r.descricao_material || '';
+  $('#edProjeto').value = r.projeto || '';
+  $('#edUn').value = unOk(r.unidade);
+  $('#edClasse').value = r.classe || '';
+  renderSapEd();
+}
+
+function renderSapEd() {
+  const S = EDIT.sap, r = EDIT.r, el = $('#edMatRes');
+  const ok = (t) => `<div class="ed-st"><i>${ICONE_OK}</i><span>${t}</span></div>`;
+  const alerta = (t) => `<div class="ed-st alerta"><i>${ICONE_ALERTA}</i><span>${t}</span></div>`;
+  const era = r.material_anterior ? ` O operador tinha digitado <b>${esc(r.material_anterior)}</b>.` : '';
+  $('#edDesc').readOnly = S.estado === 'bom' || S.estado === 'novo-bom';
+  $('#edDesc').placeholder = $('#edDesc').readOnly ? 'Sem descrição na BOM' : 'Descrição da peça';
+  $('#edProjeto').readOnly = S.estado === 'novo-bom';
+  $('#edProjeto').placeholder = S.estado === 'novo-bom' ? 'Escolha acima' : '';
+  if (S.estado === 'bom') el.innerHTML = ok('Na BOM. Se o SAP estiver errado, digite o certo: descrição, projeto, unidade e classe vêm da BOM.' + era);
+  else if (S.estado === 'fora') el.innerHTML = alerta('Fora da BOM. Se o operador digitou errado, digite o SAP certo.' + era);
+  else if (S.estado === 'buscando') el.innerHTML = '<span>Procurando nas BOMs…</span>';
+  else if (S.estado === 'vazio') el.innerHTML = alerta('Digite o SAP do material.');
+  else if (S.estado === 'erro') el.innerHTML = alerta(esc(S.msg) + ' O SAP será conferido ao salvar.');
+  else if (S.estado === 'novo-bom') {
+    const m = S.linhas[0];
+    el.innerHTML = S.linhas.length === 1
+      ? ok(`Encontrado na BOM: <b>${esc(m.material)}</b>, projeto <b>${esc(m.projeto)}</b>${m.classe ? ', classe <b>' + esc(m.classe) + '</b>' : ''}. Descrição, unidade e classe foram atualizadas.`)
+      : ok(`Encontrado na BOM: <b>${esc(m.material)}</b>. Está em ${S.linhas.length} projetos. ${S.projeto ? 'Confira o projeto desta peça:' : 'Qual é o projeto desta peça?'}`)
+        + `<div class="chips">${S.linhas.map((l) => `<button type="button" class="proj op ${S.projeto === l.projeto ? 'sel' : ''}" data-edproj="${esc(l.projeto)}">${esc(l.projeto)}${l.classe ? ' · ' + esc(l.classe) : ''}</button>`).join('')}</div>`;
+  } else if (S.estado === 'novo-fora') {
+    el.innerHTML = alerta(`Esse SAP não está nas BOMs. Se salvar, fica como <b>fora da BOM</b>: confira projeto e descrição.${S.sug.length ? ' É algum destes?' : ''}`)
+      + S.sug.map((s) => `<button type="button" class="sug" data-edmat="${esc(s.material)}"><b>${esc(s.material)}</b><span class="d">${esc(s.descricao || '')}</span><span class="proj">${esc((s.projetos || '').split(',').join(', '))}</span></button>`).join('');
+  }
+}
+
+let tSapEd, seqSapEd = 0;
+async function conferirSapEd() {
+  const q = $('#edMat').value.trim(), chave = chaveCod(q), S = EDIT.sap;
+  if (chave === S.chave && !['buscando', 'erro'].includes(S.estado)) return;
+  const seq = ++seqSapEd;
+  if (chave === chaveCod(EDIT.r.material)) return sapOriginal();   // voltou ao SAP do registro
+  if (!chave) { Object.assign(S, { chave, estado: 'vazio' }); return renderSapEd(); }
+  Object.assign(S, { chave, estado: 'buscando' });
+  renderSapEd();
+  let d;
+  try {
+    const k = q.toUpperCase();
+    d = CACHE_MAT.get(k);
+    if (!d) {
+      d = await api('/api/material?' + qs({ q }));
+      if (CACHE_MAT.size > 300) CACHE_MAT.clear();
+      CACHE_MAT.set(k, d);
+    }
+  } catch (e) {
+    if (seq === seqSapEd) { Object.assign(S, { estado: 'erro', msg: e.message }); renderSapEd(); }
+    return;
+  }
+  if (seq !== seqSapEd) return;
+  if (d.exato.length) {
+    Object.assign(S, { estado: 'novo-bom', linhas: d.exato, sug: [], projeto: null });
+    const atual = $('#edProjeto').value.trim().toUpperCase();
+    const linha = d.exato.length === 1 ? d.exato[0] : d.exato.find((l) => l.projeto === atual);
+    if (linha) usarLinhaEd(linha);
+    else { $('#edProjeto').value = ''; $('#edDesc').value = EDIT.daBom.desc = d.exato[0].descricao || ''; }
+  } else {
+    Object.assign(S, { estado: 'novo-fora', linhas: [], sug: d.sugestoes.slice(0, 5), projeto: null });
+    // descrição e classe que vieram da BOM de outro SAP não valem para o código novo
+    if ($('#edDesc').value === EDIT.daBom.desc) $('#edDesc').value = '';
+    if ($('#edClasse').value === EDIT.daBom.cls) $('#edClasse').value = '';
+  }
+  renderSapEd();
+}
+function usarLinhaEd(l) {
+  EDIT.sap.projeto = l.projeto;
+  EDIT.daBom = { desc: l.descricao || '', cls: l.classe || '' };
+  $('#edProjeto').value = l.projeto;
+  $('#edDesc').value = l.descricao || '';
+  if (unOk(l.unidade)) $('#edUn').value = unOk(l.unidade);
+  $('#edClasse').value = l.classe || '';
+  ['#edProjeto', '#edUn', '#edClasse', '#edDesc'].forEach((s) => limparInvalido($(s)));
+}
+$('#edMat').addEventListener('input', () => { clearTimeout(tSapEd); tSapEd = setTimeout(conferirSapEd, 350); });
+$('#edMat').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); clearTimeout(tSapEd); conferirSapEd(); }
+});
+$('#edMatRes').addEventListener('click', (e) => {
+  const p = e.target.closest('button[data-edproj]');
+  if (p) { usarLinhaEd(EDIT.sap.linhas.find((l) => l.projeto === p.dataset.edproj)); renderSapEd(); return; }
+  const s = e.target.closest('button[data-edmat]');
+  if (s) { $('#edMat').value = s.dataset.edmat; limparInvalido($('#edMat')); clearTimeout(tSapEd); conferirSapEd(); }
+});
 $('#edCancelar').addEventListener('click', () => { $('#modalEdit').hidden = true; });
 $('#edStatus').addEventListener('change', () => {
   const emAnalise = $('#edStatus').value === 'analise';
@@ -1335,13 +1460,27 @@ $('#edStatus').addEventListener('change', () => {
 });
 $('#formEdit').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const btn = $('#edSalvar');
+  if (btn.disabled) return;
+  // SAP digitado e ainda não conferido (salvou antes da busca terminar): confere agora
+  if (chaveCod($('#edMat').value) !== EDIT.sap.chave || EDIT.sap.estado === 'buscando') {
+    clearTimeout(tSapEd); btn.disabled = true;
+    await conferirSapEd();
+    btn.disabled = false;
+  }
+  if (EDIT.sap.estado === 'vazio') return marcarInvalido($('#edMat'), 'Digite o SAP do material.');
+  if (EDIT.sap.estado === 'novo-bom' && !EDIT.sap.projeto) {
+    marcarInvalido($('#edProjeto'), 'Escolha o projeto desta peça nos botões acima.');
+    return $('#edMatRes').scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
   const status = $('#edStatus').value, parecer = $('#edParecer').value.trim();
   const mudouAnalise = status !== EDIT.status0 || (status !== 'analise' && parecer !== EDIT.parecer0);
   if (mudouAnalise && status !== 'analise' && !parecer) return marcarInvalido($('#edParecer'), 'Escreva o parecer da Qualidade.');
   if (mudouAnalise && !OP) return exigirOperador(true);
-  const btn = $('#edSalvar'); btn.disabled = true;
+  btn.disabled = true;
   try {
-    await api('/api/scrap/' + EDIT.id, { method: 'PATCH', body: JSON.stringify({
+    const salvo = await api('/api/scrap/' + EDIT.id, { method: 'PATCH', body: JSON.stringify({
+      material: $('#edMat').value.trim(), descricao_material: $('#edDesc').value.trim(),
       posto: $('#edPosto').value, projeto: $('#edProjeto').value.trim(), quantidade: $('#edQtd').value, unidade: $('#edUn').value.trim(), classe: $('#edClasse').value.trim(),
       defeito: $('#edDefeito').value, descricao_problema: $('#edProblema').value.trim(),
     }) });
@@ -1352,11 +1491,12 @@ $('#formEdit').addEventListener('submit', async (e) => {
       contarPendentes();
     }
     $('#modalEdit').hidden = true;
-    toast('Alterações salvas');
+    const trocouSap = chaveCod(salvo.material) !== chaveCod(EDIT.r.material);
+    toast(trocouSap ? `SAP corrigido: ${EDIT.r.material} → ${salvo.material}${salvo.fora_bom ? ' (fora da BOM)' : ''}` : 'Alterações salvas');
     EDIT.depois();
     if ($('#tab-registrar').classList.contains('ativo')) carregarHoje();
   } catch (err) {
-    const alvo = { posto: '#edPosto', projeto: '#edProjeto', quantidade: '#edQtd', unidade: '#edUn', defeito: '#edDefeito', descricao_problema: '#edProblema', parecer_ed: '#edParecer' }[err.campo];
+    const alvo = { material: '#edMat', descricao_material: '#edDesc', posto: '#edPosto', projeto: '#edProjeto', quantidade: '#edQtd', unidade: '#edUn', defeito: '#edDefeito', descricao_problema: '#edProblema', parecer_ed: '#edParecer' }[err.campo];
     alvo ? marcarInvalido($(alvo), err.message) : toast(err.message, true);
   }
   btn.disabled = false;
@@ -1399,14 +1539,14 @@ async function carregarAnalise() {
       <div class="kpi-mini"><small>Pendentes</small><b>${fmt(ANALISE.length)}</b></div>
       <div class="kpi-mini ${atrasados ? 'alerta' : ''}"><small>Mais de ${PRAZO_DIAS} dias</small><b>${fmt(atrasados)}</b></div>
       <div class="kpi-mini"><small>Peças retidas</small><b>${fmt(qtd)}</b></div>` : '';
-    const pode = podeFoto();
+    const pode = podeFoto(), admin = ROLE === 'admin';
     $('#aLista').innerHTML = ANALISE.length ? ANALISE.map((r) => {
       const fechado = r.status && r.status !== 'analise';
       const id = idade(fechado ? r.analisado_em || r.created_at : r.created_at);
       const atrasado = !fechado && Date.now() - Date.parse(r.created_at) > PRAZO_DIAS * 864e5;
       return `<div class="painel an-card ${fechado ? 'fechado' : ''} ${atrasado ? 'atrasado' : ''}">
         <div>
-          <div class="an-top"><span class="cod">${esc(r.material)}</span><span class="proj">${esc(r.projeto)}</span>${clsHtml(r.classe)}${stHtml(r.status)}</div>
+          <div class="an-top"><span class="cod">${esc(r.material)}</span><span class="proj">${esc(r.projeto)}</span>${clsHtml(r.classe)}${r.fora_bom ? '<span class="proj fora">fora BOM</span>' : ''}${stHtml(r.status)}${tagSap(r)}</div>
           <p class="an-desc">${esc(r.descricao_material)}</p>
           <div class="an-meta"><span>Posto <b>P${r.posto}</b></span><span>Quantidade <b>${esc(qtdTxt(r.quantidade, r.unidade))}</b></span>
             <span>Defeito <b>${esc(r.defeito)}</b></span><span>Registrado por <b>${esc(r.registrado_por || '–')}</b> em ${dataHora(r.created_at)}</span></div>
@@ -1419,8 +1559,11 @@ async function carregarAnalise() {
           ${!fechado && pode ? `<div class="decisoes">${Object.entries(ST_NOME).filter(([k]) => k !== 'analise')
             .map(([k, n]) => `<button data-dec="${k}" data-id="${r.id}">${n}</button>`).join('')}</div>` : ''}
           ${!fechado && !pode ? '<span class="an-desc">Aguardando parecer da Qualidade</span>' : ''}
-          ${fechado && pode ? `<button class="editar-sit" data-editsit="${r.id}">${ICONE_LAPIS}Editar situação</button>
-            <button class="reabrir" data-reabrir="${r.id}">Voltar para análise</button>` : ''}
+          ${(fechado && pode) || admin ? `<div class="an-botoes">
+            ${fechado && pode ? `<button class="editar-sit" data-editsit="${r.id}">${ICONE_LAPIS}Editar situação</button>` : ''}
+            ${admin ? `<button class="editar-sit" data-editreg="${r.id}" title="Corrigir SAP, quantidade, posto e outros dados">${ICONE_LAPIS}Editar registro</button>` : ''}
+          </div>` : ''}
+          ${fechado && pode ? `<button class="reabrir" data-reabrir="${r.id}">Voltar para análise</button>` : ''}
         </div>
       </div>`;
     }).join('') : `<div class="painel vazio"><b>${sit === 'analise' ? 'Nenhum item aguardando análise' : 'Nenhum item analisado nesse filtro'}</b>${sit === 'analise' ? 'Tudo em dia.' : 'Mude os filtros.'}</div>`;
@@ -1467,6 +1610,8 @@ $('#formDec').addEventListener('submit', async (e) => {
   btn.disabled = false;
 });
 $('#aLista').addEventListener('click', async (e) => {
+  const er = e.target.closest('button[data-editreg]');
+  if (er) return abrirEdicao(ANALISE.find((x) => String(x.id) === er.dataset.editreg), carregarAnalise);
   const es = e.target.closest('button[data-editsit]');
   if (es) return abrirParecer(ANALISE.find((x) => String(x.id) === es.dataset.editsit), ANALISE.find((x) => String(x.id) === es.dataset.editsit)?.status, true);
   const d = e.target.closest('button[data-dec]');
@@ -1499,7 +1644,7 @@ async function carregarRegistros() {
         <td class="hora">${dataHora(r.created_at)}</td>
         <td><span class="posto-tag">P${r.posto}</span></td>
         <td class="mat-cel"><span class="cod">${esc(r.material)}${r.fora_bom ? ' <span class="proj fora">fora BOM</span>' : ''}</span>
-          <span class="desc">${esc(r.descricao_material)}</span>${botaoFotos(r)}</td>
+          ${tagSap(r)}<span class="desc">${esc(r.descricao_material)}</span>${botaoFotos(r)}</td>
         <td><span class="proj">${esc(r.projeto)}</span></td>
         <td>${clsHtml(r.classe, true)}</td>
         <td class="n">${qtdHtml(r.quantidade, r.unidade)}</td>
@@ -1529,12 +1674,12 @@ $('#rTabela').addEventListener('click', (e) => {
 $('#rExport').addEventListener('click', () => {
   if (!REGISTROS.length) return toast('Nada para exportar nesse filtro', true);
   const dados = REGISTROS.map((r) => ({
-    'Data/hora': dataHora(r.created_at), Posto: 'P' + r.posto, Material: r.material, 'Descrição': r.descricao_material,
+    'Data/hora': dataHora(r.created_at), Posto: 'P' + r.posto, Material: r.material, 'SAP antes da correção': r.material_anterior || '', 'Descrição': r.descricao_material,
     Projeto: r.projeto, Classe: r.classe || '', Quantidade: r.quantidade, Unidade: unOk(r.unidade), Defeito: r.defeito,
     'O que aconteceu': r.descricao_problema, Operador: r.registrado_por, 'Matrícula': r.matricula || '', 'Fora da BOM': r.fora_bom ? 'SIM' : '', Situação: ST_NOME[r.status || 'analise'], Parecer: r.parecer || '', 'Analisado por': r.analisado_por || '', 'Analisado em': r.analisado_em ? dataHora(r.analisado_em) : '', 'Editado em': r.editado_em ? dataHora(r.editado_em) : '', Fotos: r.fotos ? String(r.fotos).split(',').length : 0,
   }));
   const ws = XLSX.utils.json_to_sheet(dados);
-  ws['!cols'] = [16, 7, 16, 36, 10, 7, 10, 8, 20, 50, 22, 12, 11, 20, 40, 22, 16, 16, 7].map((w) => ({ wch: w }));
+  ws['!cols'] = [16, 7, 16, 18, 36, 10, 7, 10, 8, 20, 50, 22, 12, 11, 20, 40, 22, 16, 16, 7].map((w) => ({ wch: w }));
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Scrap');
   XLSX.writeFile(wb, `scrap_${$('#rDe').value.slice(0, 10)}_a_${$('#rAte').value.slice(0, 10)}.xlsx`);

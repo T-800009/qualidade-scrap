@@ -2,12 +2,13 @@ import APP_HTML from './app.html';
 import LOGIN_HTML from './login.html';
 import { temPalavrao } from './palavras.js';
 
-const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#e4002b"/><circle cx="29" cy="29" r="14.5" fill="none" stroke="#fff" stroke-width="7"/><path d="M38.5 38.5 49 49" stroke="#fff" stroke-width="7.5" stroke-linecap="round"/></svg>';
+// Logo QA: Q + check vermelho + A (o check é o rabo do Q e a perna do A)
+const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="qaFundo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1d22"/><stop offset="1" stop-color="#09090b"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#qaFundo)"/><rect x="1" y="1" width="62" height="62" rx="14" fill="none" stroke="#e4002b" stroke-width="2"/><g fill="none" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="17.9" width="15.8" height="28.2" rx="7.9" stroke="#fff"/><path d="M43 17.9 50 46.1M38.2 37.3h9.6" stroke="#fff"/><path d="M25.4 35.5 36 46.1 43 17.9" stroke="#ff1f47"/></g></svg>';
 
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-06 · editar situação';
+const VERSAO = '2026-10-06 · corrigir SAP + logo QA';
 const SESSAO_HORAS = 12;
 const MAX_FALHAS = 10;          // a fábrica sai por um IP só: limite folgado para um erro não travar todo mundo
 const BLOQUEIO_MS = 5 * 60 * 1000;
@@ -29,7 +30,8 @@ const SCHEMA = [
      defeito TEXT NOT NULL, descricao_problema TEXT NOT NULL, registrado_por TEXT,
      fora_bom INTEGER NOT NULL DEFAULT 0, matricula TEXT, excluido_em TEXT, excluido_por TEXT,
      editado_em TEXT, editado_por TEXT, classe TEXT,
-     status TEXT NOT NULL DEFAULT 'analise', parecer TEXT, analisado_por TEXT, analisado_em TEXT)`,
+     status TEXT NOT NULL DEFAULT 'analise', parecer TEXT, analisado_por TEXT, analisado_em TEXT,
+     material_anterior TEXT)`,
   `CREATE INDEX IF NOT EXISTS idx_scrap_data ON scrap(created_at)`,
   `CREATE INDEX IF NOT EXISTS idx_scrap_posto ON scrap(posto, created_at)`,
   `CREATE INDEX IF NOT EXISTS idx_scrap_projeto ON scrap(projeto, created_at)`,
@@ -56,6 +58,7 @@ const MIGRACOES = [
   'ALTER TABLE scrap ADD COLUMN parecer TEXT',
   'ALTER TABLE scrap ADD COLUMN analisado_por TEXT',
   'ALTER TABLE scrap ADD COLUMN analisado_em TEXT',
+  'ALTER TABLE scrap ADD COLUMN material_anterior TEXT',
 ];
 let schemaOk = null;
 function garantirSchema(env) {
@@ -626,32 +629,72 @@ async function excluirScrap(env, id) {
 async function editarScrap(req, env, id) {
   const b = await req.json().catch(() => null);
   if (!b) return json({ erro: 'Dados inválidos' }, 400);
-  const reg = await env.DB.prepare('SELECT id, excluido_em FROM scrap WHERE id = ?').bind(id).first();
+  const reg = await env.DB.prepare(
+    'SELECT id, excluido_em, material, descricao_material, fora_bom, material_anterior FROM scrap WHERE id = ?'
+  ).bind(id).first();
   if (!reg || reg.excluido_em) return json({ erro: 'Registro não encontrado' }, 404);
 
   const posto = Number(b.posto);
   const quantidade = Number(String(b.quantidade ?? '').replace(',', '.'));
-  const projeto = texto(b.projeto, 40).toUpperCase();
+  let projeto = texto(b.projeto, 40).toUpperCase();
   const defeito = texto(b.defeito, 60);
   const problema = texto(b.descricao_problema, 1000);
-  const unidade = normUn(b.unidade);
-  const classe = normClasse(b.classe);
+  let unidade = normUn(b.unidade);
+  let classe = normClasse(b.classe);
+  let descMat = reg.descricao_material || '';
+  let material = reg.material, foraBom = reg.fora_bom ? 1 : 0;
   if (!Number.isInteger(posto) || posto < 1 || posto > 10) return json({ erro: 'Posto inválido (1 a 10)', campo: 'posto' }, 400);
   if (String(b.unidade ?? '').trim() && !unidade) return json({ erro: 'Unidade inválida. Use letras, ex.: PC, UN, M, KG.', campo: 'unidade' }, 400);
   if (quantidade > 100000) return json({ erro: 'Quantidade alta demais. Confira o valor.', campo: 'quantidade' }, 400);
+
+  // SAP corrigido: busca o código novo na BOM e traz descrição, projeto, unidade e classe
+  if (b.material != null) {
+    const novo = normCodigo(b.material).slice(0, 40);
+    if (!novo) return json({ erro: 'Informe o SAP do material', campo: 'material' }, 400);
+    if (chaveCodigo(novo) !== chaveCodigo(reg.material)) {
+      const idx = await bomIndex(env);
+      const m = idx.porMaterial.get(novo) || idx.porChave.get(chaveCodigo(novo));
+      if (m) {
+        const linha = m.linhas.find((l) => l.projeto === projeto) || (m.linhas.length === 1 ? m.linhas[0] : null);
+        if (!linha) {
+          return json({ erro: `Esse SAP está em mais de um projeto (${m.linhas.map((l) => l.projeto).join(', ')}). Escolha o projeto.`, campo: 'projeto' }, 400);
+        }
+        material = m.material;
+        projeto = linha.projeto;
+        descMat = linha.descricao || m.descricao || '';
+        unidade = normUn(linha.unidade) || unidade;     // SAP mudou: vale o que a BOM diz
+        classe = normClasse(linha.classe) || classe;
+        foraBom = 0;
+      } else {
+        material = novo;
+        foraBom = 1;
+      }
+    }
+  }
+  // Material da BOM usa a descrição da BOM; só o que está fora da BOM tem descrição digitada
+  if (foraBom && b.descricao_material != null) descMat = texto(b.descricao_material, 200);
   if (!projeto) return json({ erro: 'Informe o projeto', campo: 'projeto' }, 400);
   if (!(quantidade > 0)) return json({ erro: 'Quantidade deve ser maior que zero', campo: 'quantidade' }, 400);
   if (!defeito) return json({ erro: 'Escolha o defeito', campo: 'defeito' }, 400);
   if (!problema) return json({ erro: 'Descreva o problema', campo: 'descricao_problema' }, 400);
   if (temPalavrao(problema)) return json({ erro: MSG_PALAVRAO, campo: 'descricao_problema' }, 422);
   if (temPalavrao(projeto)) return json({ erro: MSG_PALAVRAO, campo: 'projeto' }, 422);
+  if (foraBom && temPalavrao(descMat)) return json({ erro: MSG_PALAVRAO, campo: 'descricao_material' }, 422);
 
+  // Guarda o SAP que o operador digitou (só o primeiro; se voltar para ele, a marca some)
+  let anterior = reg.material_anterior || null;
+  if (material !== reg.material) {
+    anterior = reg.material_anterior || reg.material;
+    if (chaveCodigo(anterior) === chaveCodigo(material)) anterior = null;
+  }
   await env.DB.prepare(
-    `UPDATE scrap SET posto = ?, projeto = ?, quantidade = ?, unidade = ?, classe = ?, defeito = ?, descricao_problema = ?,
+    `UPDATE scrap SET material = ?, descricao_material = ?, fora_bom = ?, material_anterior = ?,
+            posto = ?, projeto = ?, quantidade = ?, unidade = ?, classe = ?, defeito = ?, descricao_problema = ?,
             editado_em = ?, editado_por = ? WHERE id = ?`
-  ).bind(posto, projeto, quantidade, unidade, classe, defeito, problema, new Date().toISOString(), 'Administrador', id).run();
+  ).bind(material, descMat, foraBom, anterior, posto, projeto, quantidade, unidade, classe, defeito, problema,
+         new Date().toISOString(), 'Administrador', id).run();
   await env.DB.prepare('INSERT OR IGNORE INTO projeto_extra (projeto) VALUES (?)').bind(projeto).run();
-  return json({ ok: true });
+  return json({ ok: true, material, projeto, descricao_material: descMat, fora_bom: foraBom });
 }
 
 /* ---------------- fotos ---------------- */

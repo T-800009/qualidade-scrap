@@ -7,7 +7,7 @@ Cloudflare Worker + D1, publicado pelo GitHub (igual ao Controle de Produção).
 - **Operador** (`QUALIDADE_PASSWORD`): registra scrap, vê registros e painel, exporta Excel.
   Ao abrir o site, informa matrícula e nome (ficam gravados em cada registro).
 - **Qualidade** (`INSPECAO_PASSWORD`): tudo do operador + **adicionar e remover fotos** dos registros (filtro "Sem foto" em Registros).
-- **Admin** (`ADMIN_PASSWORD`): tudo acima + importar/excluir BOMs + **editar e apagar registros**. Também pode adicionar fotos.
+- **Admin** (`ADMIN_PASSWORD`): tudo acima + importar/excluir BOMs + **editar e apagar registros** (inclusive corrigir o SAP digitado errado). Também pode adicionar fotos.
 
 Registros apagados não somem do banco: ficam marcados com quem apagou e quando.
 Registros editados ficam marcados como "editado", com data e hora da edição.
@@ -77,6 +77,12 @@ Edite ou reenvie os arquivos no GitHub. Cada commit publica sozinho.
 Todo scrap registrado entra como **Em análise**. A Qualidade (ou o admin) dá o parecer na aba **Em análise**:
 Scrap confirmado, Retrabalho, Devolver ao fornecedor ou Liberado para uso, sempre com um texto de parecer.
 Itens com mais de 2 dias aparecem em vermelho. O número na aba mostra quantos estão pendentes.
+
+## Corrigir SAP digitado errado
+Admin → aba **Em análise** ou **Registros** → **Editar registro** → digite o SAP certo.
+- SAP da BOM: descrição, projeto, unidade e classe vêm sozinhos. Se o SAP estiver em mais de um projeto, escolha o projeto.
+- SAP fora da BOM: o registro fica marcado "fora BOM"; preencha projeto e descrição.
+- O registro mostra **SAP corrigido · era X** (o código que o operador digitou) e o Excel tem a coluna "SAP antes da correção".
 
 ## Filtro de palavras
 O site bloqueia palavrões e ofensas em "O que aconteceu", no nome do operador e nos campos de material fora da BOM.
