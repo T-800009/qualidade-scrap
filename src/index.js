@@ -7,7 +7,7 @@ const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><r
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-05 · em análise + classe + unidade';
+const VERSAO = '2026-10-06 · classe pelo material';
 const SESSAO_HORAS = 12;
 const MAX_FALHAS = 10;          // a fábrica sai por um IP só: limite folgado para um erro não travar todo mundo
 const BLOQUEIO_MS = 5 * 60 * 1000;
@@ -345,17 +345,32 @@ async function bomIndex(env) {
         if (!m) { m = { material: r.material, descricao: '', busca: '', linhas: [] }; porMaterial.set(r.material, m); }
         m.linhas.push({ projeto: r.projeto, material: r.material, descricao: r.descricao || '', unidade: normUn(r.unidade), classe: r.classe || '' });
         if (!m.descricao && r.descricao) { m.descricao = r.descricao; m.busca = r.descricao.toUpperCase(); }
-        const pj = projetos.get(r.projeto) || { projeto: r.projeto, itens: 0, atualizado: '' };
+        const pj = projetos.get(r.projeto) || { projeto: r.projeto, itens: 0, comClasse: 0, atualizado: '' };
         pj.itens++;
         if (r.updated_at > pj.atualizado) pj.atualizado = r.updated_at;
         projetos.set(r.projeto, pj);
       }
       const porChave = new Map();
+      // A classe (A/B/C) é do material. Se uma BOM não informa, usa a das outras BOMs do mesmo
+      // código (com ou sem hífen), desde que todas concordem.
+      const grupos = new Map();
       for (const m of porMaterial.values()) {
         m.linhas.sort((a, b) => a.projeto.localeCompare(b.projeto));
         m.chave = chaveCodigo(m.material);
+        if (!grupos.has(m.chave)) grupos.set(m.chave, []);
+        grupos.get(m.chave).push(m);
         if (!porChave.has(m.chave)) porChave.set(m.chave, m);
       }
+      const unica = (lista) => { const u = [...new Set(lista.filter(Boolean))]; return u.length === 1 ? u[0] : ''; };
+      for (const ms of grupos.values()) {
+        const doGrupo = unica(ms.flatMap((m) => m.linhas.map((l) => l.classe)));
+        for (const m of ms) {
+          const proprias = m.linhas.map((l) => l.classe).filter(Boolean);
+          m.classe = proprias.length ? unica(proprias) : doGrupo;
+          for (const l of m.linhas) if (!l.classe) l.classe = m.classe;
+        }
+      }
+      for (const m of porMaterial.values()) for (const l of m.linhas) if (l.classe) projetos.get(l.projeto).comClasse++;
       return {
         versao: v, checado: Date.now(), porMaterial, porChave,
         materiais: [...porMaterial.values()].sort((a, b) => a.material.localeCompare(b.material)),
@@ -400,6 +415,24 @@ async function listarNomesProjetos(env) {
   return json({ projetos: todos });
 }
 
+// Registros sem classe ganham a classe da BOM: primeiro a do mesmo projeto, senão a do material
+async function completarClasses(env) {
+  const idx = await bomIndex(env);
+  const sem = (await env.DB.prepare(
+    "SELECT id, material, projeto FROM scrap WHERE (classe IS NULL OR classe = '') AND excluido_em IS NULL"
+  ).all()).results;
+  const updates = [];
+  for (const r of sem) {
+    const m = idx.porMaterial.get(r.material) || idx.porChave.get(chaveCodigo(r.material));
+    if (!m) continue;
+    const doProjeto = m.linhas.find((l) => l.projeto === r.projeto && l.classe);
+    const cls = normClasse(doProjeto ? doProjeto.classe : m.classe);
+    if (cls) updates.push(env.DB.prepare('UPDATE scrap SET classe = ? WHERE id = ?').bind(cls, r.id));
+  }
+  for (let i = 0; i < updates.length; i += 100) await env.DB.batch(updates.slice(i, i + 100));
+  return updates.length;
+}
+
 async function listarProjetosBom(env) {
   const idx = await bomIndex(env);
   return json({ projetos: idx.projetos });
@@ -431,13 +464,8 @@ async function importarBom(req, env) {
   }
   for (let i = 0; i < lote.length; i += 500) await env.DB.batch(lote.slice(i, i + 500));
   await novaVersaoBom(env);
-  // Registros antigos sem classe ganham a classe da BOM recém-importada
-  await env.DB.prepare(
-    `UPDATE scrap SET classe = (SELECT classe FROM bom WHERE bom.material = scrap.material AND bom.projeto = scrap.projeto)
-      WHERE (classe IS NULL OR classe = '')
-        AND EXISTS (SELECT 1 FROM bom WHERE bom.material = scrap.material AND bom.projeto = scrap.projeto AND bom.classe <> '')`
-  ).run();
-  return json({ ok: true, gravados: lote.length, ignorados });
+  const classificados = await completarClasses(env);
+  return json({ ok: true, gravados: lote.length, ignorados, classificados });
 }
 
 /* ---------------- scrap ---------------- */
@@ -480,6 +508,10 @@ async function criarScrap(req, env) {
     material = linha.material;
     unidade = normUn(unidade);
     classe = normClasse(linha.classe);
+    if (!classe) {
+      const m = (await bomIndex(env)).porChave.get(chaveCodigo(material));
+      classe = normClasse(m?.classe);
+    }
   } else {
     projeto = texto(b.projeto, 40).toUpperCase();
     descMat = texto(b.descricao_material, 200);

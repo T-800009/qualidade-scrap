@@ -1577,8 +1577,10 @@ $('#pAtualizar').addEventListener('click', carregarPainel);
 async function carregarProjetosBom() {
   try {
     const d = await api('/api/bom/projetos');
-    $('#bProjetos').innerHTML = d.projetos.length ? `<table><thead><tr><th>Projeto</th><th style="text-align:right">Itens</th><th>Atualizado</th><th></th></tr></thead><tbody>
-      ${d.projetos.map((p) => `<tr><td><span class="proj">${esc(p.projeto)}</span></td><td class="n">${fmt(p.itens)}</td><td class="hora">${dataHora(p.atualizado)}</td>
+    $('#bProjetos').innerHTML = d.projetos.length ? `<table><thead><tr><th>Projeto</th><th style="text-align:right">Itens</th><th>Com classe</th><th>Atualizado</th><th></th></tr></thead><tbody>
+      ${d.projetos.map((p) => `<tr><td><span class="proj">${esc(p.projeto)}</span></td><td class="n">${fmt(p.itens)}</td>
+        <td style="white-space:nowrap${p.comClasse ? '' : ';color:var(--red-h);font-weight:600'}" title="${p.comClasse ? 'Materiais com classe A/B/C' : 'Importe a BOM com a coluna CLASSIFICAÇÃO'}">${fmt(p.comClasse)} de ${fmt(p.itens)}</td>
+        <td class="hora">${dataHora(p.atualizado)}</td>
         <td style="text-align:right"><button class="btn-del" data-delproj="${esc(p.projeto)}">Excluir</button></td></tr>`).join('')}
       </tbody></table>` : '<div class="vazio"><b>Nenhuma BOM ainda</b>Importe o Excel ao lado para o site reconhecer os materiais.</div>';
   } catch (e) { $('#bProjetos').innerHTML = `<div class="vazio">${esc(e.message)}</div>`; }
@@ -1636,6 +1638,15 @@ function montarColunas() {
     ['#bcCls', /classifica|^classe|^class$/i],
   ];
   for (const [id, re] of cfg) { preencherSelect($(id), ops, 'Nenhuma'); $(id).value = adivinhar(re); }
+  // Sem cabeçalho de classe: procura a coluna cujos valores são A, B ou C
+  if ($('#bcCls').value === '') {
+    const hdr = Number($('#bHdr').value);
+    const amostra = LINHAS.slice(hdr, hdr + 60);
+    for (let c = 0; c < h.length; c++) {
+      const vals = amostra.map((L) => String(L[c] ?? '').trim()).filter(Boolean);
+      if (vals.length >= 3 && vals.filter((v) => /^(classe\s*)?[abc]$/i.test(v)).length / vals.length >= 0.8) { $('#bcCls').value = String(c); break; }
+    }
+  }
   if ($('#bcUn').value !== '' && pareceUnidade(Number($('#bcUn').value)) < 0.6) $('#bcUn').value = '';
   previa();
 }
@@ -1689,13 +1700,13 @@ $('#bImportar').addEventListener('click', async () => {
   btn.disabled = true; prog.style.width = '0';
   try {
     if (subst) for (const p of projs) await api('/api/bom/projeto/' + encodeURIComponent(p), { method: 'DELETE' });
-    let gravados = 0;
+    let gravados = 0, classificados = 0;
     for (let i = 0; i < rows.length; i += 1000) {
       const d = await api('/api/bom/import', { method: 'POST', body: JSON.stringify({ rows: rows.slice(i, i + 1000) }) });
-      gravados += d.gravados;
+      gravados += d.gravados; classificados += d.classificados || 0;
       prog.style.width = Math.min(100, Math.round(((i + 1000) / rows.length) * 100)) + '%';
     }
-    toast(`BOM importada: ${fmt(gravados)} materiais`);
+    toast(`BOM importada: ${fmt(gravados)} materiais` + (classificados ? `. ${fmt(classificados)} registro(s) receberam a classe` : ''));
     CACHE_MAT.clear();
     carregarProjetosBom(); carregarProjetos();
   } catch (e) { toast(e.message, true); }
