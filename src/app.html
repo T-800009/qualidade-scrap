@@ -80,6 +80,8 @@ nav button.ativo::after{content:"";position:absolute;left:14px;right:14px;bottom
 .editar:hover{color:var(--txt);border-color:var(--line2);background:var(--s2)}
 .tag-edit{display:inline-block;margin-top:4px;padding:1px 7px;border-radius:4px;background:var(--s3);color:var(--mut);font-size:11px;font-weight:600}
 .modal-caixa.larga{width:min(560px,100%)}
+.modal-caixa.larga label{margin-bottom:12px}
+.modal-caixa.larga input,.modal-caixa.larga select,.modal-caixa.larga textarea{font-size:15px;padding:11px 12px}
 .modal-caixa .grid2{margin:0}
 .modal-caixa select,.modal-caixa textarea{margin-top:8px}
 .tema{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--s1);color:var(--mut)}
@@ -283,6 +285,10 @@ html[data-tema="claro"] .st-analise{color:#975a16}
 .decisoes [data-dec="retrabalho"]{color:#3b82f6}
 .decisoes [data-dec="devolucao"]{color:#9b6bf2}
 .decisoes [data-dec="liberado"]{color:var(--ok)}
+.editar-sit{display:inline-flex;align-items:center;gap:6px;height:28px;margin-top:8px;padding:0 11px;border-radius:999px;border:1px solid var(--line2);background:none;color:var(--txt);font-size:12px;font-weight:700;white-space:nowrap}
+.editar-sit:hover{border-color:var(--red);color:var(--red-h)}
+.editar-sit svg{width:14px;height:14px}
+.secao-modal{margin:6px 0 12px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;font-weight:700;color:var(--mut)}
 .reabrir{border:0;background:none;color:var(--mut);font-size:12px;font-weight:600;text-decoration:underline;padding:0}
 .an-resumo{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .an-resumo .kpi-mini{padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:var(--s1);min-width:150px}
@@ -371,9 +377,9 @@ td .proj{height:22px;font-size:13px}
 .btn-del:hover{color:var(--red-h);border-color:var(--red-line)}
 
 /* ---------- modal / toast ---------- */
-.modal{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:16px;background:var(--vidro);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fade .18s ease-out}
+.modal{position:fixed;inset:0;z-index:30;display:flex;overflow-y:auto;overscroll-behavior:contain;padding:16px;background:var(--vidro);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fade .18s ease-out}
 @keyframes fade{from{opacity:0}}
-.modal-caixa{width:min(420px,100%);background:var(--s1);border:1px solid var(--line2);border-radius:18px;padding:28px;box-shadow:0 30px 80px var(--sombra);animation:sobe .22s cubic-bezier(.3,.7,.2,1)}
+.modal-caixa{margin:auto;width:min(420px,100%);background:var(--s1);border:1px solid var(--line2);border-radius:18px;padding:28px;box-shadow:0 30px 80px var(--sombra);animation:sobe .22s cubic-bezier(.3,.7,.2,1)}
 @keyframes sobe{from{opacity:0;transform:translateY(12px) scale(.98)}}
 .modal-caixa h2{margin:0;font:600 28px/1.1 var(--cond)}
 .modal-caixa p{margin:8px 0 22px;color:var(--mut)}
@@ -663,7 +669,10 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
       <label>Classe<input id="edClasse" maxlength="10" placeholder="A, B ou C" autocapitalize="characters"></label>
       <label>Defeito<select id="edDefeito"></select></label>
     </div>
-    <label>O que aconteceu<textarea id="edProblema" rows="3" maxlength="1000"></textarea></label>
+    <label>O que aconteceu<textarea id="edProblema" rows="2" maxlength="1000"></textarea></label>
+    <div class="secao-modal">Análise da Qualidade</div>
+    <label>Situação<select id="edStatus"></select></label>
+    <label>Parecer<textarea id="edParecer" rows="2" maxlength="1000" placeholder="Ex.: aguardando o fornecedor retirar a peça"></textarea></label>
     <div class="modal-acoes">
       <button type="button" class="btn" id="edCancelar">Cancelar</button>
       <button type="submit" class="btn-prim" id="edSalvar">Salvar alterações</button>
@@ -675,7 +684,7 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
 <div class="modal" id="modalDec" hidden>
   <form class="modal-caixa larga" id="formDec" autocomplete="off">
     <div class="linha-sinal"></div>
-    <h2>Parecer da Qualidade</h2>
+    <h2 id="decTit">Parecer da Qualidade</h2>
     <p id="decInfo"></p>
     <div class="dec-opcoes" id="decOpcoes">
       <button type="button" data-dec="scrap">Scrap confirmado</button>
@@ -1307,26 +1316,47 @@ function abrirEdicao(r, depois) {
   $('#edClasse').value = r.classe || '';
   $('#edDefeito').value = r.defeito;
   $('#edProblema').value = r.descricao_problema || '';
+  preencherSelect($('#edStatus'), Object.entries(ST_NOME).map(([v, t]) => ({ v, t })));
+  EDIT.status0 = r.status || 'analise';
+  EDIT.parecer0 = r.parecer || '';
+  $('#edStatus').value = EDIT.status0;
+  $('#edParecer').value = EDIT.parecer0;
+  $('#edParecer').disabled = EDIT.status0 === 'analise';
   $('#editInfo').textContent = `Material ${r.material}, registrado por ${r.registrado_por || 'sem nome'} em ${dataHora(r.created_at)}.`;
   document.querySelectorAll('#formEdit .invalido').forEach(limparInvalido);
   $('#modalEdit').hidden = false;
   setTimeout(() => $('#edQtd').focus(), 50);
 }
 $('#edCancelar').addEventListener('click', () => { $('#modalEdit').hidden = true; });
+$('#edStatus').addEventListener('change', () => {
+  const emAnalise = $('#edStatus').value === 'analise';
+  $('#edParecer').disabled = emAnalise;
+  if (emAnalise) limparInvalido($('#edParecer'));
+});
 $('#formEdit').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const status = $('#edStatus').value, parecer = $('#edParecer').value.trim();
+  const mudouAnalise = status !== EDIT.status0 || (status !== 'analise' && parecer !== EDIT.parecer0);
+  if (mudouAnalise && status !== 'analise' && !parecer) return marcarInvalido($('#edParecer'), 'Escreva o parecer da Qualidade.');
+  if (mudouAnalise && !OP) return exigirOperador(true);
   const btn = $('#edSalvar'); btn.disabled = true;
   try {
     await api('/api/scrap/' + EDIT.id, { method: 'PATCH', body: JSON.stringify({
       posto: $('#edPosto').value, projeto: $('#edProjeto').value.trim(), quantidade: $('#edQtd').value, unidade: $('#edUn').value.trim(), classe: $('#edClasse').value.trim(),
       defeito: $('#edDefeito').value, descricao_problema: $('#edProblema').value.trim(),
     }) });
+    if (mudouAnalise) {
+      try {
+        await api(`/api/scrap/${EDIT.id}/analise`, { method: 'POST', body: JSON.stringify({ status, parecer, nome: OP.nome, matricula: OP.matricula }) });
+      } catch (err2) { err2.campo = 'parecer_ed'; throw err2; }
+      contarPendentes();
+    }
     $('#modalEdit').hidden = true;
     toast('Alterações salvas');
     EDIT.depois();
     if ($('#tab-registrar').classList.contains('ativo')) carregarHoje();
   } catch (err) {
-    const alvo = { posto: '#edPosto', projeto: '#edProjeto', quantidade: '#edQtd', unidade: '#edUn', defeito: '#edDefeito', descricao_problema: '#edProblema' }[err.campo];
+    const alvo = { posto: '#edPosto', projeto: '#edProjeto', quantidade: '#edQtd', unidade: '#edUn', defeito: '#edDefeito', descricao_problema: '#edProblema', parecer_ed: '#edParecer' }[err.campo];
     alvo ? marcarInvalido($(alvo), err.message) : toast(err.message, true);
   }
   btn.disabled = false;
@@ -1389,7 +1419,8 @@ async function carregarAnalise() {
           ${!fechado && pode ? `<div class="decisoes">${Object.entries(ST_NOME).filter(([k]) => k !== 'analise')
             .map(([k, n]) => `<button data-dec="${k}" data-id="${r.id}">${n}</button>`).join('')}</div>` : ''}
           ${!fechado && !pode ? '<span class="an-desc">Aguardando parecer da Qualidade</span>' : ''}
-          ${fechado && pode ? `<button class="reabrir" data-reabrir="${r.id}">Voltar para análise</button>` : ''}
+          ${fechado && pode ? `<button class="editar-sit" data-editsit="${r.id}">${ICONE_LAPIS}Editar situação</button>
+            <button class="reabrir" data-reabrir="${r.id}">Voltar para análise</button>` : ''}
         </div>
       </div>`;
     }).join('') : `<div class="painel vazio"><b>${sit === 'analise' ? 'Nenhum item aguardando análise' : 'Nenhum item analisado nesse filtro'}</b>${sit === 'analise' ? 'Tudo em dia.' : 'Mude os filtros.'}</div>`;
@@ -1400,13 +1431,17 @@ $('#aBuscar').addEventListener('click', carregarAnalise);
 $('#aSit').addEventListener('change', carregarAnalise);
 $('#aMat').addEventListener('keydown', (e) => { if (e.key === 'Enter') carregarAnalise(); });
 
-const DEC = { id: null, status: '' };
-function abrirParecer(r, status) {
+const DEC = { id: null, status: '', editando: false };
+function abrirParecer(r, status, editando = false) {
+  if (!r) return;
   if (!OP) return exigirOperador(true);
-  DEC.id = r.id; DEC.status = status;
-  $('#decInfo').textContent = `Material ${r.material} · ${qtdTxt(r.quantidade, r.unidade)} · posto P${r.posto} · registrado por ${r.registrado_por || '–'}.`;
-  document.querySelectorAll('#decOpcoes button').forEach((b) => b.classList.toggle('sel', b.dataset.dec === status));
-  $('#decParecer').value = '';
+  DEC.id = r.id; DEC.status = status && status !== 'analise' ? status : ''; DEC.editando = editando;
+  $('#decTit').textContent = editando ? 'Editar situação' : 'Parecer da Qualidade';
+  $('#decSalvar').textContent = editando ? 'Salvar alterações' : 'Salvar parecer';
+  $('#decInfo').textContent = `Material ${r.material} · ${qtdTxt(r.quantidade, r.unidade)} · posto P${r.posto} · registrado por ${r.registrado_por || '–'}.`
+    + (editando && r.analisado_por ? ` Último parecer: ${r.analisado_por}${r.analisado_em ? ', ' + dataHora(r.analisado_em) : ''}.` : '');
+  document.querySelectorAll('#decOpcoes button').forEach((b) => b.classList.toggle('sel', b.dataset.dec === DEC.status));
+  $('#decParecer').value = editando ? (r.parecer || '') : '';
   limparInvalido($('#decParecer'));
   $('#modalDec').hidden = false;
   setTimeout(() => $('#decParecer').focus(), 50);
@@ -1420,17 +1455,20 @@ $('#decOpcoes').addEventListener('click', (e) => {
 $('#decCancelar').addEventListener('click', () => { $('#modalDec').hidden = true; });
 $('#formDec').addEventListener('submit', async (e) => {
   e.preventDefault();
+  if (!DEC.status) return toast('Escolha a situação', true);
   const btn = $('#decSalvar'); btn.disabled = true;
   try {
     await api(`/api/scrap/${DEC.id}/analise`, { method: 'POST', body: JSON.stringify({
       status: DEC.status, parecer: $('#decParecer').value.trim(), nome: OP.nome, matricula: OP.matricula }) });
     $('#modalDec').hidden = true;
-    toast(`Parecer salvo: ${ST_NOME[DEC.status]}`);
+    toast(DEC.editando ? `Situação atualizada: ${ST_NOME[DEC.status]}` : `Parecer salvo: ${ST_NOME[DEC.status]}`);
     atualizarListas(); contarPendentes();
   } catch (err) { err.campo === 'parecer' ? marcarInvalido($('#decParecer'), err.message) : toast(err.message, true); }
   btn.disabled = false;
 });
 $('#aLista').addEventListener('click', async (e) => {
+  const es = e.target.closest('button[data-editsit]');
+  if (es) return abrirParecer(ANALISE.find((x) => String(x.id) === es.dataset.editsit), ANALISE.find((x) => String(x.id) === es.dataset.editsit)?.status, true);
   const d = e.target.closest('button[data-dec]');
   if (d) return abrirParecer(ANALISE.find((x) => String(x.id) === d.dataset.id), d.dataset.dec);
   const r = e.target.closest('button[data-reabrir]');
@@ -1467,7 +1505,8 @@ async function carregarRegistros() {
         <td class="n">${qtdHtml(r.quantidade, r.unidade)}</td>
         <td class="def">${esc(r.defeito)}</td>
         <td style="min-width:200px">${esc(r.descricao_problema)}${tagEditado(r) ? '<br>' + tagEditado(r) : ''}</td>
-        <td>${stHtml(r.status)}${r.parecer ? `<div class="an-desc" style="max-width:200px">${esc(r.parecer)}</div>` : ''}</td>
+        <td>${stHtml(r.status)}${r.parecer ? `<div class="an-desc" style="max-width:200px">${esc(r.parecer)}</div>` : ''}${podeFoto()
+          ? `<div><button class="editar-sit" data-editsit="${r.id}">${ICONE_LAPIS}${r.status && r.status !== 'analise' ? 'Editar situação' : 'Dar parecer'}</button></div>` : ''}</td>
         <td style="white-space:nowrap">${esc(r.registrado_por)}${r.matricula ? `<br><span class="mut">${esc(r.matricula)}</span>` : ''}</td>
         <td>${ROLE === 'admin' ? acoesAdmin(r) : ''}</td>
       </tr>`).join('')}</tbody></table>`
@@ -1477,6 +1516,8 @@ async function carregarRegistros() {
 $('#rBuscar').addEventListener('click', carregarRegistros);
 $('#rMat').addEventListener('keydown', (e) => { if (e.key === 'Enter') carregarRegistros(); });
 $('#rTabela').addEventListener('click', (e) => {
+  const es = e.target.closest('button[data-editsit]');
+  if (es) { const r = REGISTROS.find((x) => String(x.id) === es.dataset.editsit); return abrirParecer(r, r?.status, !!(r?.status && r.status !== 'analise')); }
   const ed = e.target.closest('button[data-edit]');
   if (ed) return abrirEdicao(REGISTROS.find((x) => String(x.id) === ed.dataset.edit), carregarRegistros);
   const b = e.target.closest('button[data-del]');
