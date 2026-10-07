@@ -2,13 +2,13 @@ import APP_HTML from './app.html';
 import LOGIN_HTML from './login.html';
 import { temPalavrao } from './palavras.js';
 
-// Marca: etiqueta de inspeção branca com o check vermelho, na faixa azul-marinho
-const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#1a365d"/><path fill="#fff" fill-rule="evenodd" d="M24 10h16l10 10v31a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3V20zm8 5.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"/><path d="m22.5 37.5 6.8 6.8 12.7-13" fill="none" stroke="#c8102e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+// Marca WQA (Wesley Qualidade): W, Q e A em traço único; o check vermelho é o rabo do Q e a perna do A
+const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><title>WQA</title><rect width="64" height="64" rx="13" fill="#1a365d"/><g transform="translate(2.6 16.4) scale(.6)"><g fill="none" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 12 40 21 22 30 40 38 12" stroke="#fff"/><circle cx="60" cy="26" r="13" stroke="#fff"/><path d="M86 12 95 40M79.9 31h12.2" stroke="#fff"/><path d="M65 28 77 40 86 12" stroke="#e5484d"/></g></g></svg>';
 
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-07 · PCP + visual novo';
+const VERSAO = '2026-10-07 · posto ½ + logo WQA';
 // A página leva a versão (rodapé e aviso de versão nova)
 const APP_PAGINA = APP_HTML.replaceAll('__VERSAO__', VERSAO);
 const SESSAO_HORAS = 12;
@@ -17,26 +17,41 @@ const BLOQUEIO_MS = 5 * 60 * 1000;
 const COOKIE = 'qs_sess';
 const enc = new TextEncoder();
 
+// Postos da linha, na ordem: ½ ("posto meio", entre o 0 e o 1) e 1 a 10. O ½ fica gravado como 0.5.
+const POSTOS = [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Tabela scrap: as colunas ficam aqui para a criação e a reconstrução usarem a mesma lista
+const COLUNAS_SCRAP = [
+  ['id', 'INTEGER PRIMARY KEY AUTOINCREMENT'],
+  ['created_at', 'TEXT NOT NULL'],
+  ['posto', 'INTEGER NOT NULL CHECK (posto BETWEEN 0 AND 10)'],
+  ['material', 'TEXT NOT NULL'], ['projeto', 'TEXT NOT NULL'], ['descricao_material', 'TEXT'],
+  ['quantidade', 'REAL NOT NULL CHECK (quantidade > 0)'], ['unidade', 'TEXT'],
+  ['defeito', 'TEXT NOT NULL'], ['descricao_problema', 'TEXT NOT NULL'], ['registrado_por', 'TEXT'],
+  ['fora_bom', 'INTEGER NOT NULL DEFAULT 0'], ['matricula', 'TEXT'], ['excluido_em', 'TEXT'], ['excluido_por', 'TEXT'],
+  ['editado_em', 'TEXT'], ['editado_por', 'TEXT'], ['classe', 'TEXT'],
+  ['status', "TEXT NOT NULL DEFAULT 'analise'"], ['parecer', 'TEXT'], ['analisado_por', 'TEXT'], ['analisado_em', 'TEXT'],
+  ['material_anterior', 'TEXT'],
+  ['scrap_feito_em', 'TEXT'], ['scrap_feito_por', 'TEXT'], ['arrumado_em', 'TEXT'], ['arrumado_por', 'TEXT'],
+];
+const sqlTabelaScrap = (nome, seNaoExiste) =>
+  `CREATE TABLE ${seNaoExiste ? 'IF NOT EXISTS ' : ''}${nome} (${COLUNAS_SCRAP.map(([c, t]) => `${c} ${t}`).join(', ')})`;
+const INDICES_SCRAP = [
+  'CREATE INDEX IF NOT EXISTS idx_scrap_data ON scrap(created_at)',
+  'CREATE INDEX IF NOT EXISTS idx_scrap_posto ON scrap(posto, created_at)',
+  'CREATE INDEX IF NOT EXISTS idx_scrap_projeto ON scrap(projeto, created_at)',
+  'CREATE INDEX IF NOT EXISTS idx_scrap_matricula ON scrap(matricula, created_at)',
+  'CREATE INDEX IF NOT EXISTS idx_scrap_status ON scrap(status, created_at)',
+];
+
 // Tabelas criadas automaticamente (não precisa rodar SQL no painel)
 const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS bom (
      projeto TEXT NOT NULL, material TEXT NOT NULL, descricao TEXT, unidade TEXT, classe TEXT,
      updated_at TEXT NOT NULL, PRIMARY KEY (projeto, material))`,
   `CREATE INDEX IF NOT EXISTS idx_bom_material ON bom(material)`,
-  `CREATE TABLE IF NOT EXISTS scrap (
-     id INTEGER PRIMARY KEY AUTOINCREMENT,
-     created_at TEXT NOT NULL,
-     posto INTEGER NOT NULL CHECK (posto BETWEEN 1 AND 10),
-     material TEXT NOT NULL, projeto TEXT NOT NULL, descricao_material TEXT,
-     quantidade REAL NOT NULL CHECK (quantidade > 0), unidade TEXT,
-     defeito TEXT NOT NULL, descricao_problema TEXT NOT NULL, registrado_por TEXT,
-     fora_bom INTEGER NOT NULL DEFAULT 0, matricula TEXT, excluido_em TEXT, excluido_por TEXT,
-     editado_em TEXT, editado_por TEXT, classe TEXT,
-     status TEXT NOT NULL DEFAULT 'analise', parecer TEXT, analisado_por TEXT, analisado_em TEXT,
-     material_anterior TEXT)`,
-  `CREATE INDEX IF NOT EXISTS idx_scrap_data ON scrap(created_at)`,
-  `CREATE INDEX IF NOT EXISTS idx_scrap_posto ON scrap(posto, created_at)`,
-  `CREATE INDEX IF NOT EXISTS idx_scrap_projeto ON scrap(projeto, created_at)`,
+  sqlTabelaScrap('scrap', true),
+  INDICES_SCRAP[0], INDICES_SCRAP[1], INDICES_SCRAP[2],
   `CREATE TABLE IF NOT EXISTS meta (chave TEXT PRIMARY KEY, valor TEXT)`,
   `CREATE TABLE IF NOT EXISTS foto (
      id INTEGER PRIMARY KEY AUTOINCREMENT, scrap_id INTEGER NOT NULL, criado_em TEXT NOT NULL,
@@ -100,6 +115,7 @@ function garantirSchema(env) {
         const col = m.split(' ')[5];
         if (!cols.includes(col)) await env.DB.prepare(m).run();
       }
+      await liberarPostoMeio(env);
       const colsBom = (await env.DB.prepare('PRAGMA table_info(bom)').all()).results.map((c) => c.name);
       if (!colsBom.includes('classe')) await env.DB.prepare('ALTER TABLE bom ADD COLUMN classe TEXT').run();
       const colsFoto = (await env.DB.prepare('PRAGMA table_info(foto)').all()).results.map((c) => c.name);
@@ -114,8 +130,7 @@ function garantirSchema(env) {
       if (faltam.length) await env.DB.batch(faltam.map((m) => env.DB.prepare(m)));
       // Depois das colunas novas: índices e lista de projetos fora da BOM (uma vez só)
       await env.DB.batch([
-        'CREATE INDEX IF NOT EXISTS idx_scrap_matricula ON scrap(matricula, created_at)',
-        'CREATE INDEX IF NOT EXISTS idx_scrap_status ON scrap(status, created_at)',
+        INDICES_SCRAP[3], INDICES_SCRAP[4],
         'CREATE INDEX IF NOT EXISTS idx_foto_avaria ON foto(avaria_id, id)',
         // número RA não se repete entre os relatórios ativos do ano
         'CREATE UNIQUE INDEX IF NOT EXISTS idx_avaria_ra ON avaria(ano, numero) WHERE excluido_em IS NULL',
@@ -139,6 +154,37 @@ function garantirSchema(env) {
     })().catch((e) => { schemaOk = null; throw e; });
   }
   return schemaOk;
+}
+
+// Posto ½: a tabela scrap antiga só aceita posto de 1 a 10 (CHECK), e o SQLite não deixa mudar um CHECK.
+// Então a tabela é refeita uma vez, numa transação só: cópia de todas as linhas com os mesmos ids
+// (as fotos e os relatórios continuam ligados), troca de nome e índices de volta.
+// Se der errado, o site segue funcionando como antes (só o posto ½ não grava) e tenta de novo depois.
+let postoMeioOk = false;
+async function liberarPostoMeio(env) {
+  const t = await env.DB.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'scrap'").first();
+  // qualquer CHECK de posto que não seja o novo (0 a 10) impede o ½
+  const sql = t?.sql || '';
+  if (!/CHECK\s*\(\s*posto\b/i.test(sql) || /CHECK\s*\(\s*posto\s+BETWEEN\s+0\s+AND\s+10\s*\)/i.test(sql)) { postoMeioOk = true; return; }
+  try {
+    const antigas = (await env.DB.prepare('PRAGMA table_info(scrap)').all()).results;
+    const novas = COLUNAS_SCRAP.map(([c]) => c);
+    // coluna que só exista na tabela antiga vai junto, com o mesmo tipo
+    const extras = antigas.filter((c) => !novas.includes(c.name)).map((c) => `ALTER TABLE scrap_novo ADD COLUMN "${c.name.replace(/"/g, '')}" ${String(c.type || '').replace(/[^\w ()]/g, '')}`);
+    const cols = antigas.map((c) => `"${c.name.replace(/"/g, '')}"`).join(', ');
+    await env.DB.batch([
+      'DROP TABLE IF EXISTS scrap_novo',
+      sqlTabelaScrap('scrap_novo'),
+      ...extras,
+      `INSERT INTO scrap_novo (${cols}) SELECT ${cols} FROM scrap`,
+      'DROP TABLE scrap',
+      'ALTER TABLE scrap_novo RENAME TO scrap',
+      ...INDICES_SCRAP,
+    ].map((q) => env.DB.prepare(q)));
+    postoMeioOk = true;
+  } catch (e) {
+    console.error('posto ½: a tabela scrap não foi refeita', e);
+  }
 }
 
 export default {
@@ -687,7 +733,9 @@ async function criarScrap(req, env) {
   const por = texto(b.registrado_por, 60);
   const matricula = texto(b.matricula, 20).toUpperCase();
 
-  if (!Number.isInteger(posto) || posto < 1 || posto > 10) return json({ erro: 'Selecione o posto (1 a 10)' }, 400);
+  if (!POSTOS.includes(posto)) return json({ erro: 'Selecione o posto (½ ou 1 a 10)' }, 400);
+  if (posto === 0.5 && !postoMeioOk) await liberarPostoMeio(env);
+  if (posto === 0.5 && !postoMeioOk) return json({ erro: 'O posto ½ ainda não foi liberado no banco. Tente de novo em instantes.' }, 503);
   if (!material) return json({ erro: 'Informe o material' }, 400);
   if (!(quantidade > 0)) return json({ erro: 'Quantidade deve ser maior que zero' }, 400);
   if (quantidade > 100000) return json({ erro: 'Quantidade alta demais. Confira o valor.' }, 400);
@@ -884,7 +932,9 @@ async function editarScrap(req, env, id) {
   let classe = normClasse(b.classe);
   let descMat = reg.descricao_material || '';
   let material = reg.material, foraBom = reg.fora_bom ? 1 : 0;
-  if (!Number.isInteger(posto) || posto < 1 || posto > 10) return json({ erro: 'Posto inválido (1 a 10)', campo: 'posto' }, 400);
+  if (!POSTOS.includes(posto)) return json({ erro: 'Posto inválido (½ ou 1 a 10)', campo: 'posto' }, 400);
+  if (posto === 0.5 && !postoMeioOk) await liberarPostoMeio(env);
+  if (posto === 0.5 && !postoMeioOk) return json({ erro: 'O posto ½ ainda não foi liberado no banco. Tente de novo em instantes.', campo: 'posto' }, 503);
   if (String(b.unidade ?? '').trim() && !unidade) return json({ erro: 'Unidade inválida. Use letras, ex.: PC, UN, M, KG.', campo: 'unidade' }, 400);
   if (quantidade > 100000) return json({ erro: 'Quantidade alta demais. Confira o valor.', campo: 'quantidade' }, 400);
 

@@ -14,7 +14,7 @@
     document.documentElement.setAttribute('data-tema', t);
   })();
 </script>
-<title>Qualidade · Scrap e avarias</title>
+<title>WQA · Scrap e avarias</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -73,10 +73,11 @@ svg{flex:none}
 
 /* ---------- topo: faixa azul-marinho ---------- */
 .topo{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:22px;height:56px;padding:0 24px;background:var(--topo);color:var(--topo-txt);border-bottom:1px solid var(--topo-borda)}
-.marca{display:flex;align-items:center;gap:10px;min-width:max-content;color:var(--topo-txt)}
-.marca .logo{width:28px;height:28px}
-.marca strong{display:block;font:600 16px/1.1 var(--sans);letter-spacing:-.005em}
-.marca small{display:block;color:var(--topo-mut);font-size:12px;line-height:1.2;margin-top:2px}
+.marca{display:flex;align-items:center;gap:12px;min-width:max-content;color:var(--topo-txt)}
+.marca .logo{width:auto;height:23px}
+.marca>div{padding-left:12px;border-left:1px solid var(--topo-linha)}
+.marca strong{display:block;font:600 14px/1.15 var(--sans);letter-spacing:-.005em}
+.marca small{display:block;color:var(--topo-mut);font-size:11.5px;line-height:1.2;margin-top:2px}
 nav{display:flex;gap:2px;height:100%;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
 nav button{position:relative;height:100%;padding:0 13px;border:0;background:none;color:var(--topo-mut);font-weight:500;font-size:14px;white-space:nowrap;transition:color .15s,background-color .15s}
@@ -126,10 +127,11 @@ html[data-tema="claro"] .painel{box-shadow:0 1px 2px rgba(21,35,58,.05)}
 .linha-cab{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:16px}
 .linha-cab h2{margin:0;font-size:15px;font-weight:600}
 .linha-cab span{color:var(--mut);font-size:13px}
-.linha{position:relative;display:grid;grid-template-columns:repeat(10,1fr);--prog:0}
-.linha::before,.linha::after{content:"";position:absolute;top:25px;left:5%;height:2px;border-radius:2px}
-.linha::before{right:5%;background:var(--line)}
-.linha::after{width:calc(90% * var(--prog));background:var(--ac);transition:width .35s cubic-bezier(.3,.7,.2,1)}
+.linha{--n:11;position:relative;display:grid;grid-template-columns:repeat(var(--n),1fr);--prog:0}
+.linha::before,.linha::after{content:"";position:absolute;top:25px;left:calc(50% / var(--n));height:2px;border-radius:2px}
+.linha::before{right:calc(50% / var(--n));background:var(--line)}
+.linha::after{width:calc((100% - 100% / var(--n)) * var(--prog));background:var(--ac);transition:width .35s cubic-bezier(.3,.7,.2,1)}
+.posto.meio .no{font-size:22px}
 .posto{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:7px;padding:0;border:0;background:none;color:var(--mut)}
 .posto .no{position:relative;display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--s1);border:1.5px solid var(--line2);
   font:600 20px/1 var(--cond);color:var(--txt);font-variant-numeric:tabular-nums;transition:transform .15s,background .2s,border-color .2s,box-shadow .2s}
@@ -398,7 +400,7 @@ td .proj{height:22px;font-size:12.5px}
 .bf{height:100%;border-radius:2px;background:var(--ac);opacity:.55}
 .bar.lider .bf{background:var(--red);opacity:1}
 .bv{text-align:right;font:600 15px/1 var(--cond);font-variant-numeric:tabular-nums}
-.colunas{display:grid;grid-template-columns:repeat(10,1fr);gap:10px;align-items:end;height:260px;padding-top:10px}
+.colunas{display:grid;grid-template-columns:repeat(11,1fr);gap:10px;align-items:end;height:260px;padding-top:10px}
 .coluna{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;height:100%}
 .coluna .v{font:600 14px/1 var(--cond);font-variant-numeric:tabular-nums}
 .coluna .c{width:100%;max-width:36px;border-radius:3px 3px 0 0;background:var(--ac);opacity:.5;min-height:3px;transition:height .4s cubic-bezier(.3,.7,.2,1)}
@@ -409,7 +411,7 @@ td .proj{height:22px;font-size:12.5px}
 .critico-box small{color:var(--mut);font-size:13px;font-weight:600}
 .critico-frase{margin:8px 0 0;max-width:68ch;font:500 21px/1.4 var(--sans);letter-spacing:-.005em}
 .critico-frase b{font-weight:600;color:var(--red-h)}
-.calor{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:18px}
+.calor{display:grid;grid-template-columns:repeat(11,1fr);gap:6px;margin-top:18px}
 .calor div{display:flex;flex-direction:column;gap:6px;align-items:center}
 .calor span{display:block;width:100%;height:12px;border-radius:3px;background:var(--s3)}
 .calor em{font:600 12.5px/1 var(--cond);font-style:normal;color:var(--mut)}
@@ -908,7 +910,7 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
   .cab-pag h1{font-size:23px}
   .cab-pag p{font-size:14px}
   .linha-wrap{padding:16px 12px}
-  .linha{grid-template-columns:repeat(5,1fr);row-gap:16px}
+  .linha{grid-template-columns:repeat(6,1fr);row-gap:16px}
   .linha::before,.linha::after{display:none}
   .form{padding:18px 16px}
   .grid2{grid-template-columns:1fr}
@@ -927,8 +929,8 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
 <body data-aba="registrar">
 <header class="topo">
   <div class="marca">
-    <svg class="logo" aria-hidden="true" viewBox="0 0 32 32"><path fill="#fff" fill-rule="evenodd" d="M11 3h10l5 5v19.5a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 6 27.5V8zm5 3.2a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6z"/><path d="m10.6 18.4 3.7 3.7 7.3-7.5" fill="none" stroke="#c8102e" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <div><strong>Qualidade</strong><small>Scrap e avarias</small></div>
+    <svg class="logo" viewBox="0 7 100 38" role="img" aria-label="WQA"><g fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 12 40 21 22 30 40 38 12" stroke="currentColor"/><circle cx="60" cy="26" r="13" stroke="currentColor"/><path d="M86 12 95 40M79.9 31h12.2" stroke="currentColor"/><path d="M65 28 77 40 86 12" stroke="#e5484d"/></g></svg>
+    <div><strong>Wesley Qualidade</strong><small>Scrap e avarias</small></div>
   </div>
   <nav id="nav">
     <button data-tab="registrar" class="ativo">Registrar</button>
@@ -1170,7 +1172,7 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
           <label>QUANTO detectou?<input id="avQuanto" maxlength="120"></label>
         </div>
         <datalist id="avComoLista"><option value="Inspeção de linha"><option value="Inspeção de recebimento"><option value="Montagem no posto"><option value="Auditoria de qualidade"></datalist>
-        <datalist id="avOndeLista"><option value="Posto 01"><option value="Posto 02"><option value="Posto 03"><option value="Posto 04"><option value="Posto 05"><option value="Posto 06"><option value="Posto 07"><option value="Posto 08"><option value="Posto 09"><option value="Posto 10"><option value="Recebimento"><option value="Almoxarifado"></datalist>
+        <datalist id="avOndeLista"><option value="Posto ½"><option value="Posto 01"><option value="Posto 02"><option value="Posto 03"><option value="Posto 04"><option value="Posto 05"><option value="Posto 06"><option value="Posto 07"><option value="Posto 08"><option value="Posto 09"><option value="Posto 10"><option value="Recebimento"><option value="Almoxarifado"></datalist>
       </details>
 
       <details class="av-sec" id="avSecRast">
@@ -1339,7 +1341,7 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
   </section>
 </main>
 <footer class="rodape">
-  <span><b>Qualidade</b>, sistema de scrap e avarias da linha</span>
+  <span><b>WQA</b> · Wesley Qualidade, sistema de scrap e avarias da linha</span>
   <span>Versão __VERSAO__</span>
   <span class="assinatura">Desenvolvido por <b>Wesley</b>, PCP</span>
 </footer>
@@ -1516,6 +1518,12 @@ const store = (tipo) => ({
 const ls = store('localStorage'), ss = store('sessionStorage');
 const hojeStr = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 const pad = (n) => String(n).padStart(2, '0');
+// Postos da linha, na ordem: ½ ("posto meio", entre o 0 e o 1) e 1 a 10. O ½ é gravado como 0.5.
+const POSTOS = [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const nomePosto = (p) => (Number(p) === 0.5 ? '½' : String(p));
+const tagPosto = (p) => 'P' + nomePosto(p);
+const ondePosto = (p) => 'Posto ' + (Number(p) === 0.5 ? '½' : pad(p));
+const OPCOES_POSTO = POSTOS.map((p) => ({ v: p, t: 'Posto ' + nomePosto(p) }));
 const dtLocal = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 const inicioHojeISO = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d.toISOString(); };
 // valores dos campos de data/hora -> ISO (o "até" inclui o minuto inteiro)
@@ -1744,19 +1752,20 @@ $('#opChip').addEventListener('click', async () => {
 });
 
 /* ---------- postos ---------- */
-const est = { posto: Number(ls.get('qs_posto')) || null, busca: null, projeto: null, foraBom: false, seq: 0, porPosto: {}, criticos: [], bump: null };
+const est = { posto: POSTOS.includes(Number(ls.get('qs_posto'))) ? Number(ls.get('qs_posto')) : null, busca: null, projeto: null, foraBom: false, seq: 0, porPosto: {}, criticos: [], bump: null };
 const ICONE_AVISO = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0ZM12 9v4M12 17h.01"/></svg>';
 
 function montarPostos() {
-  $('#postos').style.setProperty('--prog', est.posto ? (est.posto - 1) / 9 : 0);
-  $('#postos').innerHTML = Array.from({ length: 10 }, (_, i) => i + 1).map((n) => {
+  const i = POSTOS.indexOf(est.posto);
+  $('#postos').style.setProperty('--prog', i > 0 ? i / (POSTOS.length - 1) : 0);
+  $('#postos').innerHTML = POSTOS.map((n) => {
     const q = est.porPosto[n];
-    const cls = (est.posto === n ? 'sel' : est.posto && n < est.posto ? 'passou' : '') + (est.criticos.includes(n) ? ' critico' : '');
-    return `<button class="posto ${cls}" data-p="${n}" aria-pressed="${est.posto === n}">
-      <span class="no">${n}${q ? `<span class="qt${est.bump === n ? ' bump' : ''}" title="${q} registro(s) hoje">${q}</span>` : ''}</span>
-      <span class="nome">Posto ${n}</span></button>`;
+    const cls = (est.posto === n ? 'sel' : est.posto && n < est.posto ? 'passou' : '') + (est.criticos.includes(n) ? ' critico' : '') + (n === 0.5 ? ' meio' : '');
+    return `<button class="posto ${cls}" data-p="${n}" aria-pressed="${est.posto === n}"${n === 0.5 ? ' title="Posto ½ (meio), entre o posto 0 e o posto 1"' : ''}>
+      <span class="no">${nomePosto(n)}${q ? `<span class="qt${est.bump === n ? ' bump' : ''}" title="${q} registro(s) hoje">${q}</span>` : ''}</span>
+      <span class="nome">Posto ${nomePosto(n)}</span></button>`;
   }).join('');
-  $('#hojeTit').textContent = est.posto ? `Hoje no posto ${est.posto}` : 'Hoje';
+  $('#hojeTit').textContent = est.posto ? `Hoje no posto ${nomePosto(est.posto)}` : 'Hoje';
   est.bump = null;
 }
 
@@ -1774,10 +1783,10 @@ async function carregarHoje() {
     const d = await api('/api/stats?' + qs({ de: inicioHojeISO() }));
     est.porPosto = Object.fromEntries(d.porPosto.map((p) => [p.posto, p.registros]));
     // Posto crítico: 5+ registros hoje e pelo menos o dobro da média da linha
-    const media = d.total.registros / 10;
+    const media = d.total.registros / POSTOS.length;
     est.criticos = d.porPosto.filter((p) => p.registros >= 5 && p.registros >= media * 2).map((p) => p.posto);
     $('#alertaLinha').innerHTML = est.criticos.length ? `<div class="alerta-linha" role="status">${ICONE_AVISO}<div>${
-      est.criticos.map((n) => `<b>Posto ${n}</b> com ${est.porPosto[n]} registros hoje, ${(est.porPosto[n] / media).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}× a média da linha.`).join('<br>')
+      est.criticos.map((n) => `<b>Posto ${nomePosto(n)}</b> com ${est.porPosto[n]} registros hoje, ${(est.porPosto[n] / media).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}× a média da linha.`).join('<br>')
     } Vale verificar a causa.</div></div>` : '';
     $('#linhaInfo').textContent = d.total.registros
       ? `${fmt(d.total.registros)} registro(s) de scrap hoje na linha`
@@ -1928,7 +1937,7 @@ async function prepararFoto(arquivo, info) {
   g.fillStyle = '#fff';
   g.font = `600 ${fs}px "IBM Plex Sans", system-ui, sans-serif`;
   g.textBaseline = 'middle';
-  const partes = [(info.em || new Date()).toLocaleString('pt-BR'), info.posto ? 'Posto ' + info.posto : info.rotulo,
+  const partes = [(info.em || new Date()).toLocaleString('pt-BR'), info.posto ? 'Posto ' + nomePosto(info.posto) : info.rotulo,
     info.material, info.projeto, OP ? 'Qualidade: ' + OP.nome : ''].filter(Boolean);
   g.fillText(partes.join('   ·   '), Math.round(fs * 1), h - faixa / 2, w - fs * 2);
   return c.toDataURL('image/jpeg', 0.78);
@@ -2121,7 +2130,7 @@ $('#salvar').addEventListener('click', async () => {
   btn.disabled = true;
   try {
     const r = await api('/api/scrap', { method: 'POST', body: JSON.stringify(body) });
-    toast(`Scrap registrado no posto ${est.posto}, projeto ${r.projeto}`);
+    toast(`Scrap registrado no posto ${nomePosto(est.posto)}, projeto ${r.projeto}`);
     est.bump = est.posto;
     $('#mat').value = ''; $('#qtd').value = '1'; $('#problema').value = ''; marcarDefeito('');
     limparInvalido($('#problema'));
@@ -2190,7 +2199,7 @@ $('#ultimos').addEventListener('click', (e) => {
 });
 
 /* ---------- edição (admin) ---------- */
-preencherSelect($('#edPosto'), Array.from({ length: 10 }, (_, i) => ({ v: i + 1, t: 'Posto ' + (i + 1) })));
+preencherSelect($('#edPosto'), OPCOES_POSTO);
 let EDIT = null;
 const chaveCod = (s) => String(s ?? '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 function abrirEdicao(r, depois) {
@@ -2212,7 +2221,7 @@ function abrirEdicao(r, depois) {
   $('#edStatus').value = EDIT.status0;
   $('#edParecer').value = EDIT.parecer0;
   $('#edParecer').disabled = EDIT.status0 === 'analise';
-  $('#editInfo').textContent = `Registrado por ${r.registrado_por || 'sem nome'}${r.matricula ? ' (' + r.matricula + ')' : ''} em ${dataHora(r.created_at)}, posto P${r.posto}.`;
+  $('#editInfo').textContent = `Registrado por ${r.registrado_por || 'sem nome'}${r.matricula ? ' (' + r.matricula + ')' : ''} em ${dataHora(r.created_at)}, posto ${tagPosto(r.posto)}.`;
   $('#modalEdit').hidden = false;
   setTimeout(() => $('#edMat').focus(), 50);
 }
@@ -2365,7 +2374,7 @@ $('#formEdit').addEventListener('submit', async (e) => {
 
 /* ---------- em análise ---------- */
 const PRAZO_DIAS = 2;   // acima disso o item aparece como atrasado
-preencherSelect($('#aPosto'), Array.from({ length: 10 }, (_, i) => ({ v: i + 1, t: 'Posto ' + (i + 1) })), 'Todos');
+preencherSelect($('#aPosto'), OPCOES_POSTO, 'Todos');
 let ANALISE = [];
 
 async function contarPendentes() {
@@ -2409,7 +2418,7 @@ async function carregarAnalise() {
         <div>
           <div class="an-top"><span class="cod">${esc(r.material)}</span><span class="proj">${esc(r.projeto)}</span>${clsHtml(r.classe)}${r.fora_bom ? '<span class="proj fora">fora BOM</span>' : ''}${stHtml(r.status)}${tagSap(r)}${tagAvaria(r)}</div>
           <p class="an-desc">${esc(r.descricao_material)}</p>
-          <div class="an-meta"><span>Posto <b>P${r.posto}</b></span><span>Quantidade <b>${esc(qtdTxt(r.quantidade, r.unidade))}</b></span>
+          <div class="an-meta"><span>Posto <b>${tagPosto(r.posto)}</b></span><span>Quantidade <b>${esc(qtdTxt(r.quantidade, r.unidade))}</b></span>
             <span>Defeito <b>${esc(r.defeito)}</b></span><span>Registrado por <b>${esc(r.registrado_por || '–')}</b> em ${dataHora(r.created_at)}</span></div>
           <p class="an-problema">${esc(r.descricao_problema)}</p>
           ${fechado ? `<div class="an-parecer">${esc(r.parecer || '')}<small>${esc(r.analisado_por || '')} · ${r.analisado_em ? dataHora(r.analisado_em) : ''}</small></div>` : ''}
@@ -2442,7 +2451,7 @@ function abrirParecer(r, status, editando = false) {
   DEC.id = r.id; DEC.status = status && status !== 'analise' ? status : ''; DEC.editando = editando;
   $('#decTit').textContent = editando ? 'Editar situação' : 'Parecer da Qualidade';
   $('#decSalvar').textContent = editando ? 'Salvar alterações' : 'Salvar parecer';
-  $('#decInfo').textContent = `Material ${r.material} · ${qtdTxt(r.quantidade, r.unidade)} · posto P${r.posto} · registrado por ${r.registrado_por || '–'}.`
+  $('#decInfo').textContent = `Material ${r.material} · ${qtdTxt(r.quantidade, r.unidade)} · posto ${tagPosto(r.posto)} · registrado por ${r.registrado_por || '–'}.`
     + (editando && r.analisado_por ? ` Último parecer: ${r.analisado_por}${r.analisado_em ? ', ' + dataHora(r.analisado_em) : ''}.` : '');
   document.querySelectorAll('#decOpcoes button').forEach((b) => b.classList.toggle('sel', b.dataset.dec === DEC.status));
   $('#decParecer').value = editando ? (r.parecer || '') : '';
@@ -2604,7 +2613,7 @@ function avisoAvaria(lista) {
     lista.length > 3 ? `<button type="button" class="tag-av" data-av="${lista.map((a) => a.id).join(',')}">ver os ${lista.length}</button>` : ''}</div></div>`;
 }
 function linhaScrapAv(s) {
-  return `<li><span class="posto-tag">P${esc(s.posto)}</span> <b>${esc(qtdTxt(s.quantidade, s.unidade))}</b> · ${esc(s.defeito)}`
+  return `<li><span class="posto-tag">${esc(tagPosto(s.posto))}</span> <b>${esc(qtdTxt(s.quantidade, s.unidade))}</b> · ${esc(s.defeito)}`
     + (s.descricao_problema ? ` · “${esc(s.descricao_problema)}”` : '')
     + ` · ${esc(s.registrado_por || '')}${s.matricula ? ' (' + esc(s.matricula) + ')' : ''} · ${dataHora(s.created_at)}${stHtml(s.status)}</li>`;
 }
@@ -2789,7 +2798,7 @@ function textosAuto() {
     avPorque: tipo ? tipo[1] : '',
     avQuem: ult ? `${ult.registrado_por || 'Operador'} - Operador de produção` : (OP ? `${OP.nome} - Qualidade` : ''),
     avComo: ult || !rec ? 'Inspeção de linha' : 'Inspeção de recebimento',
-    avOnde: ult ? `Posto ${pad(ult.posto)}` : '',
+    avOnde: ult ? ondePosto(ult.posto) : '',
     avQuando: ult ? `${dataBR(ult.created_at)} às ${hora(ult.created_at)}` : dataBR(data),
     avQuanto: quantoTxt(qtd, m.unidade),
     avA1Desc: `${CONTENCAO[AV.sit] || CONTENCAO.analise} ${ENVIO_AREAS}`,
@@ -3573,8 +3582,8 @@ async function montarPdfRA(PDFLib, d, img) {
   doc.setSubject(textoPdf(`${d.material} - ${d.descricao || ''}`));
   doc.setAuthor(textoPdf(d.responsavel || 'Qualidade'));
   doc.setKeywords(['Relatório de avarias', RA_PDF.form, d.ra, d.material].map(textoPdf));
-  doc.setCreator('Qualidade - Registro de scrap');
-  doc.setProducer('Qualidade - Registro de scrap');
+  doc.setCreator('WQA - Wesley Qualidade');
+  doc.setProducer('WQA - Wesley Qualidade');
   doc.setLanguage('pt-BR');
   doc.setCreationDate(new Date());
   return doc.save();
@@ -3941,7 +3950,7 @@ const primeiroNome = (s) => String(s || '').replace(/\s*\(.*\)\s*$/, '').trim().
 const diaCurto = (iso) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
 const normBusca = (s) => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
 
-preencherSelect($('#rPosto'), Array.from({ length: 10 }, (_, i) => ({ v: i + 1, t: 'Posto ' + (i + 1) })), 'Todos');
+preencherSelect($('#rPosto'), OPCOES_POSTO, 'Todos');
 preencherSelect($('#rDefeito'), DEFEITOS, 'Todos');
 
 // Faixa "andamento" (Registros e Painel): total + as quatro etapas, com a proporção embaixo
@@ -3988,7 +3997,7 @@ function filtrarRegistros() {
     if (!termo) return true;
     if (termoCod.length >= 3 && chaveCod(r.material).includes(termoCod)) return true;
     return normBusca([r.material, r.descricao_material, r.projeto, r.defeito, r.descricao_problema, r.parecer,
-      r.registrado_por, r.matricula, ST_NOME[r.status || 'analise'], 'P' + r.posto, ...(r.avarias || []).map((a) => a.ra)].join(' | ')).includes(termo);
+      r.registrado_por, r.matricula, ST_NOME[r.status || 'analise'], tagPosto(r.posto), r.posto === 0.5 ? 'posto meio' : '', ...(r.avarias || []).map((a) => a.ra)].join(' | ')).includes(termo);
   });
   const cont = { analise: 0, aguardando_scrap: 0, falta_arrumar: 0, resolvido: 0 };
   for (const r of base) cont[etapaDe(r)]++;
@@ -4014,9 +4023,9 @@ function linhaRegistro(r) {
   const tags = [r.fora_bom ? '<span class="proj fora">fora da BOM</span>' : '', tagSap(r), tagAvaria(r, true), botaoFotos(r)].filter(Boolean).join('');
   return `<tr data-id="${r.id}"${sel ? ' class="sel"' : ''}>
     ${pode ? `<td class="c-ck"><input type="checkbox" data-sel="${r.id}" aria-label="Selecionar ${esc(r.material)}"${sel ? ' checked' : ''}></td>` : ''}
-    <td class="c-data"><span class="r-dt">${diaCurto(r.created_at)}</span><span class="r-hr">${hora(r.created_at)}</span><span class="posto-tag" title="Posto ${r.posto}">P${r.posto}</span></td>
+    <td class="c-data"><span class="r-dt">${diaCurto(r.created_at)}</span><span class="r-hr">${hora(r.created_at)}</span><span class="posto-tag" title="Posto ${nomePosto(r.posto)}">${tagPosto(r.posto)}</span></td>
     <td class="c-mat"><span class="cod">${esc(r.material)}</span><span class="desc">${esc(r.descricao_material)}</span>
-      <div class="r-meta-cel"><span>${dataHora(r.created_at)}</span><span>P${r.posto}</span><b>${esc(r.projeto)}</b>${r.classe ? `<span>Classe ${esc(r.classe)}</span>` : ''}<b>${esc(qtdTxt(r.quantidade, r.unidade))}</b><span>${esc(r.registrado_por || '')}</span></div>
+      <div class="r-meta-cel"><span>${dataHora(r.created_at)}</span><span>${tagPosto(r.posto)}</span><b>${esc(r.projeto)}</b>${r.classe ? `<span>Classe ${esc(r.classe)}</span>` : ''}<b>${esc(qtdTxt(r.quantidade, r.unidade))}</b><span>${esc(r.registrado_por || '')}</span></div>
       ${tags ? `<div class="r-tags">${tags}</div>` : ''}</td>
     <td class="c-proj"><span class="proj" title="${esc(r.projeto)}">${esc(r.projeto)}</span><div>${clsHtml(r.classe, true)}</div></td>
     <td class="c-qtd n">${qtdHtml(r.quantidade, r.unidade)}</td>
@@ -4200,7 +4209,7 @@ $('#rExport').addEventListener('click', () => {
   if (!FILTRADOS.length) return toast('Nada para exportar com esses filtros', true);
   const sn = (v) => (v ? 'Sim' : 'Não');
   const dados = FILTRADOS.map((r) => ({
-    'Data/hora': dataHora(r.created_at), Posto: 'P' + r.posto, Material: r.material, 'SAP antes da correção': r.material_anterior || '', 'Descrição': r.descricao_material,
+    'Data/hora': dataHora(r.created_at), Posto: tagPosto(r.posto), Material: r.material, 'SAP antes da correção': r.material_anterior || '', 'Descrição': r.descricao_material,
     Projeto: r.projeto, Classe: r.classe || '', Quantidade: r.quantidade, Unidade: unOk(r.unidade), Defeito: r.defeito,
     'O que aconteceu': r.descricao_problema, Operador: r.registrado_por, 'Matrícula': r.matricula || '', 'Fora da BOM': r.fora_bom ? 'SIM' : '', Situação: ST_NOME[r.status || 'analise'], Parecer: r.parecer || '', 'Analisado por': r.analisado_por || '', 'Analisado em': r.analisado_em ? dataHora(r.analisado_em) : '',
     Andamento: ETAPAS.find((e) => e.id === etapaDe(r)).t,
@@ -4266,7 +4275,7 @@ async function carregarPainel() {
     $('#kpis').innerHTML = `
       <div class="kpi"><small>Registros de scrap</small><div>${fmt(tot)}</div>${variacao(tot, a?.total.registros)}</div>
       <div class="kpi"><small>Quantidade total</small><div>${fmt(d.total.quantidade)}</div>${variacao(d.total.quantidade, a?.total.quantidade)}</div>
-      <div class="kpi"><small>Posto com mais scrap</small><div>${topPosto ? 'P' + topPosto.posto : '–'}</div>${topPosto ? `<span class="var">${pct(topPosto.registros)} dos registros</span>` : ''}</div>
+      <div class="kpi"><small>Posto com mais scrap</small><div>${topPosto ? tagPosto(topPosto.posto) : '–'}</div>${topPosto ? `<span class="var">${pct(topPosto.registros)} dos registros</span>` : ''}</div>
       <div class="kpi"><small>Projeto com mais scrap</small><div>${topProj ? esc(topProj.projeto) : '–'}</div>${topProj ? `<span class="var">${pct(topProj.registros)} dos registros</span>` : ''}</div>`;
 
     // andamento do período (mesma faixa da tela Registros): clicar abre os registros daquela etapa
@@ -4277,25 +4286,25 @@ async function carregarPainel() {
     $('#critico').hidden = !tot;
     if (tot) {
       const maxP = Math.max(1, ...d.porPosto.map((p) => p.registros));
-      const calor = Array.from({ length: 10 }, (_, i) => {
-        const q = (d.porPosto.find((p) => p.posto === i + 1) || {}).registros || 0;
+      const calor = POSTOS.map((n) => {
+        const q = (d.porPosto.find((p) => p.posto === n) || {}).registros || 0;
         const forca = q / maxP;
-        return `<div class="${topPosto && topPosto.posto === i + 1 ? 'lider' : ''}" title="Posto ${i + 1}: ${q} registro(s)">
-          <span style="${q ? `background:color-mix(in srgb, var(--red) ${Math.round(15 + forca * 85)}%, transparent)` : ''}"></span><em>P${i + 1}</em></div>`;
+        return `<div class="${topPosto && topPosto.posto === n ? 'lider' : ''}" title="Posto ${nomePosto(n)}: ${q} registro(s)">
+          <span style="${q ? `background:color-mix(in srgb, var(--red) ${Math.round(15 + forca * 85)}%, transparent)` : ''}"></span><em>${tagPosto(n)}</em></div>`;
       }).join('');
       $('#critico').innerHTML = `<small>Ponto crítico no período</small>
-        <p class="critico-frase">O posto ${topPosto.posto} concentra <b>${pct(topPosto.registros)}</b> do scrap.
+        <p class="critico-frase">O posto ${nomePosto(topPosto.posto)} concentra <b>${pct(topPosto.registros)}</b> do scrap.
         O defeito mais frequente é ${esc(topDef.defeito).toLowerCase()} e o material mais afetado é o
         ${esc(topMat.material)}${topMat.descricao ? ', ' + esc(topMat.descricao.toLowerCase()) : ''}.</p>
         <div class="calor" aria-label="Scrap por posto">${calor}</div>`;
     }
-    const postos = Array.from({ length: 10 }, (_, i) => d.porPosto.find((p) => p.posto === i + 1) || { posto: i + 1, registros: 0 });
+    const postos = POSTOS.map((n) => d.porPosto.find((p) => p.posto === n) || { posto: n, registros: 0 });
     const max = Math.max(1, ...postos.map((p) => p.registros));
     $('#gPosto').innerHTML = postos.map((p) => `
       <div class="coluna ${topPosto && p.posto === topPosto.posto && p.registros ? 'lider' : ''}">
         <span class="v">${p.registros ? fmt(p.registros) : ''}</span>
         <div class="c" style="height:${(p.registros / max) * 82}%"></div>
-        <span class="p">P${p.posto}</span></div>`).join('');
+        <span class="p">${tagPosto(p.posto)}</span></div>`).join('');
     barras($('#gProjeto'), d.porProjeto, (i) => i.projeto);
     barras($('#gDefeito'), d.porDefeito, (i) => i.defeito);
     barras($('#gStatus'), d.porStatus || [], (i) => ST_NOME[i.status] || i.status);

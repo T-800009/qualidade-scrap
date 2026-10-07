@@ -1,6 +1,6 @@
-# Qualidade · Scrap e avarias
+# WQA · Wesley Qualidade (scrap e avarias)
 
-Registro de scrap por posto (P1–P10) com identificação automática do projeto pela BOM, parecer da Qualidade,
+Registro de scrap por posto (P½ e P1–P10) com identificação automática do projeto pela BOM, parecer da Qualidade,
 relatório de avarias (FO.QA.A.049) e acompanhamento do PCP (scrap feito / arrumado).
 Cloudflare Worker + D1, publicado pelo GitHub (igual ao Controle de Produção).
 
@@ -73,6 +73,12 @@ Edite ou reenvie os arquivos no GitHub. Cada commit publica sozinho.
 - Deploy command: `npx wrangler deploy`
 - Os arquivos do site ficam **só** em `src/`. Não suba cópias na raiz nem em outras pastas.
 - Se o repositório for apagado e criado de novo, é preciso desconectar e conectar o Git de novo no Cloudflare. Depois disso, o build só roda no **próximo commit**.
+
+## Postos
+A linha tem o **posto ½** (o "posto meio", entre o 0 e o 1) e os postos **1 a 10**. O ½ aparece antes do 1 na linha do Registrar,
+nos filtros, no Painel e no Excel como **P½** (no banco ele é gravado como 0.5).
+Na primeira vez que a versão com o ½ roda, a tabela de registros é refeita sozinha (o banco antigo só aceitava 1 a 10):
+todas as linhas são copiadas com os mesmos números, e as fotos e os relatórios continuam ligados.
 
 ## Em análise
 Todo scrap registrado entra como **Em análise**. A Qualidade (ou o admin) dá o parecer na aba **Em análise**:
