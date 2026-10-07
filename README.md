@@ -78,13 +78,19 @@ Todo scrap registrado entra como **Em análise**. A Qualidade (ou o admin) dá o
 Scrap confirmado, Retrabalho, Devolver ao fornecedor ou Liberado para uso, sempre com um texto de parecer.
 Itens com mais de 2 dias aparecem em vermelho. O número na aba mostra quantos estão pendentes.
 
-## Relatório de avarias
-Aba **Relatório**: a Qualidade (ou o admin) monta; o operador só vê.
-- Digite o código da peça (com ou sem hífen) e tire a foto (até 4: peça inteira, detalhe, etiqueta). Descrição, projeto, unidade e classe vêm da BOM. O defeito e a quantidade já vêm do último registro de scrap do material. Situação (em análise, scrap, retrabalho, devolver ao fornecedor, liberado) e observação são opcionais.
-- Cada peça vira um **formulário de avaria** (nº AV-ano-número) e entra no relatório do dia, junto com os registros de scrap do mesmo material dos últimos 7 dias.
-- **Imprimir / PDF**: folha A4 com as fotos, resumo por situação e "Página 1 de N". **Excel**: aba Avarias + aba Registros de scrap. As setas mostram outros dias.
-- Na folha dá para mudar a situação, editar, pôr mais foto e excluir (a exclusão fica registrada, como nos registros).
-- Em **Registrar**, **Em análise** e **Registros**, o material que tem formulário aparece com o selo **Formulário de avaria** (clique abre o formulário com as fotos). Em Registros há o filtro "Avaria" e a coluna no Excel.
+## Relatório de avarias (FO.QA.A.049)
+Aba **Relatório**: a Qualidade (ou o admin) monta; o operador só vê e baixa o PDF.
+- Um relatório por avaria, no modelo **FO.QA.A.049 rev.02** (A4, mesmo layout do formulário em papel). A numeração continua a do papel: o primeiro feito no site é o **RA-0018-2026** (o último manual foi o RA-0017-2026; para mudar, `RA_ULTIMO_MANUAL` em `src/index.js`). O número sai na hora de salvar e não se repete; dá para corrigir à mão, e o site avisa se o número já existir.
+- Digite o código da peça e tire a foto NC (até 4). A descrição do problema (o quê, por quê, quem, como, onde, quando, quanto), a rastreabilidade e o plano de ação (contenção + corretiva com prazo de 15 dias) já vêm escritos, a partir da BOM, do tipo de avaria, da situação da peça e do registro de scrap do material nos últimos 7 dias. Tudo pode ser ajustado; o que for mexido à mão não é reescrito.
+- **Foto OK** (padrão aceitável) é opcional; no relatório seguinte da mesma peça, as fotos OK do anterior entram sozinhas.
+- **Ver PDF** mostra o formulário antes de salvar. **Salvar e enviar por e-mail** salva e abre o e-mail já escrito (assunto, texto formal com a descrição, a rastreabilidade e o plano de ação):
+  - **E-mail pronto com PDF (Outlook)** baixa um rascunho `.eml` que abre no Outlook com o texto e o PDF anexado; é só conferir e enviar.
+  - No celular, **Compartilhar…** manda o PDF e o texto pelo app escolhido (Outlook, Gmail…).
+  - Também dá para abrir no programa de e-mail (o PDF é baixado para anexar), copiar o texto ou baixar só o PDF.
+  - Os destinatários (Para e Cc) ficam salvos para os próximos relatórios.
+- O cartão de cada RA mostra a situação da peça (dá para mudar ali), se o e-mail já saiu, as fotos e os registros de scrap do material, com os botões PDF, Enviar de novo, Editar, Foto NC e Excluir. Excluir um RA que ainda não foi enviado libera o número.
+- **Excel** do dia com todos os campos. A busca acha por `RA-0018` ou pelo código da peça. As setas mostram outros dias.
+- Em **Registrar**, **Em análise** e **Registros**, o material que tem relatório aparece com o selo **Formulário de avaria RA-…** (clique mostra os relatórios com o PDF). Em Registros há o filtro "Avaria" e a coluna no Excel.
 - Material fora da BOM também entra: preencha projeto e descrição se souber.
 - Link direto para um dia: `/?aba=relatorio&dia=2026-10-07`.
 

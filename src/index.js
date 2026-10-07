@@ -8,7 +8,7 @@ const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><d
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-07 · relatório de avarias';
+const VERSAO = '2026-10-07 · FO.QA.A.049 + e-mail';
 const SESSAO_HORAS = 12;
 const MAX_FALHAS = 10;          // a fábrica sai por um IP só: limite folgado para um erro não travar todo mundo
 const BLOQUEIO_MS = 5 * 60 * 1000;
@@ -60,6 +60,15 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS login_attempts (
      ip TEXT PRIMARY KEY, falhas INTEGER NOT NULL DEFAULT 0, bloqueado_ate INTEGER NOT NULL DEFAULT 0)`,
 ];
+// Relatório de Avarias FO.QA.A.049 (um por ocorrência): número RA-0000-ano por ano, os campos do
+// formulário em "dados" (JSON) e quando o e-mail foi preparado
+const MIGRACOES_AVARIA = [
+  'ALTER TABLE avaria ADD COLUMN ano INTEGER',
+  'ALTER TABLE avaria ADD COLUMN numero INTEGER',
+  'ALTER TABLE avaria ADD COLUMN dados TEXT',
+  'ALTER TABLE avaria ADD COLUMN email_em TEXT',
+  'ALTER TABLE avaria ADD COLUMN email_por TEXT',
+];
 // Colunas adicionadas depois da primeira versão (ignora se já existem)
 const MIGRACOES = [
   'ALTER TABLE scrap ADD COLUMN matricula TEXT',
@@ -91,11 +100,18 @@ function garantirSchema(env) {
       // Fotos do relatório de avarias (avaria_id) e miniatura que o relatório mostra e imprime
       if (!colsFoto.includes('avaria_id')) await env.DB.prepare('ALTER TABLE foto ADD COLUMN avaria_id INTEGER').run();
       if (!colsFoto.includes('mini')) await env.DB.prepare('ALTER TABLE foto ADD COLUMN mini TEXT').run();
+      // Foto do relatório de avarias: 'nc' (evidência da avaria) ou 'ok' (padrão aceitável)
+      if (!colsFoto.includes('categoria')) await env.DB.prepare('ALTER TABLE foto ADD COLUMN categoria TEXT').run();
+      const colsAv = (await env.DB.prepare('PRAGMA table_info(avaria)').all()).results.map((c) => c.name);
+      const faltam = MIGRACOES_AVARIA.filter((m) => !colsAv.includes(m.split(' ')[5]));
+      if (faltam.length) await env.DB.batch(faltam.map((m) => env.DB.prepare(m)));
       // Depois das colunas novas: índices e lista de projetos fora da BOM (uma vez só)
       await env.DB.batch([
         'CREATE INDEX IF NOT EXISTS idx_scrap_matricula ON scrap(matricula, created_at)',
         'CREATE INDEX IF NOT EXISTS idx_scrap_status ON scrap(status, created_at)',
         'CREATE INDEX IF NOT EXISTS idx_foto_avaria ON foto(avaria_id, id)',
+        // número RA não se repete entre os relatórios ativos do ano
+        'CREATE UNIQUE INDEX IF NOT EXISTS idx_avaria_ra ON avaria(ano, numero) WHERE excluido_em IS NULL',
       ].map((s) => env.DB.prepare(s)));
       const limpo = await env.DB.prepare("SELECT valor FROM meta WHERE chave = 'migr_unidade'").first();
       if (!limpo) {
@@ -176,17 +192,25 @@ async function rotear(req, env) {
     return adicionarFotos(req, env, Number(mAddFoto[1]));
   }
 
-  // Relatório de avarias: todos veem; a Qualidade (e o admin) monta, edita e exclui
+  // Relatório de avarias (FO.QA.A.049): todos veem; a Qualidade (e o admin) monta, edita, exclui e envia
   if (p === '/api/avaria' && m === 'GET') return listarAvarias(url, env);
   if (p === '/api/avaria/material' && m === 'GET') return avariasDoMaterial(url, env);
-  const mAv = p.match(/^\/api\/avaria(?:\/(\d+)(\/fotos)?)?$/);
+  if (p === '/api/avaria/proximo' && m === 'GET') return proximoRA(url, env);
+  if (p === '/api/avaria/config' && m === 'GET') return configEmail(env);
+  if (p === '/api/avaria/config' && m === 'PUT') {
+    if (!podeFoto) return json({ erro: 'Só a Qualidade pode mudar os destinatários.' }, 403);
+    return salvarConfigEmail(req, env);
+  }
+  const mAv = p.match(/^\/api\/avaria(?:\/(\d+)(?:\/(fotos|fotos-ok|email))?)?$/);
   if (mAv && m !== 'GET') {
     if (!podeFoto) return json({ erro: 'Só a Qualidade pode mexer no relatório de avarias.' }, 403);
-    const id = Number(mAv[1]);
+    const id = Number(mAv[1]), sub = mAv[2];
     if (!id && m === 'POST') return criarAvaria(req, env);
-    if (id && mAv[2] && m === 'POST') return fotosAvaria(req, env, id);
-    if (id && !mAv[2] && m === 'PATCH') return editarAvaria(req, env, id);
-    if (id && !mAv[2] && m === 'DELETE') return excluirAvaria(req, env, id);
+    if (id && sub === 'fotos' && m === 'POST') return fotosAvaria(req, env, id);
+    if (id && sub === 'fotos-ok' && m === 'POST') return copiarFotosOk(req, env, id);
+    if (id && sub === 'email' && m === 'POST') return marcarEmail(req, env, id);
+    if (id && !sub && m === 'PATCH') return editarAvaria(req, env, id);
+    if (id && !sub && m === 'DELETE') return excluirAvaria(req, env, id);
   }
 
   if (p === '/api/analise/contagem' && m === 'GET') {
@@ -747,7 +771,7 @@ async function anexarAvarias(env, rows) {
   if (!chaves.length) return rows;
   const lotes = [];
   for (let i = 0; i < chaves.length; i += 90) lotes.push(chaves.slice(i, i + 90));
-  const campos = 'SELECT id, chave, created_at, situacao FROM avaria WHERE excluido_em IS NULL';
+  const campos = 'SELECT id, chave, created_at, situacao, ano, numero FROM avaria WHERE excluido_em IS NULL';
   // período enorme (muitos materiais): lê de uma vez a tabela de avarias, que é pequena
   const res = lotes.length > 8
     ? [await env.DB.prepare(`${campos} ORDER BY created_at DESC`).all()]
@@ -757,7 +781,7 @@ async function anexarAvarias(env, rows) {
   for (const x of res) {
     for (const a of x.results) {
       if (!porChave.has(a.chave)) porChave.set(a.chave, []);
-      porChave.get(a.chave).push({ id: a.id, em: a.created_at, situacao: a.situacao });
+      porChave.get(a.chave).push({ id: a.id, em: a.created_at, situacao: a.situacao, ra: numeroRA(a) });
     }
   }
   if (porChave.size) for (const r of rows) {
@@ -921,15 +945,16 @@ function lerFotos(lista, max = MAX_FOTOS) {
   });
 }
 
-// dono: { scrap: id } ou { avaria: id }
+// dono: { scrap: id } ou { avaria: id, categoria: 'nc' | 'ok' }
 async function gravarFotos(env, dono, fotos, autor) {
   const agora = new Date().toISOString();
   for (const f of fotos) {
     const partes = [];
     for (let i = 0; i < f.b64.length; i += PEDACO) partes.push(f.b64.slice(i, i + PEDACO));
     const r = await env.DB.prepare(
-      'INSERT INTO foto (scrap_id, avaria_id, criado_em, tipo, partes, enviado_por, mini) VALUES (?, ?, ?, ?, ?, ?, ?)'
-    ).bind(dono.scrap || 0, dono.avaria || null, agora, f.tipo, partes.length, autor || null, f.mini || null).run();
+      'INSERT INTO foto (scrap_id, avaria_id, criado_em, tipo, partes, enviado_por, mini, categoria) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+    ).bind(dono.scrap || 0, dono.avaria || null, agora, f.tipo, partes.length, autor || null, f.mini || null,
+           dono.avaria ? dono.categoria || 'nc' : null).run();
     const id = r.meta?.last_row_id;
     await env.DB.batch(partes.map((d, n) =>
       env.DB.prepare('INSERT INTO foto_parte (foto_id, n, dados) VALUES (?, ?, ?)').bind(id, n, d)));
@@ -1005,22 +1030,62 @@ async function analisarScrap(req, env, id) {
   return json({ ok: true });
 }
 
-/* ---------------- relatório de avarias (Qualidade) ----------------
- * A Qualidade digita o código da peça e tira a foto; o resto vem sozinho: descrição, projeto,
- * unidade e classe pela BOM, e os registros de scrap do mesmo material (dos 7 dias antes até o dia
- * do formulário). O relatório do dia é a lista dos formulários daquele dia. Nos registros de scrap,
- * o material aparece marcado "Formulário de avaria" (anexarAvarias). */
-const MAX_FOTOS_AVARIA = 4;
+/* ---------------- relatório de avarias (FO.QA.A.049) ----------------
+ * Um relatório por ocorrência, numerado RA-0000-ano. A Qualidade digita o código da peça e tira a foto
+ * da avaria; descrição, projeto, unidade e classe vêm da BOM e a tela já escreve o resto (descrição do
+ * problema, rastreabilidade e plano de ação), que a Qualidade pode revisar. Os campos do formulário
+ * ficam em "dados" (JSON). Fotos: categoria 'nc' (evidência da avaria) e 'ok' (padrão aceitável).
+ * O PDF e o e-mail são montados no navegador. Nos registros de scrap, o material aparece marcado
+ * "Formulário de avaria" (anexarAvarias). */
+const MAX_FOTOS_NC = 4;
+const MAX_FOTOS_OK = 3;
 const JANELA_DIAS = 7;
 const DIA_MS = 864e5;
-const SQL_AVARIA = `SELECT avaria.*, (SELECT group_concat(id) FROM foto WHERE foto.avaria_id = avaria.id) AS fotos FROM avaria`;
+// Último relatório feito à mão antes do site, por ano: a numeração continua dele
+const RA_ULTIMO_MANUAL = { 2026: 17 };
+const CLASSIFICACOES = ['processo', 'recebimento'];
+const SEVERIDADES = ['baixa', 'media', 'alta', 'critica'];
+const STATUS_ACAO = ['Concluído', 'Pendente', 'Em andamento'];
+const SQL_AVARIA = `SELECT avaria.*,
+    (SELECT group_concat(id) FROM foto WHERE foto.avaria_id = avaria.id AND COALESCE(foto.categoria, 'nc') = 'nc') AS fotos,
+    (SELECT group_concat(id) FROM foto WHERE foto.avaria_id = avaria.id AND foto.categoria = 'ok') AS fotos_ok
+  FROM avaria`;
+// Maior número RA em uso no ano: os relatórios ativos e os que já saíram por e-mail (mesmo se excluídos)
+const SQL_MAIOR_RA = 'SELECT MAX(numero) FROM avaria WHERE ano = ? AND (excluido_em IS NULL OR email_em IS NOT NULL)';
 
 const quemFez = (b) => {
   const nome = texto(b?.nome, 60), mat = texto(b?.matricula, 20).toUpperCase();
   return nome ? `${nome}${mat ? ' (' + mat + ')' : ''}` : '';
 };
 const falha = (e) => json({ erro: e.erro, campo: e.campo }, e.status || 400);
-const umaAvaria = (env, id) => env.DB.prepare(`${SQL_AVARIA} WHERE id = ?`).bind(id).first();
+const hojeBR = () => new Date(Date.now() - 3 * 36e5).toISOString().slice(0, 10);   // Brasília (UTC-3, sem horário de verão)
+const numeroRA = (a) => (a && a.numero ? `RA-${String(a.numero).padStart(4, '0')}-${a.ano}` : '');
+// "dados" volta como objeto, junto com o número RA pronto
+function comDados(a) {
+  if (!a) return a;
+  let d = {};
+  try { d = JSON.parse(a.dados || '{}') || {}; } catch {}
+  return { ...a, dados: d, ra: numeroRA(a) };
+}
+const umaAvaria = async (env, id) => comDados(await env.DB.prepare(`${SQL_AVARIA} WHERE id = ?`).bind(id).first());
+const lerNumero = (v) => {
+  const n = Number(String(v ?? '').trim().replace(/^RA-?\s*/i, '').split(/[-/]/)[0]);
+  return Number.isInteger(n) && n > 0 && n < 100000 ? n : null;
+};
+async function numeroLivre(env, ano, numero, id = 0) {
+  return !(await env.DB.prepare(
+    'SELECT id FROM avaria WHERE ano = ? AND numero = ? AND id <> ? AND (excluido_em IS NULL OR email_em IS NOT NULL)'
+  ).bind(ano, numero, id).first());
+}
+const jaUsado = (ano, numero) => ({
+  erro: `O ${numeroRA({ ano, numero })} já existe. Deixe o número em branco que o site usa o próximo livre.`, campo: 'numero', status: 409,
+});
+
+async function proximoRA(url, env) {
+  const ano = Number(url.searchParams.get('ano')) || Number(hojeBR().slice(0, 4));
+  const r = await env.DB.prepare(`SELECT MAX(?, COALESCE((${SQL_MAIOR_RA}), 0)) + 1 AS n`).bind(RA_ULTIMO_MANUAL[ano] || 0, ano).first();
+  return json({ ano, numero: r.n, ra: numeroRA({ ano, numero: r.n }) });
+}
 
 // Código digitado → material da BOM (descrição, projeto, unidade e classe). Material em mais de um
 // projeto, sem projeto escolhido, fica com todos ("BC22, BC24"). Fora da BOM fica o que foi digitado.
@@ -1048,7 +1113,7 @@ async function materialAvaria(env, b) {
   return { material: digitado, chave: chaveCodigo(digitado), fora_bom: 1, projeto, descricao_material: descricao, unidade: normUn(b.unidade), classe: '' };
 }
 
-// Quantidade, defeito, observação e situação. parcial (edição): só o que veio no pedido.
+// Quantidade, defeito (tipo de avaria) e situação da peça. parcial (edição): só o que veio no pedido.
 function dadosAvaria(b, parcial) {
   const d = {};
   const veio = (k) => !parcial || b[k] !== undefined;
@@ -1071,6 +1136,39 @@ function dadosAvaria(b, parcial) {
   return { d };
 }
 
+// Campos do FO.QA.A.049. Na edição, só o que veio muda; o resto continua como estava.
+function dadosRA(e, antes) {
+  const d = { ...(antes || {}) };
+  if (e && typeof e === 'object') {
+    const t = (k, max) => { if (e[k] !== undefined) d[k] = texto(e[k], max); };
+    if (e.data !== undefined) d.data = /^\d{4}-\d{2}-\d{2}$/.test(String(e.data)) ? String(e.data) : '';
+    t('turno', 20);
+    if (e.classificacao !== undefined) d.classificacao = CLASSIFICACOES.includes(e.classificacao) ? e.classificacao : '';
+    if (e.severidade !== undefined) d.severidade = SEVERIDADES.includes(e.severidade) ? e.severidade : '';
+    t('o_que', 500); t('por_que', 500); t('quem', 120); t('como', 120); t('onde', 120); t('quando', 120); t('quanto', 120);
+    t('nota_fiscal', 60);
+    if (e.itens !== undefined) {
+      d.itens = (Array.isArray(e.itens) ? e.itens : []).slice(0, 3).map((i) => ({
+        codigo: normCodigo(i?.codigo).slice(0, 40), qtd: texto(i?.qtd, 12), nf: texto(i?.nf, 60), descricao: texto(i?.descricao, 120),
+      })).filter((i) => i.codigo || i.descricao);
+    }
+    if (e.acoes !== undefined) {
+      d.acoes = (Array.isArray(e.acoes) ? e.acoes : []).slice(0, 2).map((a, n) => ({
+        tipo: n ? 'corretiva' : 'contencao', descricao: texto(a?.descricao, 500), responsavel: texto(a?.responsavel, 80),
+        prazo: texto(a?.prazo, 40), status: STATUS_ACAO.includes(a?.status) ? a.status : 'Pendente',
+      }));
+    }
+  }
+  if (!d.data) d.data = hojeBR();
+  const campos = [['o_que', d.o_que], ['por_que', d.por_que], ['quem', d.quem], ['como', d.como], ['onde', d.onde],
+    ['quando', d.quando], ['quanto', d.quanto], ['nota_fiscal', d.nota_fiscal], ['turno', d.turno],
+    ...(d.itens || []).flatMap((i, n) => [[`item${n}`, i.descricao], [`item${n}`, i.nf]]),
+    ...(d.acoes || []).flatMap((a, n) => [[`acao${n}`, a.descricao], [`acao${n}`, a.responsavel], [`acao${n}`, a.prazo]])];
+  const ruim = campos.find(([, v]) => temPalavrao(v));
+  if (ruim) return { erro: MSG_PALAVRAO, campo: ruim[0], status: 422 };
+  return { d };
+}
+
 async function criarAvaria(req, env) {
   const b = await req.json().catch(() => null);
   if (!b) return json({ erro: 'Dados inválidos' }, 400);
@@ -1081,22 +1179,36 @@ async function criarAvaria(req, env) {
   if (mat.erro) return falha(mat);
   const x = dadosAvaria(b, false);
   if (x.erro) return falha(x);
-  const r = await env.DB.prepare(
-    `INSERT INTO avaria (created_at, material, chave, projeto, descricao_material, unidade, classe, fora_bom,
-                         quantidade, defeito, observacao, situacao, registrado_por, matricula)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-  ).bind(new Date().toISOString(), mat.material, mat.chave, mat.projeto, mat.descricao_material, mat.unidade, mat.classe,
-         mat.fora_bom, x.d.quantidade, x.d.defeito, x.d.observacao, x.d.situacao, nome, matricula).run();
+  const ra = dadosRA(b.dados, {});
+  if (ra.erro) return falha(ra);
+  const ano = Number(ra.d.data.slice(0, 4));
+  const manual = lerNumero(b.numero);
+  if (manual && !(await numeroLivre(env, ano, manual))) return falha(jaUsado(ano, manual));
+  let r;
+  try {
+    // número no mesmo comando do INSERT: dois relatórios salvos juntos não pegam o mesmo RA
+    r = await env.DB.prepare(
+      `INSERT INTO avaria (created_at, material, chave, projeto, descricao_material, unidade, classe, fora_bom,
+                           quantidade, defeito, observacao, situacao, registrado_por, matricula, dados, ano, numero)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE(?, MAX(?, COALESCE((${SQL_MAIOR_RA}), 0)) + 1))`
+    ).bind(new Date().toISOString(), mat.material, mat.chave, mat.projeto, mat.descricao_material, mat.unidade, mat.classe,
+           mat.fora_bom, x.d.quantidade, x.d.defeito, x.d.observacao, x.d.situacao, nome, matricula, JSON.stringify(ra.d),
+           ano, manual, RA_ULTIMO_MANUAL[ano] || 0, ano).run();
+  } catch (e) {
+    if (/UNIQUE/i.test(e.message)) return falha(jaUsado(ano, manual || 0));
+    throw e;
+  }
   if (mat.fora_bom && mat.projeto) await env.DB.prepare('INSERT OR IGNORE INTO projeto_extra (projeto) VALUES (?)').bind(mat.projeto).run();
   return json({ ok: true, item: await umaAvaria(env, r.meta?.last_row_id) }, 201);
 }
 
-// Edição: o formulário inteiro (com material) ou só uma parte, como a situação
+// Edição: o relatório inteiro ou só uma parte (a situação, por exemplo). Relatório sem número (feito na
+// versão anterior do site) ganha o próximo número livre.
 async function editarAvaria(req, env, id) {
   const b = await req.json().catch(() => null);
   if (!b) return json({ erro: 'Dados inválidos' }, 400);
   const atual = await env.DB.prepare('SELECT * FROM avaria WHERE id = ?').bind(id).first();
-  if (!atual || atual.excluido_em) return json({ erro: 'Esse formulário de avaria não existe mais.' }, 404);
+  if (!atual || atual.excluido_em) return json({ erro: 'Esse relatório de avaria não existe mais.' }, 404);
   const novo = { ...atual };
   if (b.material !== undefined) {
     const mat = await materialAvaria(env, b);
@@ -1106,58 +1218,147 @@ async function editarAvaria(req, env, id) {
   const x = dadosAvaria(b, true);
   if (x.erro) return falha(x);
   Object.assign(novo, x.d);
-  await env.DB.prepare(
-    `UPDATE avaria SET material = ?, chave = ?, projeto = ?, descricao_material = ?, unidade = ?, classe = ?, fora_bom = ?,
-            quantidade = ?, defeito = ?, observacao = ?, situacao = ?, editado_em = ?, editado_por = ? WHERE id = ?`
-  ).bind(novo.material, novo.chave, novo.projeto, novo.descricao_material, novo.unidade, novo.classe, novo.fora_bom,
-         novo.quantidade, novo.defeito, novo.observacao, novo.situacao, new Date().toISOString(), quemFez(b) || 'Qualidade', id).run();
+  const ra = dadosRA(b.dados, comDados(atual).dados);
+  if (ra.erro) return falha(ra);
+  const ano = Number(ra.d.data.slice(0, 4));
+  const manual = lerNumero(b.numero);
+  let numero = atual.ano === ano ? atual.numero : null;          // mudou o ano: próximo número livre do ano novo
+  if (manual && (manual !== atual.numero || ano !== atual.ano)) {
+    if (!(await numeroLivre(env, ano, manual, id))) return falha(jaUsado(ano, manual));
+    numero = manual;
+  }
+  try {
+    await env.DB.prepare(
+      `UPDATE avaria SET material = ?, chave = ?, projeto = ?, descricao_material = ?, unidade = ?, classe = ?, fora_bom = ?,
+              quantidade = ?, defeito = ?, observacao = ?, situacao = ?, dados = ?, ano = ?,
+              numero = COALESCE(?, MAX(?, COALESCE((${SQL_MAIOR_RA}), 0)) + 1), editado_em = ?, editado_por = ? WHERE id = ?`
+    ).bind(novo.material, novo.chave, novo.projeto, novo.descricao_material, novo.unidade, novo.classe, novo.fora_bom,
+           novo.quantidade, novo.defeito, novo.observacao, novo.situacao, JSON.stringify(ra.d), ano,
+           numero, RA_ULTIMO_MANUAL[ano] || 0, ano, new Date().toISOString(), quemFez(b) || 'Qualidade', id).run();
+  } catch (e) {
+    if (/UNIQUE/i.test(e.message)) return falha(jaUsado(ano, numero || 0));
+    throw e;
+  }
   return json({ ok: true, item: await umaAvaria(env, id) });
 }
 
-// Exclusão lógica, como nos registros de scrap: fica no banco com quem excluiu e quando
+// Exclusão lógica, como nos registros de scrap: fica no banco com quem excluiu e quando. O número de
+// um relatório que não chegou a ir por e-mail volta a ficar livre.
 async function excluirAvaria(req, env, id) {
   const b = await req.json().catch(() => ({}));
   const a = await env.DB.prepare('SELECT id, excluido_em FROM avaria WHERE id = ?').bind(id).first();
-  if (!a || a.excluido_em) return json({ erro: 'Esse formulário de avaria não existe mais.' }, 404);
+  if (!a || a.excluido_em) return json({ erro: 'Esse relatório de avaria não existe mais.' }, 404);
   await env.DB.prepare('UPDATE avaria SET excluido_em = ?, excluido_por = ? WHERE id = ?')
     .bind(new Date().toISOString(), quemFez(b) || 'Qualidade', id).run();
   return json({ ok: true });
 }
 
+// categoria 'nc' (evidência da avaria, até 4) ou 'ok' (padrão aceitável, até 3)
 async function fotosAvaria(req, env, id) {
   const b = await req.json().catch(() => null);
   if (!b) return json({ erro: 'Dados inválidos' }, 400);
+  const categoria = b.categoria === 'ok' ? 'ok' : 'nc';
+  const max = categoria === 'ok' ? MAX_FOTOS_OK : MAX_FOTOS_NC;
   let fotos;
-  try { fotos = lerFotos(b.fotos, MAX_FOTOS_AVARIA); } catch (e) { return json({ erro: e.message }, 400); }
+  try { fotos = lerFotos(b.fotos, max); } catch (e) { return json({ erro: e.message }, 400); }
   if (!fotos.length) return json({ erro: 'Nenhuma foto enviada' }, 400);
   const a = await env.DB.prepare(
-    'SELECT excluido_em, (SELECT COUNT(*) FROM foto WHERE foto.avaria_id = avaria.id) AS n FROM avaria WHERE id = ?'
-  ).bind(id).first();
-  if (!a || a.excluido_em) return json({ erro: 'Esse formulário de avaria não existe mais.' }, 404);
-  if (a.n + fotos.length > MAX_FOTOS_AVARIA) return json({ erro: `Esse formulário já tem ${a.n} foto(s). O máximo é ${MAX_FOTOS_AVARIA}.` }, 400);
-  await gravarFotos(env, { avaria: id }, fotos, quemFez(b) || 'Qualidade');
+    `SELECT excluido_em, (SELECT COUNT(*) FROM foto WHERE foto.avaria_id = avaria.id AND COALESCE(foto.categoria, 'nc') = ?) AS n
+       FROM avaria WHERE id = ?`
+  ).bind(categoria, id).first();
+  if (!a || a.excluido_em) return json({ erro: 'Esse relatório de avaria não existe mais.' }, 404);
+  if (a.n + fotos.length > max) {
+    return json({ erro: `Esse relatório já tem ${a.n} foto(s) ${categoria === 'ok' ? 'OK' : 'da avaria'}. O máximo é ${max}.` }, 400);
+  }
+  await gravarFotos(env, { avaria: id, categoria }, fotos, quemFez(b) || 'Qualidade');
   return json({ ok: true, total: a.n + fotos.length }, 201);
 }
 
-// Formulários de um período (o relatório do dia) ou por número (ids), com os registros de scrap
-// dos mesmos materiais. A tela separa os registros de cada formulário no fuso de quem está vendo.
+// Foto OK (padrão aceitável) de outro relatório do mesmo material: a peça boa é a mesma, a Qualidade
+// não precisa fotografar de novo. Copia no banco (cada relatório fica com as suas).
+async function copiarFotosOk(req, env, id) {
+  const b = await req.json().catch(() => ({}));
+  const origem = Number(b.de);
+  if (!Number.isInteger(origem) || origem <= 0 || origem === id) return json({ erro: 'Relatório de origem inválido' }, 400);
+  const [alvo, fonte] = await env.DB.batch([
+    env.DB.prepare(`SELECT excluido_em, (SELECT COUNT(*) FROM foto WHERE foto.avaria_id = avaria.id AND foto.categoria = 'ok') AS n
+                      FROM avaria WHERE id = ?`).bind(id),
+    env.DB.prepare("SELECT id FROM foto WHERE avaria_id = ? AND categoria = 'ok' ORDER BY id").bind(origem),
+  ]);
+  const a = alvo.results[0];
+  if (!a || a.excluido_em) return json({ erro: 'Esse relatório de avaria não existe mais.' }, 404);
+  const ids = fonte.results.map((r) => r.id).slice(0, Math.max(0, MAX_FOTOS_OK - a.n));
+  if (!ids.length) return json({ ok: true, copiadas: 0 });
+  const agora = new Date().toISOString();
+  await env.DB.batch(ids.flatMap((f) => [
+    env.DB.prepare(`INSERT INTO foto (scrap_id, avaria_id, criado_em, tipo, partes, enviado_por, mini, categoria)
+                    SELECT 0, ?, ?, tipo, partes, enviado_por, mini, 'ok' FROM foto WHERE id = ?`).bind(id, agora, f),
+    // dentro do lote (transação), a foto que acabou de entrar é a de maior id
+    env.DB.prepare('INSERT INTO foto_parte (foto_id, n, dados) SELECT (SELECT MAX(id) FROM foto), n, dados FROM foto_parte WHERE foto_id = ?').bind(f),
+  ]));
+  return json({ ok: true, copiadas: ids.length }, 201);
+}
+
+// O e-mail sai do Outlook/celular de quem envia: aqui fica só quando foi preparado e por quem
+async function marcarEmail(req, env, id) {
+  const b = await req.json().catch(() => ({}));
+  const r = await env.DB.prepare('UPDATE avaria SET email_em = ?, email_por = ? WHERE id = ? AND excluido_em IS NULL')
+    .bind(new Date().toISOString(), quemFez(b) || 'Qualidade', id).run();
+  if (!r.meta?.changes) return json({ erro: 'Esse relatório de avaria não existe mais.' }, 404);
+  return json({ ok: true, item: await umaAvaria(env, id) });
+}
+
+// Destinatários padrão do e-mail (planejamento, engenharia, compras, produção…), iguais em todos os aparelhos
+const listaEmails = (s) => [...new Set(String(s ?? '').split(/[;,\s]+/).map((x) => x.trim())
+  .filter((x) => /^[^@\s<>"(),;]+@[^@\s<>"(),;]+\.[^@\s<>"(),;]+$/.test(x)))].slice(0, 40).join('; ');
+async function configEmail(env) {
+  const rows = (await env.DB.prepare("SELECT chave, valor FROM meta WHERE chave IN ('avaria_email_para', 'avaria_email_cc')").all()).results;
+  const valor = (k) => rows.find((r) => r.chave === k)?.valor || '';
+  return json({ para: valor('avaria_email_para'), cc: valor('avaria_email_cc') });
+}
+async function salvarConfigEmail(req, env) {
+  const b = await req.json().catch(() => ({}));
+  const para = listaEmails(b.para), cc = listaEmails(b.cc);
+  await env.DB.batch([
+    env.DB.prepare("INSERT OR REPLACE INTO meta (chave, valor) VALUES ('avaria_email_para', ?)").bind(para),
+    env.DB.prepare("INSERT OR REPLACE INTO meta (chave, valor) VALUES ('avaria_email_cc', ?)").bind(cc),
+  ]);
+  return json({ ok: true, para, cc });
+}
+
+// Relatórios de um período (o dia na tela), por número (ids) ou pela busca (RA-0018, RA-0018-2026 ou código
+// do material), com os registros de scrap dos mesmos materiais. A tela separa os registros de cada
+// relatório no fuso de quem está vendo.
 async function listarAvarias(url, env) {
   const sp = url.searchParams;
   const w = ['excluido_em IS NULL'], v = [];
   const ids = [...new Set((sp.get('ids') || '').split(',').map(Number).filter((n) => Number.isInteger(n) && n > 0))].slice(0, 50);
+  const q = texto(sp.get('q'), 40).toUpperCase();
   if (ids.length) { w.push(`id IN (${ids.map(() => '?').join(',')})`); v.push(...ids); }
-  else {
+  else if (q) {
+    const m = /^RA[-\s]*0*(\d{1,5})(?:[-/\s]+(\d{4}))?$/.exec(q);
+    if (m) {
+      w.push('numero = ?'); v.push(Number(m[1]));
+      if (m[2]) { w.push('ano = ?'); v.push(Number(m[2])); }
+    } else {
+      const ch = chaveCodigo(q);
+      if (!ch) return json({ itens: [], scraps: [] });
+      w.push('chave LIKE ?'); v.push('%' + semCuringa(ch) + '%');
+    }
+  } else {
     if (sp.get('de')) { w.push('created_at >= ?'); v.push(sp.get('de')); }
     if (sp.get('ate')) { w.push('created_at <= ?'); v.push(sp.get('ate')); }
   }
-  const itens = (await env.DB.prepare(`${SQL_AVARIA} WHERE ${w.join(' AND ')} ORDER BY created_at LIMIT 3000`).bind(...v).all()).results;
+  const itens = (await env.DB.prepare(
+    `${SQL_AVARIA} WHERE ${w.join(' AND ')} ORDER BY created_at ${q && !ids.length ? 'DESC' : 'ASC'} LIMIT 3000`
+  ).bind(...v).all()).results.map(comDados);
   return json({ itens, scraps: await scrapsDasAvarias(env, itens) });
 }
 
 async function scrapsDasAvarias(env, itens) {
   if (!itens.length) return [];
   const chaves = new Set(itens.map((a) => a.chave));
-  // janela de cada formulário: 8 dias antes até 1 dia depois (folga para o fuso), juntando as que se encostam
+  // janela de cada relatório: 8 dias antes até 1 dia depois (folga para o fuso), juntando as que se encostam
   let janelas = [];
   for (const [de, ate] of itens.map((a) => Date.parse(a.created_at)).sort((x, y) => x - y)
     .map((t) => [t - (JANELA_DIAS + 1) * DIA_MS, t + DIA_MS])) {
@@ -1182,14 +1383,15 @@ async function scrapsDasAvarias(env, itens) {
   return out;
 }
 
-// Ao digitar o código: formulários de avaria que o material já tem e (scraps=1) os registros de
-// scrap dele nos últimos 7 dias
+// Ao digitar o código: relatórios de avaria que o material já tem (com as fotos OK, para reaproveitar)
+// e (scraps=1) os registros de scrap dele nos últimos 7 dias
 async function avariasDoMaterial(url, env) {
   const chave = chaveCodigo(normCodigo(url.searchParams.get('q')));
   if (!chave) return json({ avarias: [], scraps: [] });
   const consultas = [env.DB.prepare(
-    `SELECT id, created_at, material, situacao, quantidade, unidade, defeito, registrado_por,
-            (SELECT group_concat(id) FROM foto WHERE foto.avaria_id = avaria.id) AS fotos
+    `SELECT id, created_at, material, situacao, quantidade, unidade, defeito, registrado_por, ano, numero,
+            (SELECT group_concat(id) FROM foto WHERE foto.avaria_id = avaria.id AND COALESCE(foto.categoria, 'nc') = 'nc') AS fotos,
+            (SELECT group_concat(id) FROM foto WHERE foto.avaria_id = avaria.id AND foto.categoria = 'ok') AS fotos_ok
        FROM avaria WHERE excluido_em IS NULL AND chave = ? ORDER BY created_at DESC LIMIT 20`
   ).bind(chave)];
   if (url.searchParams.get('scraps')) consultas.push(env.DB.prepare(
@@ -1199,7 +1401,7 @@ async function avariasDoMaterial(url, env) {
   ).bind(new Date(Date.now() - JANELA_DIAS * DIA_MS).toISOString()));
   const [av, sc] = await env.DB.batch(consultas);
   return json({
-    avarias: av.results,
+    avarias: av.results.map((a) => ({ ...a, ra: numeroRA(a) })),
     scraps: sc ? sc.results.filter((r) => chaveCodigo(r.material) === chave).slice(0, 30) : [],
   });
 }

@@ -457,17 +457,33 @@ td .proj{height:22px;font-size:13px}
 #mbMat[readonly]{color:var(--mut);background:var(--s2)}
 @media (max-width:720px){.bom-ed{padding:16px}.bom-ed-acoes{width:100%}.bom-ed-acoes .btn{flex:1 1 auto;justify-content:center;padding:0 12px;white-space:nowrap}.bom-busca{max-width:none}}
 
-/* ---------- relatório de avarias ---------- */
-.av-entrada{padding:22px 24px;margin-bottom:18px;scroll-margin-top:84px;transition:border-color .2s,box-shadow .2s}
+/* ---------- relatório de avarias (FO.QA.A.049) ---------- */
+.av-entrada{padding:22px 24px 0;margin-bottom:18px;scroll-margin-top:84px;transition:border-color .2s,box-shadow .2s}
 .av-entrada.editando{border-color:var(--red-line);box-shadow:0 0 0 3px var(--red-soft)}
 .av-entrada.arrastando{outline:2px dashed var(--red);outline-offset:-8px}
-/* computador: botão logo abaixo dos defeitos (a coluna da esquerda ocupa as duas linhas) */
-.av-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-areas:"esq dir" "esq botao";grid-template-rows:auto 1fr;gap:0 28px}
-.av-esq{grid-area:esq}
-.av-dir{grid-area:dir}
-.av-grid .campo:last-child{margin-bottom:0}
+.av-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0 28px}
 .av-ed-aviso{display:flex;align-items:center;justify-content:space-between;gap:8px 14px;flex-wrap:wrap;margin:0 0 18px;padding:10px 14px;border-radius:var(--r-sm);background:var(--red-soft);border:1px solid var(--red-line);font-size:14px}
 .av-ed-aviso .link-btn{margin:0}
+.campo>.rot-nc,.rot-nc{color:var(--red-h)}
+.campo>.rot-ok,.rot-ok{color:var(--ok)}
+.av-linha3{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:12px;margin-bottom:22px}
+.av-linha3 label,.av-5w2h label,.av-plano label{display:block;font-size:13px;font-weight:600;color:var(--mut)}
+.av-linha3 input,.av-linha3 select{margin-top:8px;padding:10px 12px;font-size:14px}
+.av-ra{display:flex;align-items:center;margin-top:8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.av-ra:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--red-soft)}
+.av-ra span{padding-left:12px;font:600 18px/1 var(--cond);letter-spacing:.4px;color:var(--txt)}
+.av-ra span:last-child{padding:0 12px 0 0}
+.av-ra input{width:62px;margin:0;padding:9px 2px;border:0;border-radius:0;background:none;box-shadow:none!important;font:600 18px/1 var(--cond);letter-spacing:.4px;text-align:center}
+.av-ra input::placeholder{color:var(--mut);font:600 18px/1 var(--cond)}
+html[data-tema="claro"] .av-ra{background-color:var(--s1)}
+.av-opcoes{display:flex;flex-wrap:wrap;gap:8px}
+.av-opcoes button{height:38px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line2);background:var(--bg);color:var(--mut);font-weight:700;font-size:13px;transition:background .15s,border-color .15s,color .15s}
+.av-opcoes button:hover{color:var(--txt)}
+.av-opcoes button.sel{background:var(--inv);border-color:var(--inv);color:var(--inv-txt)}
+.av-sev button[data-v="media"].sel{background:#d69e2e;border-color:#d69e2e;color:#111}
+.av-sev button[data-v="alta"].sel{background:#dd6b20;border-color:#dd6b20;color:#fff}
+.av-sev button[data-v="critica"].sel{background:var(--red);border-color:var(--red);color:#fff}
+html[data-tema="claro"] .av-opcoes button:not(.sel){background-color:var(--s1)}
 .av-sit{display:flex;flex-wrap:wrap;gap:8px}
 .av-sit button{height:38px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line2);background:var(--bg);color:var(--mut);font-weight:700;font-size:13px;transition:color .15s,border-color .15s,background .15s}
 .av-sit button:hover{color:var(--txt)}
@@ -482,12 +498,14 @@ html[data-tema="claro"] .av-sit [data-sit="analise"].sel{color:#975a16}
 .chips-p .chip{height:34px;padding:0 12px;font-size:13px}
 #avMat{text-transform:uppercase}
 #avMat::placeholder{text-transform:none}
+.av-qtd-nf{margin-top:0}
+.av-qtd-nf input{padding:12px 14px}
 .av-aviso{display:flex;gap:10px;align-items:flex-start;margin-top:10px;padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--red-line);background:var(--red-soft);font-size:13px;animation:surge .22s ease-out}
 .av-aviso>svg{color:var(--red-h);margin-top:3px}
 .av-aviso b{display:block;margin-bottom:2px}
 .av-aviso .tag-av{margin:4px 6px 0 0}
 .av-regs{margin-top:10px;padding:10px 12px;border-radius:var(--r-sm);background:var(--s2);border:1px solid var(--line);font-size:13px;animation:surge .22s ease-out}
-.av-regs>small{display:block;color:var(--mut);font-weight:700;margin-bottom:2px}
+.av-regs>small,.av-scraps>small{display:block;color:var(--mut);font-weight:700;margin-bottom:2px}
 .av-regs ul,.av-scraps ul{margin:0;padding:0;list-style:none}
 .av-regs li,.av-scraps li{padding:5px 0;border-top:1px solid var(--line);line-height:1.45}
 .av-regs li:first-child,.av-scraps li:first-child{border-top:0}
@@ -495,99 +513,150 @@ html[data-tema="claro"] .av-sit [data-sit="analise"].sel{color:#975a16}
 .av-regs .st,.av-scraps .st{height:20px;padding:0 8px;font-size:11px;margin-left:4px;vertical-align:1px}
 .av-fotos-ed.arrastando .foto-add{border-color:var(--red);background:var(--red-soft)}
 .av-dica{flex-basis:100%;margin:2px 0 0;color:var(--mut2);font-size:12px}
+.av-copia{flex-basis:100%;margin:0;color:var(--mut);font-size:12.5px}
+.av-copia .link-btn{margin:0 0 0 6px;font-size:12.5px}
 .thumb-erro{position:absolute;left:0;right:0;bottom:0;padding:3px 4px;background:var(--red);color:#fff;font-size:11px;font-weight:700;text-align:center}
+.thumb.copia{border-style:dashed;border-color:var(--ok)}
 .tag-av{display:inline-flex;align-items:center;gap:5px;max-width:100%;height:24px;margin-top:4px;padding:0 9px;border-radius:6px;border:1px solid var(--red-line);background:var(--red-soft);color:var(--txt);font:700 12px/1 Barlow,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
 .tag-av svg{color:var(--red-h);flex:none}
 .tag-av:hover{border-color:var(--red)}
 .mat-cel .tag-av{display:flex;width:max-content}
 .item-top .tag-av,.an-top .tag-av{margin-top:0}
+/* seções que já vêm escritas (abrem para revisar) */
+.av-sec{margin:0 -24px;border-top:1px solid var(--line)}
+.av-sec>summary{display:flex;align-items:center;gap:4px 12px;flex-wrap:wrap;padding:16px 24px;cursor:pointer;list-style:none}
+.av-sec>summary::-webkit-details-marker{display:none}
+.av-sec>summary::before{content:"";flex:none;width:8px;height:8px;margin:0 4px 2px 2px;border-right:2px solid var(--mut);border-bottom:2px solid var(--mut);transform:rotate(-45deg);transition:transform .15s}
+.av-sec[open]>summary::before{transform:rotate(45deg);margin-bottom:5px}
+.av-sec>summary b{font-size:15px;font-weight:600}
+.av-sec>summary small{flex:1;min-width:200px;color:var(--mut);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.av-sec>summary:hover b{color:var(--red-h)}
+.av-sec-corpo{padding:0 24px 22px}
+.av-5w2h{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+.av-5w2h .larga{grid-column:1/-1}
+.av-5w2h input,.av-5w2h textarea{margin-top:6px;padding:10px 12px;font-size:14px}
+.av-5w2h textarea{min-height:60px;max-height:240px;field-sizing:content}
+.av-rast{overflow:auto;border:1px solid var(--line);border-radius:var(--r-sm)}
+.av-rast table{min-width:560px}
+.av-rast th{position:static;padding:9px 10px;background:var(--s2)}
+.av-rast td{padding:6px 10px;vertical-align:middle}
+.av-rast td.fixo{color:var(--txt);font-weight:600}
+.av-rast input{padding:8px 10px;font-size:13px}
+.av-rast .apagar{width:30px;height:30px}
+.av-plano{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.av-plano fieldset{min-width:0;margin:0;padding:12px 14px 14px;border:1px solid var(--line);border-radius:var(--r-sm)}
+.av-plano legend{padding:0 6px;font-size:13px;font-weight:700}
+.av-plano textarea{min-height:76px;max-height:240px;field-sizing:content;padding:10px 12px;font-size:14px}
+.av-plano .grid3{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr) minmax(0,1.1fr);gap:10px;margin-top:10px}
+.av-plano .grid3 input,.av-plano .grid3 select{margin-top:6px;padding:9px 10px;font-size:13px}
+/* barra de salvar: fica presa embaixo da tela enquanto o formulário está aberto */
+.av-salvar{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));z-index:5;display:flex;justify-content:flex-end;align-items:center;gap:10px;margin:0 -24px;padding:14px 24px 16px;border-top:1px solid var(--line);background:var(--s1);border-radius:0 0 var(--r) var(--r)}
+.av-salvar .btn{height:50px;padding:0 18px}
+.av-salvar .btn-prim{width:auto;min-width:270px;height:50px;padding:0 22px}
+/* lista de relatórios do dia */
 .av-barra{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .av-dias{display:flex;align-items:center;gap:8px}
 .av-dias input{width:auto;height:42px;padding:0 12px;font-size:14px}
 .av-seta{width:42px;justify-content:center;padding:0;font-size:22px;line-height:1}
 .av-seta:disabled{opacity:.35;cursor:default}
+.av-busca{position:relative;flex:1;min-width:200px;max-width:340px}
+.av-busca svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mut)}
+.av-busca input{height:42px;padding:0 12px 0 36px;font-size:14px}
 .av-botoes{display:flex;gap:8px;flex-wrap:wrap}
-/* folha do relatório: sempre clara (é o que sai na impressão e no PDF) */
-.folha{--txt:#101013;--mut:#5c5c66;--mut2:#a0a0a8;--line:#e3e3e8;--line2:#cbcbd2;--s1:#fff;--s2:#f4f4f6;--s3:#e9e9ee;--bg:#fff;
-  --inv:#101013;--inv-txt:#fff;--red:#d9002a;--red-h:#d9002a;--red-soft:rgba(217,0,42,.07);--red-line:rgba(217,0,42,.35);--ok:#1f9d5a;--ok-soft:rgba(31,157,90,.1);
-  color-scheme:light;background:#fff;color:var(--txt);border-radius:var(--r);padding:28px 32px;box-shadow:0 1px 2px rgba(0,0,0,.25),0 18px 50px var(--sombra);transition:opacity .15s}
-.folha.carregando{opacity:.55}
-.folha .st-analise{color:#975a16}
-.folha-cab{display:flex;align-items:center;gap:14px;padding-bottom:14px;border-bottom:2px solid var(--txt)}
-.folha-cab svg{width:46px;height:46px;flex:none}
-.folha-tit{flex:1;min-width:0}
-.folha-tit b{display:block;font:700 27px/1.05 var(--cond);letter-spacing:.4px;text-transform:uppercase}
-.folha-tit span{color:var(--mut);font-size:13px}
-.folha-data{text-align:right}
-.folha-data b{display:block;font:700 26px/1 var(--cond);letter-spacing:.3px}
-.folha-data span{color:var(--mut);font-size:13px}
-.folha-resumo{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 26px;padding:14px 0;border-bottom:1px solid var(--line)}
-.folha-resumo small{display:block;color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-.folha-resumo b{font:700 24px/1.1 var(--cond)}
-.folha-resumo .resp{margin-left:auto;text-align:right}
-.folha-resumo .resp b{font:600 14px/1.35 Barlow,sans-serif}
-.av-item{display:grid;grid-template-columns:30px minmax(0,1fr) 290px;gap:6px 18px;padding:18px 0;border-bottom:1px solid var(--line);break-inside:avoid;page-break-inside:avoid;scroll-margin-top:96px}
-.av-item:last-child{border-bottom:0}
-.av-item.destaque{animation:destaque 2.6s ease-out}
-@keyframes destaque{0%,35%{background:rgba(217,0,42,.09);box-shadow:-10px 0 0 rgba(217,0,42,.09),10px 0 0 rgba(217,0,42,.09)}100%{background:transparent}}
-.av-n{font:700 22px/1.1 var(--cond);color:var(--mut2)}
+.av-info{margin:-4px 0 12px;color:var(--mut);font-size:13px}
+.av-info .link-btn{margin:0 0 0 8px;font-size:13px}
+.av-lista{display:grid;gap:12px}
+.av-card{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:12px 22px;padding:18px 20px;border-left:4px solid var(--line2);scroll-margin-top:96px}
+.av-card.sev-media{border-left-color:#d69e2e}
+.av-card.sev-alta{border-left-color:#dd6b20}
+.av-card.sev-critica{border-left-color:var(--red)}
+.av-card.destaque{animation:destaque 2.6s ease-out}
+@keyframes destaque{0%,35%{box-shadow:0 0 0 3px var(--red-line);background-color:var(--red-soft)}}
 .av-topo{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap}
-.av-num{font:700 13px/1 Barlow,sans-serif;letter-spacing:.3px}
+.av-ra-num{font:700 23px/1 var(--cond);letter-spacing:.5px}
 .av-hora{color:var(--mut);font-size:13px}
-.av-mat{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}
-.av-cod{font:700 25px/1 var(--cond);letter-spacing:.5px}
+.av-tag{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;border:1px solid var(--line2);color:var(--txt);font-size:12px;font-weight:700;white-space:nowrap}
+.av-tag.sev-media{background:rgba(214,158,46,.14);border-color:rgba(214,158,46,.55);color:#d69e2e}
+.av-tag.sev-alta{background:rgba(221,107,32,.14);border-color:rgba(221,107,32,.55);color:#ed8936}
+.av-tag.sev-critica{background:var(--red);border-color:var(--red);color:#fff}
+html[data-tema="claro"] .av-tag.sev-media{color:#975a16}
+html[data-tema="claro"] .av-tag.sev-alta{color:#c05621}
+.av-tag.enviado{border-color:rgba(47,191,113,.5);background:var(--ok-soft);color:var(--ok)}
+.av-tag.sem-envio{border-style:dashed;color:var(--mut)}
+.av-mat{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.av-cod{font:700 22px/1 var(--cond);letter-spacing:.5px}
 .av-mat .proj{height:22px;font-size:13px}
-.folha .av-desc{margin:4px 0 0;font-size:14px;color:var(--txt)}
-.av-campos{display:flex;flex-wrap:wrap;gap:4px 22px;margin:10px 0 0;font-size:13px}
-.av-campos div{white-space:nowrap}
-.av-campos dt{display:inline;color:var(--mut)}
-.av-campos dd{display:inline;margin:0 0 0 5px;font-weight:700}
-.folha .av-obs{margin:8px 0 0;font-size:14px;white-space:pre-line;color:var(--txt)}
-.av-obs b{font-weight:700}
+.av-desc{margin:4px 0 0;color:var(--mut);font-size:13px}
+.av-oque{margin:10px 0 0;font-size:14px}
+.av-oque b,.av-plano-res b{font-weight:700}
+.av-campos{display:flex;flex-wrap:wrap;gap:4px 18px;margin:8px 0 0;font-size:13px;color:var(--mut)}
+.av-campos b{color:var(--txt);font-weight:600}
+.av-plano-res{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:8px;font-size:13px;color:var(--mut)}
+.st-acao{font-weight:700}
+.st-acao.concluido{color:var(--ok)}
+.st-acao.pendente{color:#ed8936}
+.st-acao.andamento{color:#3b82f6}
+html[data-tema="claro"] .st-acao.pendente{color:#c05621}
 .av-scraps{margin-top:10px;padding:8px 11px;border-radius:8px;background:var(--s2);font-size:12.5px}
-.av-scraps>small{display:block;color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
 .av-scraps.nenhum{background:none;padding:0;color:var(--mut)}
 .av-por{margin-top:8px;color:var(--mut);font-size:12px}
-.av-acoes{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.av-acoes button{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--txt);font-size:12px;font-weight:700}
-.av-acoes button:hover{border-color:var(--red);color:var(--red)}
-.av-acoes button svg{width:14px;height:14px}
-.av-sit-sel{width:auto;height:28px;padding:0 30px 0 11px;border-radius:999px;border:1.5px solid var(--line2);background-color:#fff;font-size:12px;font-weight:700;background-position:right 11px center}
-.av-sit-sel.s-analise{color:#975a16;border-color:rgba(214,158,46,.6)}
-.av-sit-sel.s-scrap{color:var(--red);border-color:var(--red-line)}
-.av-sit-sel.s-retrabalho{color:#2563eb;border-color:rgba(59,130,246,.5)}
-.av-sit-sel.s-devolucao{color:#7c4ddb;border-color:rgba(155,107,242,.5)}
-.av-sit-sel.s-liberado{color:var(--ok);border-color:rgba(31,157,90,.5)}
-.av-fotos{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-content:start}
-.av-fotos.uma{grid-template-columns:1fr}
-.av-fotos img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:var(--s3);cursor:zoom-in}
-.av-sem-foto{display:grid;place-items:center;grid-column:1/-1;aspect-ratio:4/3;max-height:140px;border:1.5px dashed var(--red-line);border-radius:6px;color:var(--red);font-size:12px;font-weight:700}
-.folha-rodape{display:flex;justify-content:space-between;gap:6px 14px;flex-wrap:wrap;margin-top:4px;padding-top:12px;border-top:1px solid var(--line);color:var(--mut);font-size:11px}
-.folha .vazio{padding:46px 20px}
-.so-papel{display:none}
-.modal-caixa.av-modal{width:min(860px,100%)}
-.av-modal .folha{margin-bottom:18px;padding:4px 20px;box-shadow:none;border:1px solid var(--line2)}
-.av-modal .av-item{grid-template-columns:minmax(0,1fr) 250px}
-.av-botao{grid-area:botao;align-self:start;margin-top:20px}
+.av-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.av-btns button{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line2);background:none;color:var(--txt);font-size:12.5px;font-weight:700}
+.av-btns button:hover{border-color:var(--red);color:var(--red-h)}
+.av-btns button.prim{background:var(--red);border-color:var(--red);color:#fff}
+.av-btns button.prim:hover{background:var(--red-h);color:#fff}
+.av-btns button:disabled{opacity:.55;cursor:default}
+.av-btns svg{width:15px;height:15px}
+.av-sit-sel{width:auto;height:28px;padding:0 30px 0 11px;border-radius:999px;border:1.5px solid var(--line2);font-size:12px;font-weight:700;background-position:right 11px center}
+.av-sit-sel.s-analise{color:#d69e2e;border-color:rgba(214,158,46,.6)}
+.av-sit-sel.s-scrap{color:var(--red-h);border-color:var(--red-line)}
+.av-sit-sel.s-retrabalho{color:#3b82f6;border-color:rgba(59,130,246,.5)}
+.av-sit-sel.s-devolucao{color:#9b6bf2;border-color:rgba(155,107,242,.5)}
+.av-sit-sel.s-liberado{color:var(--ok);border-color:rgba(47,191,113,.5)}
+html[data-tema="claro"] .av-sit-sel.s-analise{color:#975a16}
+.av-fotos-card{display:grid;gap:10px;align-content:start}
+.av-fotos-card small{display:block;margin-bottom:5px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.av-fotos-card .nc small{color:var(--red-h)}
+.av-fotos-card .ok small{color:var(--ok)}
+.av-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.av-thumbs img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:var(--s3);cursor:zoom-in}
+.av-sem-foto{display:grid;place-items:center;height:64px;border:1.5px dashed var(--red-line);border-radius:6px;color:var(--red-h);font-size:12px;font-weight:700}
+/* e-mail e modal dos formulários */
+.modal-caixa.av-modal{width:min(880px,100%)}
+.av-modal .av-lista{margin-bottom:18px}
+.av-modal .av-card{background:var(--s2)}
+.modal-caixa.em-modal{width:min(780px,100%)}
+.em-campos{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.em-campos .larga{grid-column:1/-1}
+.em-campos label{margin-bottom:12px}
+.em-campos input{font-size:15px;padding:11px 12px}
+.em-previa{margin:4px 0 0}
+.em-previa summary{cursor:pointer;color:var(--mut);font-size:13px;font-weight:600}
+.em-previa iframe{display:block;width:100%;height:360px;margin-top:8px;border:1px solid var(--line2);border-radius:var(--r-sm);background:#fff}
+.em-botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.em-botoes .btn-prim{width:auto;height:48px;padding:0 20px}
+.em-botoes .btn{height:48px}
+.em-aviso{margin:12px 0 0;padding:10px 12px;border-radius:var(--r-sm);background:var(--ok-soft);border:1px solid rgba(47,191,113,.45);font-size:13px}
+.em-pronto{color:var(--mut);font-size:12.5px;margin:10px 0 0}
 @media (max-width:980px){
-  .av-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"esq" "dir" "botao";grid-template-rows:auto}
-  .av-botao{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom));z-index:5;margin-top:22px;box-shadow:0 10px 30px var(--sombra)}
+  .av-grid,.av-card{grid-template-columns:minmax(0,1fr)}
+  .av-plano{grid-template-columns:1fr}
 }
 @media (max-width:720px){
-  .av-entrada{padding:18px 16px}
-  .folha{padding:18px 16px;border-radius:12px}
-  .folha-cab svg{width:38px;height:38px}
-  .folha-tit b{font-size:20px}
-  .folha-data b{font-size:19px}
-  .folha-resumo{gap:8px 18px}
-  .folha-resumo .resp{margin-left:0;text-align:left;flex-basis:100%}
-  .av-item,.av-modal .av-item{grid-template-columns:22px minmax(0,1fr)}
-  .av-modal .av-item{grid-template-columns:minmax(0,1fr)}
-  .av-fotos{grid-column:2}
-  .av-modal .av-fotos{grid-column:1}
-  .av-n{font-size:17px}
-  .av-cod{font-size:22px}
-  .av-barra .btn{padding:0 12px}
+  .av-entrada{padding:18px 16px 0}
+  .av-sec{margin:0 -16px}
+  .av-sec>summary{padding:14px 16px}
+  .av-sec-corpo{padding:0 16px 18px}
+  .av-5w2h,.em-campos{grid-template-columns:1fr}
+  .av-linha3{grid-template-columns:1fr 1fr}
+  .av-linha3 label:first-child{grid-column:1/-1}
+  .av-salvar{margin:0 -16px;padding:12px 16px 14px;gap:8px}
+  .av-salvar #avPrevia{display:none}
+  .av-salvar .btn{padding:0 14px}
+  .av-salvar .btn-prim{min-width:0;flex:1;padding:0 14px;font-size:15px}
+  .av-card{padding:16px}
+  .av-busca{max-width:none;order:3;flex-basis:100%}
+  .em-botoes .btn,.em-botoes .btn-prim{flex:1 1 auto;justify-content:center}
 }
 
 /* ---------- modal / toast ---------- */
@@ -648,36 +717,7 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
 @media (max-width:420px){.foto-add,.thumb{width:96px;height:96px}.tema{width:34px;height:34px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
-/* impressão / PDF do relatório de avarias (botão "Imprimir / PDF" ou Ctrl+P na aba Relatório) */
-@page{size:A4;margin:11mm 11mm 12mm}
-@media print{
-  body.imprimindo{background:#fff!important;color:#101013}
-  body.imprimindo .topo,body.imprimindo #toast,body.imprimindo .modal,body.imprimindo .galeria,
-  body.imprimindo .tab:not(#tab-relatorio),body.imprimindo #tab-relatorio>:not(.folha),body.imprimindo .so-tela{display:none!important}
-  body.imprimindo main{max-width:none;margin:0;padding:0}
-  body.imprimindo #tab-relatorio{display:block!important}
-  body.imprimindo .so-papel{display:inline-flex}
-  body.imprimindo .folha{padding:0;border-radius:0;box-shadow:none;opacity:1;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  body.imprimindo .folha-cab svg{width:40px;height:40px}
-  body.imprimindo .folha-tit b{font-size:22px}
-  body.imprimindo .folha-data b{font-size:20px}
-  body.imprimindo .folha-resumo{gap:6px 22px;padding:10px 0}
-  body.imprimindo .folha-resumo b{font-size:19px}
-  body.imprimindo .folha-resumo .resp{margin-left:auto;text-align:right;flex-basis:auto}
-  body.imprimindo .av-item{grid-template-columns:7mm minmax(0,1fr) 70mm;gap:4px 5mm;padding:4mm 0}
-  body.imprimindo .av-fotos{grid-column:auto}
-  body.imprimindo .av-n{font-size:17px}
-  body.imprimindo .av-cod{font-size:21px}
-  body.imprimindo .av-desc,body.imprimindo .av-obs{font-size:12.5px}
-  body.imprimindo .av-campos{font-size:12px;margin-top:6px}
-  body.imprimindo .av-scraps{font-size:11px;padding:5px 8px;margin-top:6px}
-  body.imprimindo .av-scraps.nenhum{padding:0}
-  body.imprimindo .av-item,body.imprimindo .folha{animation:none!important;transition:none!important;background:none}
-  body.imprimindo .av-fotos img{border-radius:3px}
-  body.imprimindo .folha-rodape{padding-top:8px}
-}
 </style>
-<style id="avPagina">/* rodapé de cada página do PDF (data e "Página 1 de 2"), montado na hora de imprimir */</style>
 </head>
 <body>
 <header class="topo">
@@ -816,9 +856,9 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
     <div class="an-lista" id="aLista"></div>
   </section>
 
-  <!-- RELATÓRIO DE AVARIAS -->
+  <!-- RELATÓRIO DE AVARIAS (FO.QA.A.049) -->
   <section id="tab-relatorio" class="tab">
-    <div class="cab-pag"><div><h1>Relatório de avarias</h1><p>Peças com avaria, sendo scrap ou não. Digite o código e tire a foto: o relatório do dia se monta sozinho.</p></div></div>
+    <div class="cab-pag"><div><h1>Relatório de avarias</h1><p>FO.QA.A.049, um por avaria. Digite o código e tire a foto: o relatório já vem escrito, pronto para o PDF e o e-mail.</p></div></div>
 
     <div class="painel av-entrada" id="avEntrada" hidden>
       <div class="av-ed-aviso" id="avEdAviso" hidden><span id="avEdTxt"></span><button type="button" class="link-btn" id="avEdCancelar">Cancelar edição</button></div>
@@ -833,17 +873,49 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
             <div id="avMatRes" aria-live="polite"></div>
           </div>
           <div class="campo">
-            <span class="rot">Fotos <span class="opcional">· até 4: peça inteira, detalhe da avaria, etiqueta</span></span>
-            <div class="fotos av-fotos-ed" id="avFotos"></div>
+            <span class="rot rot-nc">Foto NC · evidência da avaria <span class="opcional">(até 4)</span></span>
+            <div class="fotos av-fotos-ed" id="avFotosNc" data-cat="nc"></div>
           </div>
           <div class="campo">
-            <label for="avObs">Observação <span class="opcional">(opcional)</span></label>
-            <textarea id="avObs" rows="2" maxlength="1000" placeholder="Ex.: embalagem chegou rasgada, amassado na aba de fixação"></textarea>
+            <span class="rot rot-ok">Foto OK · padrão aceitável <span class="opcional">(até 3, se tiver)</span></span>
+            <div class="fotos av-fotos-ed" id="avFotosOk" data-cat="ok"></div>
           </div>
         </div>
         <div class="av-dir">
+          <div class="av-linha3">
+            <label for="avNum">Nº do relatório<span class="av-ra"><span>RA-</span><input id="avNum" inputmode="numeric" maxlength="5" autocomplete="off" aria-label="Número do relatório"><span id="avAno">-2026</span></span></label>
+            <label>Data<input type="date" id="avData"></label>
+            <label>Turno<select id="avTurno"><option>1° turno</option><option>2° turno</option><option>3° turno</option><option>Administrativo</option></select></label>
+          </div>
           <div class="campo">
-            <span class="rot">Situação</span>
+            <span class="rot">Classificação da avaria</span>
+            <div class="av-opcoes" id="avClass"><button type="button" data-v="processo">Processo</button><button type="button" data-v="recebimento">Recebimento</button></div>
+          </div>
+          <div class="campo">
+            <span class="rot">Severidade</span>
+            <div class="av-opcoes av-sev" id="avSev"><button type="button" data-v="baixa">Baixa</button><button type="button" data-v="media">Média</button><button type="button" data-v="alta">Alta</button><button type="button" data-v="critica">Crítica</button></div>
+          </div>
+          <div class="campo">
+            <span class="rot">Tipo de avaria <span class="opcional">(já escreve o "o quê" e o "por quê")</span></span>
+            <div id="avDefeitos" class="chips chips-p"></div>
+          </div>
+          <div class="grid2 av-qtd-nf">
+            <div class="campo">
+              <label for="avQtd">Quantidade</label>
+              <div class="stepper">
+                <button type="button" data-avstep="-1" aria-label="Diminuir">−</button>
+                <input id="avQtd" type="number" min="0" step="any" inputmode="decimal" value="1">
+                <button type="button" data-avstep="1" aria-label="Aumentar">+</button>
+                <span class="un" id="avUn">PC</span>
+              </div>
+            </div>
+            <div class="campo">
+              <label for="avNf">Nota fiscal</label>
+              <input id="avNf" maxlength="60" placeholder="Não aplicável">
+            </div>
+          </div>
+          <div class="campo">
+            <span class="rot">Situação da peça</span>
             <div class="av-sit" id="avSit">
               <button type="button" data-sit="analise" class="sel">Em análise</button>
               <button type="button" data-sit="scrap">Scrap</button>
@@ -852,24 +924,60 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
               <button type="button" data-sit="liberado">Liberado para uso</button>
             </div>
           </div>
-          <div class="campo">
-            <label for="avQtd">Quantidade</label>
-            <div class="stepper">
-              <button type="button" data-avstep="-1" aria-label="Diminuir">−</button>
-              <input id="avQtd" type="number" min="0" step="any" inputmode="decimal" value="1">
-              <button type="button" data-avstep="1" aria-label="Aumentar">+</button>
-              <span class="un" id="avUn">PC</span>
-            </div>
-          </div>
-          <div class="campo">
-            <span class="rot">Defeito <span class="opcional">(opcional)</span></span>
-            <div id="avDefeitos" class="chips chips-p"></div>
-          </div>
         </div>
-        <!-- no celular o botão fica preso embaixo da tela enquanto o formulário está aberto -->
-        <button id="avSalvar" class="btn-prim av-botao" type="button">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-          <span>Adicionar ao relatório</span>
+      </div>
+
+      <details class="av-sec" id="avSecDesc" open>
+        <summary><b>Descrição do problema</b><small>já vem escrita pelo código, pelo tipo de avaria e pelo registro de scrap da peça; ajuste se quiser</small></summary>
+        <div class="av-sec-corpo av-5w2h">
+          <label class="larga">O QUE é o problema?<textarea id="avOque" rows="2" maxlength="500" placeholder="Ex.: ausência de filetes de rosca no suporte de fixação da suspensão dianteira"></textarea></label>
+          <label class="larga">POR QUÊ é um problema?<textarea id="avPorque" rows="2" maxlength="500" placeholder="Ex.: sem os filetes, o parafuso não atinge o torque e pode se soltar com a vibração do veículo"></textarea></label>
+          <label>QUEM detectou?<input id="avQuem" maxlength="120" placeholder="Nome - função"></label>
+          <label>COMO detectou?<input id="avComo" maxlength="120" list="avComoLista"></label>
+          <label>ONDE detectou?<input id="avOnde" maxlength="120" list="avOndeLista" placeholder="Ex.: Posto 01"></label>
+          <label>QUANDO detectou?<input id="avQuando" maxlength="120"></label>
+          <label>QUANTO detectou?<input id="avQuanto" maxlength="120"></label>
+        </div>
+        <datalist id="avComoLista"><option value="Inspeção de linha"><option value="Inspeção de recebimento"><option value="Montagem no posto"><option value="Auditoria de qualidade"></datalist>
+        <datalist id="avOndeLista"><option value="Posto 01"><option value="Posto 02"><option value="Posto 03"><option value="Posto 04"><option value="Posto 05"><option value="Posto 06"><option value="Posto 07"><option value="Posto 08"><option value="Posto 09"><option value="Posto 10"><option value="Recebimento"><option value="Almoxarifado"></datalist>
+      </details>
+
+      <details class="av-sec" id="avSecRast">
+        <summary><b>Rastreabilidade</b><small id="avRastResumo"></small></summary>
+        <div class="av-sec-corpo">
+          <div class="av-rast"><table><thead><tr><th>Código / Nº Série</th><th style="width:56px">Item</th><th style="width:84px">Qtd</th><th style="width:140px">Nota Fiscal</th><th>Observação / Descrição do Componente</th><th style="width:40px"></th></tr></thead><tbody id="avItens"></tbody></table></div>
+          <button type="button" class="link-btn" id="avItemMais">+ Adicionar linha (outra peça ou nº de série)</button>
+        </div>
+      </details>
+
+      <details class="av-sec" id="avSecPlano">
+        <summary><b>Plano de ação</b><small id="avPlanoResumo"></small></summary>
+        <div class="av-sec-corpo av-plano">
+          <fieldset><legend>Contenção / segregação</legend>
+            <textarea id="avA1Desc" rows="3" maxlength="350" aria-label="Descrição da contenção"></textarea>
+            <div class="grid3">
+              <label>Responsável<input id="avA1Resp" maxlength="80"></label>
+              <label>Prazo<input id="avA1Prazo" maxlength="40"></label>
+              <label>Status<select id="avA1Status"><option>Concluído</option><option>Pendente</option><option>Em andamento</option></select></label>
+            </div>
+          </fieldset>
+          <fieldset><legend>Corretiva (definitiva)</legend>
+            <textarea id="avA2Desc" rows="3" maxlength="350" aria-label="Descrição da ação corretiva"></textarea>
+            <div class="grid3">
+              <label>Responsável<input id="avA2Resp" maxlength="80"></label>
+              <label>Prazo<input id="avA2Prazo" maxlength="40"></label>
+              <label>Status<select id="avA2Status"><option>Concluído</option><option>Pendente</option><option>Em andamento</option></select></label>
+            </div>
+          </fieldset>
+        </div>
+      </details>
+
+      <div class="av-salvar">
+        <button type="button" class="btn" id="avPrevia" title="Abre o PDF como vai ficar, sem salvar">Ver PDF</button>
+        <button type="button" class="btn" id="avSoSalvar">Salvar</button>
+        <button type="button" class="btn-prim" id="avSalvar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
+          <span>Salvar e enviar por e-mail</span>
         </button>
       </div>
     </div>
@@ -877,23 +985,26 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
     <div class="av-barra">
       <div class="av-dias">
         <button class="btn av-seta" id="avAnt" aria-label="Dia anterior" title="Dia anterior">‹</button>
-        <input type="date" id="avDia" aria-label="Dia do relatório">
+        <input type="date" id="avDia" aria-label="Dia dos relatórios">
         <button class="btn av-seta" id="avProx" aria-label="Próximo dia" title="Próximo dia">›</button>
         <button class="atalho" id="avHoje">Hoje</button>
+      </div>
+      <div class="av-busca">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="avBusca" placeholder="Buscar RA-0018 ou código da peça" autocomplete="off" spellcheck="false" enterkeyhint="search">
       </div>
       <div class="av-botoes">
         <button class="btn" id="avExport">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
           Excel
         </button>
-        <button class="btn claro" id="avImprimir">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>
-          Imprimir / PDF
-        </button>
       </div>
     </div>
-    <article class="folha" id="avFolha" aria-label="Relatório de avarias do dia"></article>
+    <p class="av-info" id="avInfo"></p>
+    <div class="av-lista" id="avLista"></div>
   </section>
+
+  <!-- PAINEL -->  </section>
 
   <!-- PAINEL -->
   <section id="tab-painel" class="tab">
@@ -1089,17 +1200,45 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
   </div>
 </div>
 
-<!-- formulário(s) de avaria de um material (selo "Formulário de avaria" nos registros) -->
+<!-- relatório(s) de avaria de um material (selo "Formulário de avaria" nos registros) -->
 <div class="modal" id="modalAv" hidden>
   <div class="modal-caixa av-modal" role="dialog" aria-modal="true" aria-labelledby="mavTit">
     <div class="linha-sinal"></div>
     <h2 id="mavTit">Formulário de avaria</h2>
     <p id="mavInfo"></p>
-    <div class="folha" id="mavLista"></div>
+    <div class="av-lista" id="mavLista"></div>
     <div class="modal-acoes">
       <button type="button" class="btn" id="mavFechar">Fechar</button>
-      <button type="button" class="btn-prim" id="mavAbrir">Abrir o relatório do dia</button>
+      <button type="button" class="btn-prim" id="mavAbrir">Abrir na aba Relatório</button>
     </div>
+  </div>
+</div>
+
+<!-- e-mail do relatório: já vem escrito, com o PDF anexado -->
+<div class="modal" id="modalEmail" hidden>
+  <div class="modal-caixa em-modal" role="dialog" aria-modal="true" aria-labelledby="emTit">
+    <div class="linha-sinal"></div>
+    <h2 id="emTit">Enviar por e-mail</h2>
+    <p>O e-mail já vem escrito e com o PDF do relatório anexado. Confira os destinatários: eles ficam salvos para os próximos.</p>
+    <div class="em-campos">
+      <label class="larga">Para<input id="emPara" type="email" multiple autocomplete="off" placeholder="planejamento@empresa.com; engenharia@empresa.com"></label>
+      <label>Cópia (Cc)<input id="emCc" type="email" multiple autocomplete="off" placeholder="opcional"></label>
+      <label>Assunto<input id="emAssunto" maxlength="200"></label>
+    </div>
+    <details class="em-previa" open><summary>Prévia do e-mail</summary><iframe id="emPrevia" title="Prévia do e-mail" sandbox=""></iframe></details>
+    <div class="em-botoes">
+      <button type="button" class="btn-prim" id="emOutlook" title="Baixa o e-mail pronto (.eml): abre no Outlook com o texto e o PDF anexado">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
+        <span>E-mail pronto com PDF (Outlook)</span>
+      </button>
+      <button type="button" class="btn" id="emCompartilhar" hidden>Compartilhar…</button>
+      <button type="button" class="btn" id="emMailto" title="Abre o programa de e-mail com o texto; o PDF é baixado para anexar">Abrir no e-mail</button>
+      <button type="button" class="btn" id="emCopiar">Copiar texto</button>
+      <button type="button" class="btn" id="emPdf">Baixar PDF</button>
+    </div>
+    <p class="em-pronto" id="emPronto"></p>
+    <p class="em-aviso" id="emAviso" hidden></p>
+    <div class="modal-acoes"><button type="button" class="btn" id="emFechar">Fechar</button></div>
   </div>
 </div>
 
@@ -1353,7 +1492,7 @@ $('#formOp').addEventListener('submit', async (e) => {
   mostrarOperador();
   carregarHoje();
   toast('Olá, ' + nome.split(' ')[0]);
-  ($('#tab-relatorio').classList.contains('ativo') ? $('#avMat') : $('#mat')).focus();
+  if ($('#tab-relatorio').classList.contains('ativo')) { preencherAuto(); $('#avMat').focus(); } else $('#mat').focus();
 });
 
 $('#opChip').addEventListener('click', async () => {
@@ -1529,7 +1668,7 @@ function carregarImagem(arquivo) {
 }
 
 // Reduz para no máximo 1600 px e carimba data/hora, posto (ou rótulo) e material embaixo da foto.
-// info: { posto | rotulo, material, projeto, em (hora em que a foto foi tirada) }
+// info: { posto | rotulo, material, projeto, em (hora em que a foto foi tirada) } ou { semCarimbo: true }
 async function prepararFoto(arquivo, info) {
   const img = await carregarImagem(arquivo);
   const escala = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
@@ -1538,6 +1677,7 @@ async function prepararFoto(arquivo, info) {
   c.width = w; c.height = h;
   const g = c.getContext('2d');
   g.drawImage(img, 0, 0, w, h);
+  if (info.semCarimbo) return c.toDataURL('image/jpeg', 0.82);
   const fs = Math.max(16, Math.round(w / 42)), faixa = Math.round(fs * 2);
   g.fillStyle = 'rgba(0,0,0,.62)';
   g.fillRect(0, h - faixa, w, faixa);
@@ -2102,34 +2242,93 @@ $('#aLista').addEventListener('click', async (e) => {
   }
 });
 
-/* ---------- relatório de avarias ----------
-   A Qualidade digita o código da peça e tira a foto. Descrição, projeto, unidade e classe vêm da BOM, e os
-   registros de scrap do mesmo material (7 dias) entram sozinhos no formulário. O relatório do dia é a folha
-   com todos os formulários daquele dia, pronta para imprimir/PDF ou Excel. Nos registros de scrap (Registrar,
-   Em análise e Registros) o material aparece com o selo "Formulário de avaria". */
-const MAX_FOTOS_AV = 4;
-const JANELA_AV = 7;       // dias de registros de scrap que entram no formulário (igual ao servidor)
+/* ---------- relatório de avarias (FO.QA.A.049) ----------
+   Um relatório por avaria, numerado RA-0000-ano, igual ao formulário da Qualidade. A Qualidade digita o
+   código da peça e tira a foto da avaria: descrição, projeto, unidade e classe vêm da BOM, e a descrição do
+   problema (o quê, por quê, quem, como, onde, quando, quanto), a rastreabilidade e o plano de ação já vêm
+   escritos (pelo tipo de avaria e pelo último registro de scrap da peça); ela só revisa. O PDF sai igual ao
+   FO.QA.A.049 e o e-mail já vem escrito, com o PDF anexado. Nos registros de scrap o material aparece com o
+   selo "Formulário de avaria". */
+const MAX_FOTOS_AV = { nc: 4, ok: 3 };
+const JANELA_AV = 7;       // dias de registros de scrap ligados ao relatório (igual ao servidor)
 const CELULAR = matchMedia('(pointer: coarse)').matches;
-const TITULO = document.title;
+const PDF_LIB_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js';
+// Logotipo do cabeçalho do FO.QA.A.049 (PNG 103×62, extraído do formulário da equipe)
+const LOGO_FORM = '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';
 const ICONE_DOC = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
 const ICONE_GALERIA = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="m21 15-5-5L5 21"/></svg>';
-const LOGO_FOLHA = '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="qaFundoF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1d22"/><stop offset="1" stop-color="#09090b"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#qaFundoF)"/><rect x="1" y="1" width="62" height="62" rx="14" fill="none" stroke="#e4002b" stroke-width="2"/><g fill="none" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="17.9" width="15.8" height="28.2" rx="7.9" stroke="#fff"/><path d="M43 17.9 50 46.1M38.2 37.3h9.6" stroke="#fff"/><path d="M25.4 35.5 36 46.1 43 17.9" stroke="#ff1f47"/></g></svg>';
+const ICONE_EMAIL = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>';
+const CLASSIF = { processo: 'Processo', recebimento: 'Recebimento' };
+const SEVER = { baixa: 'Baixa', media: 'Média', alta: 'Alta', critica: 'Crítica' };
+const SLUG_ACAO = { 'Concluído': 'concluido', Pendente: 'pendente', 'Em andamento': 'andamento' };
+// Tipo de avaria → começo do "o quê" e o "por quê" (a Qualidade ajusta se precisar)
+const TIPO_AVARIA = {
+  'Amassado': ['Peça amassada', 'A deformação compromete o encaixe e a fixação da peça na montagem.'],
+  'Riscado': ['Peça riscada', 'O risco compromete o acabamento e a proteção da peça contra corrosão.'],
+  'Trincado / quebrado': ['Peça trincada / quebrada', 'A trinca compromete a resistência da peça e a segurança do veículo.'],
+  'Dimensional fora': ['Peça com dimensional fora do especificado', 'Fora da medida, a peça não encaixa ou não garante a montagem correta.'],
+  'Furação errada': ['Peça com furação fora de posição', 'Com a furação fora de posição, não é possível fixar a peça corretamente.'],
+  'Solda com defeito': ['Peça com solda defeituosa', 'A solda com defeito compromete a resistência da união e a segurança do veículo.'],
+  'Pintura com defeito': ['Peça com falha de pintura', 'A falha de pintura compromete o acabamento e a proteção contra corrosão.'],
+  'Oxidação': ['Peça com oxidação', 'A oxidação compromete a resistência e a durabilidade da peça.'],
+  'Material errado': ['Material recebido diferente do especificado', 'A peça não corresponde ao especificado e não pode ser montada no veículo.'],
+  'Falta de componente': ['Conjunto com falta de componente', 'Sem o componente, a montagem fica incompleta e o conjunto não funciona como deveria.'],
+  'Dano no manuseio': ['Peça danificada no manuseio', 'O dano compromete o uso da peça na montagem.'],
+  'Erro de montagem': ['Peça montada de forma incorreta', 'A montagem incorreta compromete o funcionamento e a segurança do conjunto.'],
+  'Outro': ['Peça com avaria', 'A peça está fora do padrão de aceitação e não pode ser usada na produção.'],
+};
+const PROCESSO = new Set(['Dano no manuseio', 'Erro de montagem']);            // avaria causada aqui dentro
+const SEVERA = new Set(['Trincado / quebrado', 'Solda com defeito', 'Falta de componente']);
+const CONTENCAO = {
+  analise: 'O material foi identificado e segregado, aguardando a definição da Qualidade (reparo, devolução ou scrap).',
+  scrap: 'O material foi identificado e segregado para baixa como scrap.',
+  retrabalho: 'O material foi identificado e segregado, aguardando reparo do item.',
+  devolucao: 'O material foi identificado e segregado, aguardando devolução ao fornecedor.',
+  liberado: 'O material foi avaliado pela Qualidade e liberado para uso.',
+};
+const ENVIO_AREAS = 'O relatório será enviado para as áreas de planejamento, engenharia, compras e produção a fim de evitar reincidências da ocorrência.';
+const CORRETIVA = {
+  recebimento: ['Realizar contato com o fornecedor para solicitar o envio imediato da peça de reposição e cobrar prioridade máxima no prazo de entrega, visando mitigar impactos na linha de produção.', 'Planejamento / Compras'],
+  processo: ['Analisar a causa da avaria com a produção, reforçar o padrão de manuseio e operação no posto e solicitar a reposição da peça ao planejamento, visando evitar reincidência e impactos na linha de produção.', 'Produção / Planejamento'],
+};
+const CAMPOS_AUTO = ['avOque', 'avPorque', 'avQuem', 'avComo', 'avOnde', 'avQuando', 'avQuanto', 'avA1Desc', 'avA1Resp', 'avA1Prazo', 'avA2Desc', 'avA2Resp', 'avA2Prazo'];
 const AV = { id: null, item: null, q: '', busca: null, info: null, projeto: null, foraBom: false, seq: 0, buscando: null,
-  novas: [], existentes: [], sit: 'analise', defeito: '', qtdTocada: false, defTocado: false, salvando: false };
-let tAv, FOTO_AV = null;
+  fotos: { nc: { ex: [], novas: [] }, ok: { ex: [], novas: [], copiar: null } }, okDispensado: false,
+  sit: 'analise', defeito: '', classificacao: '', severidade: '', tocados: new Set(), proximo: null, salvando: false };
+let tAv, FOTO_AV = null, CFG_EMAIL = null;
 
-function numAv(a) { return `AV-${new Date(a.created_at || a.em).getFullYear()}-${String(a.id).padStart(4, '0')}`; }
+const pad4 = (n) => String(n).padStart(4, '0');
+function numAv(a) { return a.ra || (a.numero ? `RA-${pad4(a.numero)}-${a.ano}` : 'RA sem número'); }
 function dataCurta(iso) { return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }); }
 const diaDe = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const dataDia = (dia) => { const [y, m, d] = dia.split('-').map(Number); return new Date(y, m - 1, d); };
 const somaDias = (dia, n) => { const d = dataDia(dia); d.setDate(d.getDate() + n); return diaDe(d); };
+// "2026-10-02" ou data/hora ISO → 02/10/2026
+const dataBR = (v) => (!v ? '' : /^\d{4}-\d{2}-\d{2}$/.test(v) ? v.split('-').reverse().join('/') : new Date(v).toLocaleDateString('pt-BR'));
 const fotosDe = (a) => (a.fotos ? String(a.fotos).split(',').filter(Boolean) : []);
-// miniatura que não abre (estragada): usa a foto inteira
-const SEM_MINI = (id) => `onerror="this.onerror=null;this.src='/api/foto/${Number(id)}'"`;
+const fotosOkDe = (a) => (a.fotos_ok ? String(a.fotos_ok).split(',').filter(Boolean) : []);
 const quemAv = (a) => `${a.registrado_por || ''}${a.matricula ? ' (' + a.matricula + ')' : ''}`;
 const ehImagem = (f) => /^image\//.test(f.type) || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name || '');
-
-// Registros de scrap do mesmo material: dos 6 dias antes até o fim do dia do formulário (7 dias)
+// miniatura que não abre (estragada): usa a foto inteira
+const SEM_MINI = (id) => `onerror="this.onerror=null;this.src='/api/foto/${Number(id)}'"`;
+// Frase com inicial maiúscula e ponto final
+function frase(s) {
+  s = String(s || '').trim().replace(/\s+/g, ' ');
+  if (!s) return '';
+  s = s.charAt(0).toUpperCase() + s.slice(1);
+  return /[.!?…]$/.test(s) ? s : s + '.';
+}
+// 1 PC → "01 peça"; 3 PC → "03 peças"; 2,5 M → "2,5 m"
+function quantoTxt(q, un) {
+  const n = Number(q) || 0, u = unOk(un);
+  const num = Number.isInteger(n) && n < 10 ? pad(n) : n.toLocaleString('pt-BR', { maximumFractionDigits: 3 });
+  const pecas = !u || ['PC', 'PCS', 'PÇ', 'UN', 'UND', 'UNID', 'EA', 'ST'].includes(u);
+  if (pecas) return `${num} ${n === 1 ? 'peça' : 'peças'}`;
+  if (u === 'CJ') return `${num} ${n === 1 ? 'conjunto' : 'conjuntos'}`;
+  return `${num} ${u.toLowerCase()}`;
+}
+const qtdBR = (q) => Number(q || 0).toLocaleString('pt-BR', { maximumFractionDigits: 3 });
+// Registros de scrap do mesmo material: dos 6 dias antes até o fim do dia do relatório (7 dias)
 function ligadosAv(a, scraps) {
   const d = new Date(a.created_at);
   const ini = new Date(d.getFullYear(), d.getMonth(), d.getDate() - (JANELA_AV - 1)).getTime();
@@ -2137,19 +2336,29 @@ function ligadosAv(a, scraps) {
   return scraps.filter((s) => s.chave === a.chave && Date.parse(s.created_at) >= ini && Date.parse(s.created_at) < fim)
     .sort((x, y) => y.created_at.localeCompare(x.created_at));
 }
+// Plano de ação padrão (relatório sem plano gravado)
+function acoesPadrao(a) {
+  const d = a.dados || {}, rec = (d.classificacao || 'recebimento') === 'recebimento';
+  return [
+    { descricao: `${CONTENCAO[a.situacao] || CONTENCAO.analise} ${ENVIO_AREAS}`, responsavel: a.registrado_por || '', prazo: 'Imediato', status: 'Concluído' },
+    { descricao: CORRETIVA[rec ? 'recebimento' : 'processo'][0], responsavel: CORRETIVA[rec ? 'recebimento' : 'processo'][1],
+      prazo: dataBR(somaDias(d.data || diaDe(new Date(a.created_at)), 15)), status: 'Pendente' },
+  ];
+}
+const acoesDe = (a) => ((a.dados?.acoes || []).length === 2 ? a.dados.acoes : acoesPadrao(a));
 
-// Selo nos registros de scrap cujo material já tem formulário de avaria (abre o formulário)
+// Selo nos registros de scrap cujo material já tem relatório de avaria (abre o relatório)
 function tagAvaria(r) {
   const l = r.avarias;
   if (!l?.length) return '';
   const dica = l.map((a) => `${numAv(a)} de ${dataCurta(a.em)}: ${ST_NOME[a.situacao] || ''}`).join('\n');
-  return `<button type="button" class="tag-av" data-av="${l.map((a) => a.id).join(',')}" title="${esc(dica)}">${ICONE_DOC}Formulário de avaria · ${dataCurta(l[0].em)}${l.length > 1 ? ' +' + (l.length - 1) : ''}</button>`;
+  return `<button type="button" class="tag-av" data-av="${l.map((a) => a.id).join(',')}" title="${esc(dica)}">${ICONE_DOC}Formulário de avaria${l[0].ra ? ' ' + esc(l[0].ra) : ''}${l.length > 1 ? ' +' + (l.length - 1) : ''}</button>`;
 }
 // Aviso na ficha do material (Registrar e Relatório)
 function avisoAvaria(lista) {
   if (!lista?.length) return '';
   return `<div class="av-aviso">${ICONE_DOC}<div><b>Esse material já tem formulário de avaria</b>${lista.slice(0, 3).map((a) =>
-    `<button type="button" class="tag-av" data-av="${a.id}" title="Ver o formulário">${numAv(a)} · ${dataCurta(a.created_at)} · ${esc(ST_NOME[a.situacao] || ST_NOME.analise)}</button>`).join('')}${
+    `<button type="button" class="tag-av" data-av="${a.id}" title="Ver o relatório">${esc(numAv(a))} · ${dataCurta(a.created_at)} · ${esc(ST_NOME[a.situacao] || ST_NOME.analise)}</button>`).join('')}${
     lista.length > 3 ? `<button type="button" class="tag-av" data-av="${lista.map((a) => a.id).join(',')}">ver os ${lista.length}</button>` : ''}</div></div>`;
 }
 function linhaScrapAv(s) {
@@ -2158,58 +2367,63 @@ function linhaScrapAv(s) {
     + ` · ${esc(s.registrado_por || '')}${s.matricula ? ' (' + esc(s.matricula) + ')' : ''} · ${dataHora(s.created_at)}${stHtml(s.status)}</li>`;
 }
 
-// Um formulário na folha. n: posição no relatório do dia (null no modal); acoes: Qualidade pode mexer
-function itemAvHtml(a, n, ligados, acoes) {
-  const fotos = fotosDe(a), tit = `${numAv(a)} · ${a.material}`, sit = a.situacao || 'analise', MAX = 5;
-  const seletor = `<span class="so-papel">${stHtml(sit)}</span><select class="av-sit-sel so-tela s-${esc(sit)}" data-sitid="${a.id}" aria-label="Situação de ${esc(numAv(a))}">${
-    Object.entries(ST_NOME).map(([k, t]) => `<option value="${k}"${k === sit ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select>`;
-  return `<section class="av-item"${n != null ? ` id="av-${a.id}"` : ''} data-id="${a.id}">
-    ${n != null ? `<div class="av-n">${pad(n)}</div>` : ''}
+/* lista de relatórios (aba Relatório e modal do selo) */
+function cardAv(a, ligados, mexer) {
+  const d = a.dados || {}, fotos = fotosDe(a), ok = fotosOkDe(a), sit = a.situacao || 'analise', tit = `${numAv(a)} · ${a.material}`;
+  const acoes = acoesDe(a);
+  const thumbs = (ids, cat) => `<div class="av-thumbs">${ids.map((id, i) => `<img src="/api/foto/${id}?mini=1" ${SEM_MINI(id)} alt="Foto ${cat === 'ok' ? 'OK' : 'NC'} ${i + 1}" data-gal="${ids.join(',')}" data-i="${i}" data-tit="${esc(tit + (cat === 'ok' ? ' · foto OK' : ' · foto NC'))}">`).join('')}</div>`;
+  const situacao = mexer
+    ? `<select class="av-sit-sel s-${esc(sit)}" data-sitid="${a.id}" aria-label="Situação da peça">${Object.entries(ST_NOME).map(([k, t]) => `<option value="${k}"${k === sit ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select>`
+    : stHtml(sit);
+  return `<article class="painel av-card sev-${esc(d.severidade || 'media')}"${mexer ? ` id="av-${a.id}"` : ''} data-id="${a.id}">
     <div class="av-corpo">
-      <div class="av-topo"><span class="av-num">${numAv(a)}</span><span class="av-hora">${n != null ? hora(a.created_at) : dataHora(a.created_at)}</span>${acoes ? seletor : stHtml(sit)}</div>
+      <div class="av-topo"><span class="av-ra-num">${esc(numAv(a))}</span><span class="av-hora">${dataBR(d.data || a.created_at)}${d.turno ? ' · ' + esc(d.turno) : ''} · ${hora(a.created_at)}</span>
+        ${d.classificacao ? `<span class="av-tag">${esc(CLASSIF[d.classificacao])}</span>` : ''}${d.severidade ? `<span class="av-tag sev-${esc(d.severidade)}">${esc(SEVER[d.severidade])}</span>` : ''}${situacao}
+        ${a.email_em ? `<span class="av-tag enviado" title="E-mail preparado por ${esc(a.email_por || '')}">${ICONE_EMAIL}E-mail ${dataCurta(a.email_em)} ${hora(a.email_em)}</span>` : (mexer ? '<span class="av-tag sem-envio">E-mail ainda não enviado</span>' : '')}</div>
       <div class="av-mat"><b class="av-cod">${esc(a.material)}</b>${a.projeto ? `<span class="proj">${esc(a.projeto)}</span>` : ''}${clsHtml(a.classe)}${a.fora_bom ? '<span class="proj fora">fora BOM</span>' : ''}</div>
       ${a.descricao_material ? `<p class="av-desc">${esc(a.descricao_material)}</p>` : ''}
-      <dl class="av-campos"><div><dt>Quantidade</dt><dd>${esc(qtdTxt(a.quantidade, a.unidade))}</dd></div>${a.defeito ? `<div><dt>Defeito</dt><dd>${esc(a.defeito)}</dd></div>` : ''}</dl>
-      ${a.observacao ? `<p class="av-obs"><b>Observação:</b> ${esc(a.observacao)}</p>` : ''}
+      ${d.o_que ? `<p class="av-oque"><b>O quê:</b> ${esc(d.o_que)}</p>` : ''}
+      <div class="av-campos">${[['Quem', d.quem], ['Onde', d.onde], ['Quando', d.quando], ['Quanto', d.quanto || quantoTxt(a.quantidade, a.unidade)]]
+        .filter(([, v]) => v).map(([k, v]) => `<span>${k} <b>${esc(v)}</b></span>`).join('')}</div>
+      <div class="av-plano-res">${acoes.map((x, n) => `<span>${n ? 'Corretiva' : 'Contenção'}: <b class="st-acao ${SLUG_ACAO[x.status] || ''}">${esc(x.status)}</b>${x.responsavel || x.prazo ? ` <span>(${esc([x.responsavel, x.prazo].filter(Boolean).join(', ').replace(/\n/g, ' '))})</span>` : ''}</span>`).join('')}</div>
       ${ligados.length
-        ? `<div class="av-scraps"><small>Registros de scrap deste material · ${JANELA_AV} dias</small><ul>${ligados.slice(0, MAX).map(linhaScrapAv).join('')}</ul>${ligados.length > MAX ? `<small>e mais ${ligados.length - MAX}</small>` : ''}</div>`
-        : `<div class="av-scraps nenhum">Sem registro de scrap deste material nos ${JANELA_AV} dias até o formulário.</div>`}
-      <div class="av-por">Qualidade: ${esc(quemAv(a)) || '–'}${a.editado_em ? ` · editado ${dataHora(a.editado_em)}${a.editado_por ? ' por ' + esc(a.editado_por) : ''}` : ''}</div>
-      ${acoes ? `<div class="av-acoes so-tela">
+        ? `<div class="av-scraps"><small>Registros de scrap deste material · ${JANELA_AV} dias</small><ul>${ligados.slice(0, 3).map(linhaScrapAv).join('')}</ul>${ligados.length > 3 ? `<small>e mais ${ligados.length - 3}</small>` : ''}</div>`
+        : `<div class="av-scraps nenhum">Sem registro de scrap deste material nos ${JANELA_AV} dias até o relatório.</div>`}
+      <div class="av-por">Aberto por ${esc(quemAv(a)) || '–'}${a.editado_em ? ` · editado ${dataHora(a.editado_em)}${a.editado_por ? ' por ' + esc(a.editado_por) : ''}` : ''}</div>
+      <div class="av-btns">
+        <button type="button" data-avacao="pdf" data-id="${a.id}">${ICONE_DOC}PDF</button>
+        ${mexer ? `<button type="button" class="prim" data-avacao="email" data-id="${a.id}">${ICONE_EMAIL}${a.email_em ? 'Enviar de novo' : 'Enviar por e-mail'}</button>
         <button type="button" data-avacao="editar" data-id="${a.id}">${ICONE_LAPIS}Editar</button>
-        ${fotos.length < MAX_FOTOS_AV ? `<button type="button" data-avacao="foto" data-id="${a.id}">${ICONE_CAM}${fotos.length ? 'Outra foto' : 'Adicionar foto'}</button>` : ''}
-        <button type="button" data-avacao="excluir" data-id="${a.id}">${ICONE_LIXO}Excluir</button></div>` : ''}
+        ${fotos.length < MAX_FOTOS_AV.nc ? `<button type="button" data-avacao="foto" data-id="${a.id}">${ICONE_CAM}Foto NC</button>` : ''}
+        <button type="button" data-avacao="excluir" data-id="${a.id}">${ICONE_LIXO}Excluir</button>` : ''}
+      </div>
     </div>
-    <div class="av-fotos${fotos.length === 1 ? ' uma' : ''}">${fotos.length
-      ? fotos.map((id, i) => `<img src="/api/foto/${id}?mini=1" ${SEM_MINI(id)} alt="Foto ${i + 1} de ${esc(tit)}" data-gal="${fotos.join(',')}" data-i="${i}" data-tit="${esc(tit)}">`).join('')
-      : '<div class="av-sem-foto">Sem foto</div>'}</div>
-  </section>`;
+    <div class="av-fotos-card">
+      <div class="nc"><small>Foto NC</small>${fotos.length ? thumbs(fotos, 'nc') : '<div class="av-sem-foto">Sem foto da avaria</div>'}</div>
+      ${ok.length ? `<div class="ok"><small>Foto OK</small>${thumbs(ok, 'ok')}</div>` : ''}
+    </div>
+  </article>`;
 }
 
-function folhaHtml() {
-  const itens = REL.itens, d = dataDia(REL.dia), pode = podeFoto();
-  const semana = d.toLocaleDateString('pt-BR', { weekday: 'long' });
-  const cont = {};
-  for (const a of itens) cont[a.situacao || 'analise'] = (cont[a.situacao || 'analise'] || 0) + 1;
-  const resp = [...new Set(itens.map(quemAv).filter(Boolean))];
-  return `<header class="folha-cab">${LOGO_FOLHA}
-      <div class="folha-tit"><b>Relatório de avarias</b><span>Qualidade · peças com avaria, sendo scrap ou não</span></div>
-      <div class="folha-data"><b>${d.toLocaleDateString('pt-BR')}</b><span>${semana.charAt(0).toUpperCase() + semana.slice(1)}</span></div></header>
-    ${itens.length ? `<div class="folha-resumo">
-        <div><small>Formulários</small><b>${fmt(itens.length)}</b></div>
-        ${Object.keys(ST_NOME).filter((k) => cont[k]).map((k) => `<div><small>${esc(ST_NOME[k])}</small><b>${fmt(cont[k])}</b></div>`).join('')}
-        <div class="resp"><small>Responsável</small><b>${esc(resp.join(', ') || '–')}</b></div></div>
-      <div class="av-itens">${itens.map((a, i) => itemAvHtml(a, i + 1, ligadosAv(a, REL.scraps), pode)).join('')}</div>`
-    : `<div class="vazio"><b>Nenhuma avaria registrada em ${d.toLocaleDateString('pt-BR')}</b>${pode && REL.dia === hojeStr()
-        ? 'Digite o código da peça acima e tire a foto: o formulário entra aqui.' : 'Escolha outro dia nas setas acima.'}</div>`}
-    <footer class="folha-rodape"><span>Qualidade · Registro de scrap</span><span>Gerado em ${new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span></footer>`;
+function renderRelatorio() {
+  const pode = podeFoto();
+  const n = REL.itens.length;
+  $('#avInfo').innerHTML = REL.busca
+    ? `${n ? `${n} relatório(s) para “${esc(REL.busca)}”` : `Nenhum relatório para “${esc(REL.busca)}”`}<button type="button" class="link-btn" id="avLimparBusca">Voltar para o dia</button>`
+    : (n ? `${n} relatório(s) em ${dataBR(REL.dia)}` : '');
+  $('#avLista').innerHTML = n
+    ? REL.itens.map((a) => cardAv(a, ligadosAv(a, REL.scraps), pode)).join('')
+    : (REL.busca ? '' : `<div class="painel vazio"><b>Nenhum relatório de avaria em ${dataBR(REL.dia)}</b>${pode && REL.dia === hojeStr()
+        ? 'Digite o código da peça acima e tire a foto da avaria.' : 'Escolha outro dia nas setas acima ou busque pelo RA.'}</div>`);
 }
-function renderRelatorio() { $('#avFolha').innerHTML = folhaHtml(); }
 
 function abrirRelatorio({ dia, destacar } = {}) {
   $('#avEntrada').hidden = !podeFoto();
-  if (podeFoto()) { exigirOperador(); renderFotosAv(); }
-  if (dia && /^\d{4}-\d{2}-\d{2}$/.test(dia)) REL.dia = dia;
+  if (podeFoto()) {
+    exigirOperador();
+    if (!AV.id && !$('#avMat').value) limparAv();
+  }
+  if (dia && /^\d{4}-\d{2}-\d{2}$/.test(dia)) { REL.dia = dia; REL.busca = ''; $('#avBusca').value = ''; }
   if (!REL.dia) REL.dia = hojeStr();
   $('#avDia').max = hojeStr();
   $('#avDia').value = REL.dia;
@@ -2221,21 +2435,21 @@ async function carregarRelatorio(destacar) {
   const seq = ++REL.seq;
   const ini = dataDia(dia), fim = new Date(dataDia(somaDias(dia, 1)).getTime() - 1);
   $('#avProx').disabled = dia >= hojeStr();
-  $('#avHoje').classList.toggle('sel', dia === hojeStr());
-  $('#avFolha').classList.add('carregando');
+  $('#avHoje').classList.toggle('sel', dia === hojeStr() && !REL.busca);
+  $('#avLista').style.opacity = '.55';
   try {
-    const d = await api('/api/avaria?' + qs({ de: ini.toISOString(), ate: fim.toISOString() }));
+    const d = await api('/api/avaria?' + qs(REL.busca ? { q: REL.busca } : { de: ini.toISOString(), ate: fim.toISOString() }));
     if (seq !== REL.seq) return;
     REL.itens = d.itens; REL.scraps = d.scraps;
     renderRelatorio();
-    // formulário aberto em edição: fotos atualizadas (foto removida pela galeria, por exemplo)
+    // relatório aberto em edição: fotos atualizadas (foto removida pela galeria, por exemplo)
     const ed = AV.id && REL.itens.find((x) => x.id === AV.id);
-    if (ed) { AV.item = ed; AV.existentes = fotosDe(ed).map(Number); renderFotosAv(); }
+    if (ed) { AV.item = ed; AV.fotos.nc.ex = fotosDe(ed).map(Number); AV.fotos.ok.ex = fotosOkDe(ed).map(Number); renderFotosAv(); }
     if (destacar) destacarAv(destacar);
   } catch (e) {
-    if (seq === REL.seq) $('#avFolha').innerHTML = `<div class="vazio">${esc(e.message)}</div>`;
+    if (seq === REL.seq) $('#avLista').innerHTML = `<div class="painel vazio">${esc(e.message)}</div>`;
   }
-  if (seq === REL.seq) $('#avFolha').classList.remove('carregando');
+  if (seq === REL.seq) $('#avLista').style.opacity = '';
 }
 function destacarAv(id, rolar = true) {
   const el = document.getElementById('av-' + id);
@@ -2244,46 +2458,198 @@ function destacarAv(id, rolar = true) {
   el.classList.remove('destaque'); void el.offsetWidth; el.classList.add('destaque');
 }
 
-$('#avDia').addEventListener('change', () => { if ($('#avDia').value) carregarRelatorio(); });
-$('#avAnt').addEventListener('click', () => { $('#avDia').value = somaDias(REL.dia || hojeStr(), -1); carregarRelatorio(); });
-$('#avProx').addEventListener('click', () => { if (REL.dia < hojeStr()) { $('#avDia').value = somaDias(REL.dia, 1); carregarRelatorio(); } });
-$('#avHoje').addEventListener('click', () => { $('#avDia').value = hojeStr(); carregarRelatorio(); });
+$('#avDia').addEventListener('change', () => { if ($('#avDia').value) { REL.busca = ''; $('#avBusca').value = ''; carregarRelatorio(); } });
+$('#avAnt').addEventListener('click', () => { REL.busca = ''; $('#avBusca').value = ''; $('#avDia').value = somaDias(REL.dia || hojeStr(), -1); carregarRelatorio(); });
+$('#avProx').addEventListener('click', () => { if (REL.dia < hojeStr()) { REL.busca = ''; $('#avBusca').value = ''; $('#avDia').value = somaDias(REL.dia, 1); carregarRelatorio(); } });
+$('#avHoje').addEventListener('click', () => { REL.busca = ''; $('#avBusca').value = ''; $('#avDia').value = hojeStr(); carregarRelatorio(); });
+$('#avBusca').addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  REL.busca = $('#avBusca').value.trim();
+  carregarRelatorio();
+});
+$('#avBusca').addEventListener('input', () => { if (!$('#avBusca').value.trim() && REL.busca) { REL.busca = ''; carregarRelatorio(); } });
+$('#avInfo').addEventListener('click', (e) => { if (e.target.id === 'avLimparBusca') { REL.busca = ''; $('#avBusca').value = ''; carregarRelatorio(); } });
 
-/* entrada: código + foto (+ situação, quantidade, defeito e observação, se quiser) */
+/* ----- formulário ----- */
 $('#avDefeitos').innerHTML = DEFEITOS.map((d) => `<button type="button" class="chip" data-def="${esc(d)}">${esc(d)}</button>`).join('');
 function marcarAvDefeito(v) {
   AV.defeito = v || '';
   document.querySelectorAll('#avDefeitos .chip').forEach((c) => c.classList.toggle('sel', c.dataset.def === AV.defeito));
 }
-$('#avDefeitos').addEventListener('click', (e) => {
-  const c = e.target.closest('.chip');
-  if (!c) return;
-  AV.defTocado = true;
-  marcarAvDefeito(c.classList.contains('sel') ? '' : c.dataset.def);
-});
+function marcarOpcao(grupo, v) {
+  AV[grupo === 'avClass' ? 'classificacao' : 'severidade'] = v || '';
+  document.querySelectorAll(`#${grupo} button`).forEach((b) => b.classList.toggle('sel', b.dataset.v === v));
+}
 function marcarAvSit(s) {
   AV.sit = ST_NOME[s] ? s : 'analise';
   document.querySelectorAll('#avSit button').forEach((b) => b.classList.toggle('sel', b.dataset.sit === AV.sit));
 }
-$('#avSit').addEventListener('click', (e) => { const b = e.target.closest('button[data-sit]'); if (b) marcarAvSit(b.dataset.sit); });
+$('#avDefeitos').addEventListener('click', (e) => {
+  const c = e.target.closest('.chip');
+  if (!c) return;
+  marcarAvDefeito(c.classList.contains('sel') ? '' : c.dataset.def);
+  AV.tocados.add('avDefeito');
+  preencherAuto();
+});
+['avClass', 'avSev'].forEach((g) => $('#' + g).addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-v]');
+  if (!b) return;
+  marcarOpcao(g, b.dataset.v);
+  AV.tocados.add(g);
+  preencherAuto();
+}));
+$('#avSit').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-sit]');
+  if (b) { marcarAvSit(b.dataset.sit); preencherAuto(); }
+});
 document.querySelectorAll('[data-avstep]').forEach((b) => b.addEventListener('click', () => {
   const v = Number(String($('#avQtd').value).replace(',', '.')) || 0;
   $('#avQtd').value = Math.max(1, Math.round(v + Number(b.dataset.avstep)));
-  AV.qtdTocada = true;
+  AV.tocados.add('avQtd');
+  preencherAuto();
 }));
-$('#avQtd').addEventListener('input', () => { AV.qtdTocada = true; });
+$('#avQtd').addEventListener('input', () => { AV.tocados.add('avQtd'); preencherAuto(); });
+$('#avNf').addEventListener('input', () => { renderItensAv(); resumoSecoes(); });
+$('#avData').addEventListener('change', () => { if (!$('#avData').value) $('#avData').value = hojeStr(); carregarProximo(); preencherAuto(); });
+$('#avTurno').addEventListener('change', () => ls.set('qs_turno', $('#avTurno').value));
+// texto mexido pela pessoa não é mais trocado pelo automático (apagou tudo: volta o automático)
+for (const id of [...CAMPOS_AUTO, 'avA1Status', 'avA2Status']) {
+  $('#' + id).addEventListener('input', (e) => {
+    if (e.target.value.trim()) AV.tocados.add(id); else { AV.tocados.delete(id); preencherAuto(); }
+    resumoSecoes();
+  });
+  $('#' + id).addEventListener('change', () => { AV.tocados.add(id); resumoSecoes(); });
+}
 
+// Material da peça: o da BOM ou o digitado (fora da BOM)
+function materialAtual() {
+  const d = AV.busca, q = $('#avMat').value.trim().toUpperCase();
+  if (d?.exato?.length) {
+    const l = d.exato.find((x) => x.projeto === AV.projeto) || d.exato[0];
+    return { codigo: d.exato[0].material, descricao: l.descricao || d.exato[0].descricao || '', unidade: unOk(l.unidade), projeto: AV.projeto || (d.exato.length === 1 ? l.projeto : d.exato.map((x) => x.projeto).join(', ')), classe: l.classe || '' };
+  }
+  const it = AV.item && chaveCod(AV.item.material) === chaveCod(q) ? AV.item : null;
+  return { codigo: q, descricao: ($('#avFbDesc')?.value ?? it?.descricao_material ?? '').trim(), unidade: unOk($('#avFbUn')?.value ?? it?.unidade), projeto: ($('#avFbProj')?.value ?? it?.projeto ?? '').trim().toUpperCase(), classe: '' };
+}
+
+// O que o site escreve sozinho (só entra nos campos que a pessoa não mexeu)
+function textosAuto() {
+  const ult = AV.info?.scraps?.[0] || null;           // último registro de scrap da peça (7 dias)
+  const def = AV.defeito || ult?.defeito || '';
+  const tipo = TIPO_AVARIA[def];
+  const m = materialAtual();
+  const data = $('#avData').value || hojeStr();
+  const rec = AV.classificacao !== 'processo';
+  const qtd = Number(String($('#avQtd').value).replace(',', '.')) || 1;
+  return {
+    avOque: [tipo ? `${tipo[0]}${m.descricao ? ' – ' + m.descricao : ''}` : '', ult?.descricao_problema || ''].filter(Boolean).map(frase).join(' '),
+    avPorque: tipo ? tipo[1] : '',
+    avQuem: ult ? `${ult.registrado_por || 'Operador'} - Operador de produção` : (OP ? `${OP.nome} - Qualidade` : ''),
+    avComo: ult || !rec ? 'Inspeção de linha' : 'Inspeção de recebimento',
+    avOnde: ult ? `Posto ${pad(ult.posto)}` : '',
+    avQuando: ult ? `${dataBR(ult.created_at)} às ${hora(ult.created_at)}` : dataBR(data),
+    avQuanto: quantoTxt(qtd, m.unidade),
+    avA1Desc: `${CONTENCAO[AV.sit] || CONTENCAO.analise} ${ENVIO_AREAS}`,
+    avA1Resp: OP ? OP.nome : '',
+    avA1Prazo: 'Imediato',
+    avA2Desc: CORRETIVA[rec ? 'recebimento' : 'processo'][0],
+    avA2Resp: CORRETIVA[rec ? 'recebimento' : 'processo'][1],
+    avA2Prazo: dataBR(somaDias(data, 15)),
+  };
+}
+function preencherAuto() {
+  const ult = AV.info?.scraps?.[0];
+  // tipo de avaria: o do último registro de scrap da peça, até a pessoa escolher outro
+  if (!AV.tocados.has('avDefeito')) marcarAvDefeito(ult && DEFEITOS.includes(ult.defeito) ? ult.defeito : '');
+  const def = AV.defeito;
+  if (!AV.tocados.has('avClass')) marcarOpcao('avClass', PROCESSO.has(def) ? 'processo' : 'recebimento');
+  if (!AV.tocados.has('avSev')) marcarOpcao('avSev', SEVERA.has(def) ? 'alta' : 'media');
+  if (!AV.tocados.has('avQtd') && !AV.id) $('#avQtd').value = Number(ult?.quantidade) > 0 ? ult.quantidade : 1;
+  for (const [id, v] of Object.entries(textosAuto())) if (!AV.tocados.has(id)) $('#' + id).value = v;
+  if (!AV.tocados.has('avA1Status')) $('#avA1Status').value = 'Concluído';
+  if (!AV.tocados.has('avA2Status')) $('#avA2Status').value = 'Pendente';
+  renderItensAv();
+  resumoSecoes();
+}
+function resumoSecoes() {
+  const m = materialAtual(), qtd = Number(String($('#avQtd').value).replace(',', '.')) || 1;
+  const extras = AV.itens?.length || 0;
+  $('#avRastResumo').textContent = m.codigo
+    ? `${m.codigo} · ${qtdBR(qtd)} ${unOk(m.unidade) || 'PC'} · NF ${$('#avNf').value.trim() || 'não aplicável'}${extras ? ` · +${extras} linha(s)` : ''}`
+    : 'código, quantidade e nota fiscal da peça';
+  const st = (n) => $(`#avA${n}Status`).value;
+  $('#avPlanoResumo').textContent = `Contenção: ${st(1)} · Corretiva: ${st(2)}${$('#avA2Prazo').value ? ' até ' + $('#avA2Prazo').value : ''}${$('#avA2Resp').value ? ' (' + $('#avA2Resp').value + ')' : ''}`;
+}
+
+/* rastreabilidade: linha 1 é a peça; linhas extras para outra peça ou nº de série */
+AV.itens = [];
+function lerItensAv() {
+  AV.itens = [...document.querySelectorAll('#avItens tr[data-extra]')].map((tr) => ({
+    codigo: tr.querySelector('[data-k="codigo"]').value.trim().toUpperCase(), qtd: tr.querySelector('[data-k="qtd"]').value.trim(),
+    nf: tr.querySelector('[data-k="nf"]').value.trim(), descricao: tr.querySelector('[data-k="descricao"]').value.trim(),
+  }));
+  return AV.itens;
+}
+function renderItensAv() {
+  const m = materialAtual(), qtd = Number(String($('#avQtd').value).replace(',', '.')) || 1;
+  const nf = $('#avNf').value.trim() || 'Não aplicável';
+  $('#avItens').innerHTML = `<tr><td class="fixo">${esc(m.codigo || '—')}</td><td>1</td><td>${esc(qtdBR(qtd))}</td><td>${esc(nf)}</td><td>${esc(m.descricao || '—')}</td><td></td></tr>`
+    + AV.itens.map((it, i) => `<tr data-extra="${i}"><td><input data-k="codigo" maxlength="40" value="${esc(it.codigo)}" placeholder="Código ou nº de série"></td><td>${i + 2}</td>
+      <td><input data-k="qtd" maxlength="12" value="${esc(it.qtd)}"></td><td><input data-k="nf" maxlength="60" value="${esc(it.nf)}" placeholder="${esc(nf)}"></td>
+      <td><input data-k="descricao" maxlength="120" value="${esc(it.descricao)}"></td><td><button type="button" class="apagar" data-rmitem="${i}" aria-label="Tirar linha">${ICONE_LIXO}</button></td></tr>`).join('');
+  $('#avItemMais').hidden = AV.itens.length >= 3;
+}
+$('#avItemMais').addEventListener('click', () => {
+  lerItensAv();
+  AV.itens.push({ codigo: '', qtd: '1', nf: '', descricao: '' });
+  renderItensAv(); resumoSecoes();
+  $(`#avItens tr[data-extra="${AV.itens.length - 1}"] input`).focus();
+});
+$('#avItens').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-rmitem]');
+  if (!b) return;
+  lerItensAv();
+  AV.itens.splice(Number(b.dataset.rmitem), 1);
+  renderItensAv(); resumoSecoes();
+});
+$('#avItens').addEventListener('input', () => { lerItensAv(); resumoSecoes(); });
+// código da linha extra: busca a descrição na BOM
+$('#avItens').addEventListener('change', async (e) => {
+  if (e.target.dataset.k !== 'codigo' || !e.target.value.trim()) return;
+  const tr = e.target.closest('tr'), desc = tr.querySelector('[data-k="descricao"]');
+  if (desc.value.trim()) return;
+  try {
+    const d = await materialDaBom(e.target.value.trim());
+    if (d.exato.length && !desc.value.trim()) { desc.value = d.exato[0].descricao || ''; e.target.value = d.exato[0].material; lerItensAv(); }
+  } catch {}
+});
+
+/* número RA: o próximo livre aparece no campo; digitar outro só quando precisar corrigir */
+async function carregarProximo() {
+  const ano = Number(($('#avData').value || hojeStr()).slice(0, 4));
+  $('#avAno').textContent = '-' + ano;
+  if (AV.id) return;
+  try { AV.proximo = await api('/api/avaria/proximo?' + qs({ ano })); } catch { AV.proximo = null; }
+  if (!AV.id && AV.proximo?.ano === ano) $('#avNum').placeholder = pad4(AV.proximo.numero);
+}
+const raDoForm = () => {
+  const ano = Number(($('#avData').value || hojeStr()).slice(0, 4));
+  const n = Number($('#avNum').value) || (AV.item?.ano === ano ? AV.item.numero : AV.proximo?.numero) || 0;
+  return n ? `RA-${pad4(n)}-${ano}` : `RA-____-${ano}`;
+};
+
+/* código da peça */
 $('#avMat').addEventListener('input', () => { clearTimeout(tAv); tAv = setTimeout(() => buscarAvMaterial(), 350); });
 $('#avMat').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') { e.preventDefault(); clearTimeout(tAv); buscarAvMaterial(); }
 });
-
 async function buscarAvMaterial(manterProjeto = false) {
   const q = $('#avMat').value.trim();
   const seq = ++AV.seq;
   if (!manterProjeto) AV.projeto = null;
   Object.assign(AV, { busca: null, info: null, foraBom: false, q: '' });
-  if (!q) { $('#avMatRes').innerHTML = ''; AV.buscando = null; return; }
+  if (!q) { $('#avMatRes').innerHTML = ''; AV.buscando = null; AV.fotos.ok.copiar = null; renderFotosAv('ok'); preencherAuto(); return; }
   $('#avMatRes').innerHTML = '<p class="mut" style="margin:12px 0 0">Procurando nas BOMs…</p>';
   const tarefa = (async () => {
     try {
@@ -2295,8 +2661,12 @@ async function buscarAvMaterial(manterProjeto = false) {
       Object.assign(AV, { busca: d, info, q, foraBom: !d.exato.length });
       if (d.exato.length === 1) AV.projeto = d.exato[0].projeto;
       else if (!d.exato.some((x) => x.projeto === AV.projeto)) AV.projeto = null;
-      preencherDoScrap();
+      // foto OK de um relatório anterior da mesma peça (a peça boa é a mesma)
+      const ant = (info.avarias || []).find((a) => a.id !== AV.id && a.fotos_ok);
+      AV.fotos.ok.copiar = ant ? { id: ant.id, ra: ant.ra, fotos: String(ant.fotos_ok).split(',') } : null;
       renderAvMaterial();
+      preencherAuto();
+      renderFotosAv('ok');
     } catch (e) {
       if (seq === AV.seq) $('#avMatRes').innerHTML = `<p class="mut" style="margin:12px 0 0">${esc(e.message)}</p>`;
     }
@@ -2304,14 +2674,6 @@ async function buscarAvMaterial(manterProjeto = false) {
   AV.buscando = tarefa;
   await tarefa;
   if (AV.buscando === tarefa) AV.buscando = null;
-}
-
-// O formulário novo já vem com o defeito e a quantidade do último registro de scrap desse material
-function preencherDoScrap() {
-  if (AV.id) return;
-  const ult = AV.info?.scraps?.[0];
-  if (!AV.defTocado) marcarAvDefeito(ult?.defeito || '');
-  if (!AV.qtdTocada) $('#avQtd').value = Number(ult?.quantidade) > 0 ? ult.quantidade : 1;
 }
 
 function renderAvMaterial() {
@@ -2333,7 +2695,7 @@ function renderAvMaterial() {
     // fora da BOM: entra assim mesmo; na edição, volta o que foi digitado antes
     const it = AV.item && AV.item.fora_bom && chaveCod(AV.item.material) === chaveCod(q) ? AV.item : null;
     h = `<div class="ficha alerta"><div class="ficha-top"><span class="ficha-ic">${ICONE_ALERTA}</span>
-        <div><div class="ficha-cod">${esc(q)}</div><div class="ficha-desc">Não está nas BOMs. Pode adicionar assim mesmo; se souber, preencha:</div></div></div>
+        <div><div class="ficha-cod">${esc(q)}</div><div class="ficha-desc">Não está nas BOMs. Pode fazer o relatório assim mesmo; se souber, preencha:</div></div></div>
       <div class="grid2"><input id="avFbProj" list="avProjLista" placeholder="Projeto (ex.: BC22)" maxlength="40" value="${esc(it?.projeto || '')}">
         <input id="avFbUn" placeholder="Unidade (ex.: PC)" maxlength="6" value="${esc(unOk(it?.unidade))}"></div>
       <input id="avFbDesc" placeholder="Descrição da peça" maxlength="200" style="margin-top:12px" value="${esc(it?.descricao_material || '')}">
@@ -2342,7 +2704,7 @@ function renderAvMaterial() {
     </div>`;
     $('#avUn').textContent = unOk(it?.unidade) || 'PC';
   }
-  // o que já existe desse material: outros formulários de avaria e registros de scrap dos últimos dias
+  // o que já existe desse material: outros relatórios de avaria e registros de scrap dos últimos dias
   const regs = AV.info?.scraps || [];
   h += avisoAvaria((AV.info?.avarias || []).filter((a) => a.id !== AV.id));
   if (regs.length) {
@@ -2353,26 +2715,35 @@ function renderAvMaterial() {
 }
 $('#avMatRes').addEventListener('click', (e) => {
   const p = e.target.closest('button[data-avproj]');
-  if (p) { AV.projeto = AV.projeto === p.dataset.avproj ? null : p.dataset.avproj; return renderAvMaterial(); }
+  if (p) { AV.projeto = AV.projeto === p.dataset.avproj ? null : p.dataset.avproj; renderAvMaterial(); return preencherAuto(); }
   const s = e.target.closest('button[data-avmat]');
   if (s) { $('#avMat').value = s.dataset.avmat; clearTimeout(tAv); buscarAvMaterial(); }
 });
-$('#avMatRes').addEventListener('input', (e) => { if (e.target.id === 'avFbUn') $('#avUn').textContent = unOk(e.target.value) || 'PC'; });
+$('#avMatRes').addEventListener('input', (e) => {
+  if (e.target.id === 'avFbUn') $('#avUn').textContent = unOk(e.target.value) || 'PC';
+  if (['avFbUn', 'avFbDesc', 'avFbProj'].includes(e.target.id)) preencherAuto();
+});
 
-/* fotos do formulário (antes de salvar ficam só na tela; ao salvar, recebem o carimbo e vão uma por vez) */
-function renderFotosAv() {
-  const total = AV.existentes.length + AV.novas.length;
-  const bloco = (rot, ic, extra) => `<label class="foto-add">${ic}<span>${rot}</span><input type="file" accept="image/*" ${extra} data-avfoto></label>`;
-  $('#avFotos').innerHTML =
-    AV.existentes.map((id) => `<div class="thumb"><img src="/api/foto/${id}?mini=1" ${SEM_MINI(id)} alt="Foto do formulário" data-galex="${id}"><button type="button" data-rmex="${id}" aria-label="Remover foto" title="Remover foto">×</button></div>`).join('')
-    + AV.novas.map((f, i) => `<div class="thumb"><img src="${f.mini}" alt="Foto nova" data-galnova="${i}"><button type="button" data-rmnova="${i}" aria-label="Tirar esta foto" title="Tirar esta foto">×</button>${f.erro ? '<span class="thumb-erro">não enviada</span>' : ''}</div>`).join('')
-    + (total < MAX_FOTOS_AV
+/* fotos: NC (evidência da avaria) e OK (padrão aceitável). Antes de salvar ficam só na tela; ao salvar,
+   a NC recebe o carimbo (data, RA, peça) e cada foto vai num envio separado */
+function renderFotosAv(cat) {
+  if (!cat) { renderFotosAv('nc'); renderFotosAv('ok'); return; }
+  const F = AV.fotos[cat], el = $(cat === 'nc' ? '#avFotosNc' : '#avFotosOk');
+  const copia = cat === 'ok' && !AV.okDispensado && F.copiar && !F.ex.length && !F.novas.length ? F.copiar : null;
+  const total = F.ex.length + F.novas.length + (copia ? copia.fotos.length : 0);
+  const bloco = (rot, ic, extra) => `<label class="foto-add">${ic}<span>${rot}</span><input type="file" accept="image/*" ${extra} data-avfoto="${cat}"></label>`;
+  el.innerHTML =
+    F.ex.map((id) => `<div class="thumb"><img src="/api/foto/${id}?mini=1" ${SEM_MINI(id)} alt="Foto ${cat.toUpperCase()}" data-galex="${id}" data-cat="${cat}"><button type="button" data-rmex="${id}" data-cat="${cat}" aria-label="Remover foto" title="Remover foto">×</button></div>`).join('')
+    + F.novas.map((f, i) => `<div class="thumb"><img src="${f.mini}" alt="Foto nova" data-galnova="${i}" data-cat="${cat}"><button type="button" data-rmnova="${i}" data-cat="${cat}" aria-label="Tirar esta foto" title="Tirar esta foto">×</button>${f.erro ? '<span class="thumb-erro">não enviada</span>' : ''}</div>`).join('')
+    + (copia ? copia.fotos.map((id) => `<div class="thumb copia"><img src="/api/foto/${id}?mini=1" ${SEM_MINI(id)} alt="Foto OK de ${esc(copia.ra)}" data-galcopia="${id}"></div>`).join('') : '')
+    + (!copia && total < MAX_FOTOS_AV[cat]
       ? (CELULAR ? bloco('Tirar foto', ICONE_CAM, 'capture="environment"') + bloco('Galeria', ICONE_GALERIA, 'multiple')
-        : bloco(total ? 'Outra foto' : 'Adicionar foto', ICONE_CAM, 'multiple') + '<p class="av-dica">Também dá para arrastar a foto para cá ou colar com Ctrl+V.</p>')
-      : '');
+        : bloco(total ? 'Outra foto' : 'Adicionar foto', ICONE_CAM, 'multiple') + (cat === 'nc' && !total ? '<p class="av-dica">Também dá para arrastar a foto para cá ou colar com Ctrl+V.</p>' : ''))
+      : '')
+    + (copia ? `<p class="av-copia">Fotos OK do ${esc(copia.ra || 'relatório anterior')} (mesma peça) entram neste relatório.<button type="button" class="link-btn" data-semcopia>Usar outras</button></p>` : '');
 }
 
-// Miniatura (~480 px) que aparece na folha e sai na impressão
+// Miniatura (~480 px) que aparece na tela e na lista
 function miniatura(img) {
   const k = Math.min(1, 480 / Math.max(img.naturalWidth, img.naturalHeight));
   const c = document.createElement('canvas');
@@ -2383,46 +2754,53 @@ function miniatura(img) {
   for (const q of [0.55, 0.4]) if (url.length > 80000) url = c.toDataURL('image/jpeg', q);
   return url;
 }
-
-async function adicionarArquivosAv(arquivos) {
+async function adicionarArquivosAv(arquivos, cat = 'nc') {
   const imgs = arquivos.filter(ehImagem);
   if (!imgs.length) return toast('Escolha uma imagem', true);
+  const F = AV.fotos[cat];
   for (const arq of imgs) {
-    if (AV.existentes.length + AV.novas.length >= MAX_FOTOS_AV) { toast(`Máximo de ${MAX_FOTOS_AV} fotos por formulário`, true); break; }
+    if (F.ex.length + F.novas.length >= MAX_FOTOS_AV[cat]) { toast(`Máximo de ${MAX_FOTOS_AV[cat]} fotos ${cat === 'ok' ? 'OK' : 'da avaria'}`, true); break; }
     try {
       const img = await carregarImagem(arq);
-      AV.novas.push({ arquivo: arq, mini: miniatura(img), em: new Date() });
-      renderFotosAv();
+      F.novas.push({ arquivo: arq, mini: miniatura(img), em: new Date() });
+      renderFotosAv(cat);
     } catch (err) { toast(err.message, true); }
   }
 }
-$('#avFotos').addEventListener('change', (e) => {
-  if (!e.target.matches('input[data-avfoto]')) return;
-  const arqs = [...e.target.files];
-  e.target.value = '';
-  adicionarArquivosAv(arqs);
+['#avFotosNc', '#avFotosOk'].forEach((sel) => {
+  $(sel).addEventListener('change', (e) => {
+    if (!e.target.matches('input[data-avfoto]')) return;
+    const arqs = [...e.target.files];
+    e.target.value = '';
+    adicionarArquivosAv(arqs, e.target.dataset.avfoto);
+  });
+  $(sel).addEventListener('click', async (e) => {
+    const cat = $(sel).dataset.cat, F = AV.fotos[cat];
+    if (e.target.closest('[data-semcopia]')) { AV.okDispensado = true; return renderFotosAv('ok'); }
+    const rn = e.target.closest('button[data-rmnova]');
+    if (rn) { F.novas.splice(Number(rn.dataset.rmnova), 1); return renderFotosAv(cat); }
+    const rx = e.target.closest('button[data-rmex]');
+    if (rx) {
+      if (!await confirmar('Remover esta foto?', 'A foto sai do relatório de avaria. Essa ação não pode ser desfeita.', 'Remover foto')) return;
+      try {
+        await api('/api/foto/' + rx.dataset.rmex, { method: 'DELETE' });
+        F.ex = F.ex.filter((id) => String(id) !== rx.dataset.rmex);
+        renderFotosAv(cat);
+        toast('Foto removida');
+        carregarRelatorio();
+      } catch (err) { toast(err.message, true); }
+      return;
+    }
+    const tit = AV.item ? numAv(AV.item) : 'Relatório de avaria';
+    const gx = e.target.closest('img[data-galex]');
+    if (gx) return abrirGaleria(F.ex.map(String), F.ex.map(String).indexOf(gx.dataset.galex), tit);
+    const gc = e.target.closest('img[data-galcopia]');
+    if (gc) return abrirGaleria(F.copiar.fotos, F.copiar.fotos.indexOf(gc.dataset.galcopia), 'Foto OK de ' + (F.copiar.ra || 'outro relatório'));
+    const gn = e.target.closest('img[data-galnova]');
+    if (gn) abrirGaleria(F.novas.map((f) => f.mini), Number(gn.dataset.galnova), 'Foto nova, ainda não salva');
+  });
 });
-$('#avFotos').addEventListener('click', async (e) => {
-  const rn = e.target.closest('button[data-rmnova]');
-  if (rn) { AV.novas.splice(Number(rn.dataset.rmnova), 1); return renderFotosAv(); }
-  const rx = e.target.closest('button[data-rmex]');
-  if (rx) {
-    if (!await confirmar('Remover esta foto?', 'A foto sai do formulário de avaria. Essa ação não pode ser desfeita.', 'Remover foto')) return;
-    try {
-      await api('/api/foto/' + rx.dataset.rmex, { method: 'DELETE' });
-      AV.existentes = AV.existentes.filter((id) => String(id) !== rx.dataset.rmex);
-      renderFotosAv();
-      toast('Foto removida');
-      carregarRelatorio();
-    } catch (err) { toast(err.message, true); }
-    return;
-  }
-  const gx = e.target.closest('img[data-galex]');
-  if (gx) return abrirGaleria(AV.existentes.map(String), AV.existentes.map(String).indexOf(gx.dataset.galex), AV.item ? numAv(AV.item) : 'Avaria');
-  const gn = e.target.closest('img[data-galnova]');
-  if (gn) abrirGaleria(AV.novas.map((f) => f.mini), Number(gn.dataset.galnova), 'Foto nova, ainda não salva');
-});
-// arrastar a foto para o formulário ou colar (Ctrl+V), no computador
+// arrastar a foto para o formulário ou colar (Ctrl+V), no computador: entra como NC (ou OK, se cair lá)
 const ENTRADA_AV = $('#avEntrada');
 const temArquivo = (e) => [...(e.dataTransfer?.types || [])].includes('Files');
 ['dragenter', 'dragover'].forEach((ev) => ENTRADA_AV.addEventListener(ev, (e) => {
@@ -2435,121 +2813,186 @@ ENTRADA_AV.addEventListener('drop', (e) => {
   if (!temArquivo(e)) return;
   e.preventDefault();
   ENTRADA_AV.classList.remove('arrastando');
-  adicionarArquivosAv([...e.dataTransfer.files]);
+  adicionarArquivosAv([...e.dataTransfer.files], e.target.closest('#avFotosOk') ? 'ok' : 'nc');
 });
 document.addEventListener('paste', (e) => {
-  if (!$('#tab-relatorio').classList.contains('ativo') || ENTRADA_AV.hidden || !$('#modalOp').hidden) return;
+  if (!$('#tab-relatorio').classList.contains('ativo') || ENTRADA_AV.hidden || !$('#modalOp').hidden || !$('#modalEmail').hidden) return;
   const fs = [...(e.clipboardData?.files || [])].filter(ehImagem);
-  if (fs.length) { e.preventDefault(); adicionarArquivosAv(fs); }
+  if (fs.length) { e.preventDefault(); adicionarArquivosAv(fs, 'nc'); }
 });
 
 function limparAv() {
   clearTimeout(tAv);
   Object.assign(AV, { id: null, item: null, q: '', busca: null, info: null, projeto: null, foraBom: false, buscando: null,
-    novas: [], existentes: [], qtdTocada: false, defTocado: false });
+    fotos: { nc: { ex: [], novas: [] }, ok: { ex: [], novas: [], copiar: null } }, okDispensado: false, tocados: new Set(), itens: [] });
   AV.seq++;
-  $('#avMat').value = ''; $('#avMatRes').innerHTML = ''; $('#avQtd').value = '1'; $('#avUn').textContent = 'PC'; $('#avObs').value = '';
+  $('#avMat').value = ''; $('#avMatRes').innerHTML = ''; $('#avQtd').value = '1'; $('#avUn').textContent = 'PC'; $('#avNf').value = '';
+  $('#avNum').value = ''; $('#avData').value = hojeStr();
+  // turno: o último usado neste aparelho; na primeira vez, pela hora
+  const h = new Date().getHours();
+  $('#avTurno').value = ls.get('qs_turno') || (h >= 6 && h < 15 ? '1° turno' : h >= 15 ? '2° turno' : '3° turno');
   marcarAvSit('analise'); marcarAvDefeito('');
+  for (const id of CAMPOS_AUTO) $('#' + id).value = '';
   document.querySelectorAll('#avEntrada .invalido').forEach(limparInvalido);
   $('#avEdAviso').hidden = true;
   ENTRADA_AV.classList.remove('editando');
-  $('#avSalvar span').textContent = 'Adicionar ao relatório';
+  $('#avSalvar span').textContent = 'Salvar e enviar por e-mail';
+  $('#avSecDesc').open = true; $('#avSecRast').open = false; $('#avSecPlano').open = false;
   renderFotosAv();
+  preencherAuto();
+  carregarProximo();
 }
 $('#avEdCancelar').addEventListener('click', limparAv);
 
 // Edita no próprio formulário de cima. novas: fotos que ainda faltam enviar
-function abrirEdicaoAv(a, novas = [], rolar = true) {
+function abrirEdicaoAv(a, novas = { nc: [], ok: [] }, rolar = true) {
   if (!podeFoto() || !a) return;
   limparAv();
-  Object.assign(AV, { id: a.id, item: a, existentes: fotosDe(a).map(Number), novas, qtdTocada: true, defTocado: true,
-    projeto: a.projeto && !a.projeto.includes(',') ? a.projeto : null });
+  const d = a.dados || {};
+  Object.assign(AV, { id: a.id, item: a, projeto: a.projeto && !a.projeto.includes(',') ? a.projeto : null,
+    fotos: { nc: { ex: fotosDe(a).map(Number), novas: novas.nc || [] }, ok: { ex: fotosOkDe(a).map(Number), novas: novas.ok || [], copiar: null } },
+    tocados: new Set([...CAMPOS_AUTO, 'avA1Status', 'avA2Status', 'avClass', 'avSev', 'avQtd', 'avDefeito']),
+    itens: (d.itens || []).map((i) => ({ ...i })) });
   $('#avMat').value = a.material;
   $('#avQtd').value = a.quantidade;
   $('#avUn').textContent = unOk(a.unidade) || 'PC';
-  $('#avObs').value = a.observacao || '';
+  $('#avNf').value = d.nota_fiscal && d.nota_fiscal !== 'Não aplicável' ? d.nota_fiscal : '';
+  $('#avNum').value = a.numero ? pad4(a.numero) : '';
+  $('#avNum').placeholder = a.numero ? '' : 'próximo';
+  $('#avData').value = d.data || diaDe(new Date(a.created_at));
+  $('#avAno').textContent = '-' + $('#avData').value.slice(0, 4);
+  if (d.turno) $('#avTurno').value = d.turno;
   marcarAvDefeito(a.defeito || '');
   marcarAvSit(a.situacao);
+  marcarOpcao('avClass', d.classificacao || 'recebimento');
+  marcarOpcao('avSev', d.severidade || 'media');
+  const acoes = acoesDe(a);
+  const vals = { avOque: d.o_que, avPorque: d.por_que, avQuem: d.quem, avComo: d.como, avOnde: d.onde, avQuando: d.quando, avQuanto: d.quanto,
+    avA1Desc: acoes[0].descricao, avA1Resp: acoes[0].responsavel, avA1Prazo: acoes[0].prazo, avA2Desc: acoes[1].descricao, avA2Resp: acoes[1].responsavel, avA2Prazo: acoes[1].prazo };
+  for (const [id, v] of Object.entries(vals)) $('#' + id).value = v || '';
+  $('#avA1Status').value = acoes[0].status; $('#avA2Status').value = acoes[1].status;
+  // campo vazio no relatório gravado: o automático preenche
+  for (const id of CAMPOS_AUTO) if (!$('#' + id).value) AV.tocados.delete(id);
   $('#avEdTxt').innerHTML = `Editando <b>${esc(numAv(a))}</b> · ${esc(a.material)} · ${dataHora(a.created_at)}`;
   $('#avEdAviso').hidden = false;
   ENTRADA_AV.classList.add('editando');
-  $('#avSalvar span').textContent = 'Salvar alterações';
+  $('#avSalvar span').textContent = 'Salvar e enviar por e-mail';
+  $('#avSecRast').open = !!AV.itens.length;
+  renderItensAv();
+  resumoSecoes();
   renderFotosAv();
   buscarAvMaterial(true);
   if (rolar) ENTRADA_AV.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-$('#avSalvar').addEventListener('click', salvarAvaria);
-async function salvarAvaria() {
+// Tudo o que vai para o servidor
+function dadosDoForm() {
+  lerItensAv();
+  return {
+    data: $('#avData').value || hojeStr(), turno: $('#avTurno').value, classificacao: AV.classificacao, severidade: AV.severidade,
+    o_que: $('#avOque').value.trim(), por_que: $('#avPorque').value.trim(), quem: $('#avQuem').value.trim(), como: $('#avComo').value.trim(),
+    onde: $('#avOnde').value.trim(), quando: $('#avQuando').value.trim(), quanto: $('#avQuanto').value.trim(), nota_fiscal: $('#avNf').value.trim(),
+    itens: AV.itens.filter((i) => i.codigo || i.descricao),
+    acoes: [1, 2].map((n) => ({ descricao: $(`#avA${n}Desc`).value.trim(), responsavel: $(`#avA${n}Resp`).value.trim(), prazo: $(`#avA${n}Prazo`).value.trim(), status: $(`#avA${n}Status`).value })),
+  };
+}
+
+$('#avSalvar').addEventListener('click', () => salvarAvaria(true));
+$('#avSoSalvar').addEventListener('click', () => salvarAvaria(false));
+async function salvarAvaria(enviar) {
   if (AV.salvando) return;
   if (!OP) return exigirOperador(true);
   const q = $('#avMat').value.trim();
   if (!q) { $('#avMat').focus(); return toast('Digite o código da peça', true); }
-  const btn = $('#avSalvar'), rot = btn.querySelector('span'), editando = !!AV.id;
-  AV.salvando = true; btn.disabled = true;
-  const fim = () => { AV.salvando = false; btn.disabled = false; rot.textContent = AV.id ? 'Salvar alterações' : 'Adicionar ao relatório'; };
+  const btn = enviar ? $('#avSalvar') : $('#avSoSalvar'), rotulo = enviar ? btn.querySelector('span') : btn, editando = !!AV.id;
+  const textoAntes = rotulo.textContent;
+  AV.salvando = true;
+  document.querySelectorAll('.av-salvar button').forEach((b) => (b.disabled = true));
+  const fim = () => { AV.salvando = false; document.querySelectorAll('.av-salvar button').forEach((b) => (b.disabled = false)); rotulo.textContent = textoAntes; };
   // salvou antes da busca da BOM responder para o código digitado: busca agora
-  if (AV.q !== q) { rot.textContent = 'Procurando o material…'; clearTimeout(tAv); await buscarAvMaterial(true); }
+  if (AV.q !== q) { rotulo.textContent = 'Procurando o material…'; clearTimeout(tAv); await buscarAvMaterial(true); }
   const body = { material: q, projeto: AV.projeto || '', quantidade: $('#avQtd').value, defeito: AV.defeito, situacao: AV.sit,
-    observacao: $('#avObs').value.trim(), nome: OP.nome, matricula: OP.matricula };
+    nome: OP.nome, matricula: OP.matricula, dados: dadosDoForm() };
+  const num = $('#avNum').value.trim();
+  if (num && (!editando || Number(num) !== AV.item?.numero)) body.numero = num;
   if (AV.foraBom) {
     body.projeto = ($('#avFbProj')?.value || '').trim();
     body.descricao_material = ($('#avFbDesc')?.value || '').trim();
     body.unidade = ($('#avFbUn')?.value || '').trim();
   }
-  rot.textContent = 'Salvando…';
+  rotulo.textContent = 'Salvando…';
   let item;
   try {
     item = (await api(editando ? '/api/avaria/' + AV.id : '/api/avaria', { method: editando ? 'PATCH' : 'POST', body: JSON.stringify(body) })).item;
   } catch (err) {
-    const alvo = { material: '#avMat', observacao: '#avObs', descricao_material: '#avFbDesc', projeto: '#avFbProj', quantidade: '#avQtd' }[err.campo];
+    const alvo = { material: '#avMat', descricao_material: '#avFbDesc', projeto: '#avFbProj', quantidade: '#avQtd', numero: '#avNum',
+      o_que: '#avOque', por_que: '#avPorque', quem: '#avQuem', como: '#avComo', onde: '#avOnde', quando: '#avQuando', quanto: '#avQuanto',
+      nota_fiscal: '#avNf', acao0: '#avA1Desc', acao1: '#avA2Desc' }[err.campo];
     if (err.campo === 'nome') { OP = null; ss.del('qs_op'); mostrarOperador(); exigirOperador(true); toast(err.message, true); }
-    else if (alvo && $(alvo)) marcarInvalido($(alvo), err.message);
-    else toast(err.message, true);
+    else if (alvo && $(alvo)) {
+      const sec = $(alvo).closest('details');
+      if (sec) sec.open = true;
+      marcarInvalido($(alvo), err.message);
+    } else toast(err.message, true);
     return fim();
   }
   // fotos uma por vez: cada envio é pequeno e, se a rede falhar, só as que faltaram ficam para tentar de novo
-  const falharam = [];
-  let erroFoto = null;
-  for (let i = 0; i < AV.novas.length; i++) {
-    const f = AV.novas[i];
-    rot.textContent = `Enviando foto ${i + 1} de ${AV.novas.length}…`;
-    try {
-      const foto = await prepararFoto(f.arquivo, { rotulo: 'Avaria ' + numAv(item), material: item.material, projeto: item.projeto, em: f.em });
-      await api(`/api/avaria/${item.id}/fotos`, { method: 'POST', body: JSON.stringify({ fotos: [{ foto, mini: f.mini }], nome: OP.nome, matricula: OP.matricula }) });
-      f.erro = false;
-    } catch (err) { f.erro = true; falharam.push(f); erroFoto = err; }
+  const falharam = { nc: [], ok: [] };
+  let erroFoto = null, n = 0;
+  const total = AV.fotos.nc.novas.length + AV.fotos.ok.novas.length;
+  for (const cat of ['nc', 'ok']) {
+    for (const f of AV.fotos[cat].novas) {
+      rotulo.textContent = `Enviando foto ${++n} de ${total}…`;
+      try {
+        const foto = await prepararFoto(f.arquivo, cat === 'nc'
+          ? { rotulo: 'Avaria ' + numAv(item), material: item.material, projeto: item.projeto, em: f.em }
+          : { semCarimbo: true });
+        await api(`/api/avaria/${item.id}/fotos`, { method: 'POST', body: JSON.stringify({ categoria: cat, fotos: [{ foto, mini: f.mini }], nome: OP.nome, matricula: OP.matricula }) });
+        f.erro = false;
+      } catch (err) { f.erro = true; falharam[cat].push(f); erroFoto = err; }
+    }
   }
-  if (falharam.length) {
-    // o formulário já está salvo: fica aberto em edição só com as fotos que faltaram
-    let atual = item;
-    try { atual = (await api('/api/avaria?' + qs({ ids: item.id }))).itens[0] || item; } catch {}
-    abrirEdicaoAv(atual, falharam, false);
-    toast(`${numAv(item)} salvo, mas ${falharam.length === 1 ? '1 foto não foi enviada' : falharam.length + ' fotos não foram enviadas'} (${erroFoto.message}). Toque em "Salvar alterações" para tentar de novo.`, true);
-  } else {
-    toast(editando ? `${numAv(item)} atualizado` : `${numAv(item)} entrou no relatório · ${item.material}`);
-    limparAv();
-    if (!CELULAR) $('#avMat').focus();
+  // foto OK reaproveitada do relatório anterior da mesma peça
+  const copia = !AV.okDispensado && AV.fotos.ok.copiar && !AV.fotos.ok.ex.length && !AV.fotos.ok.novas.length ? AV.fotos.ok.copiar : null;
+  if (copia) {
+    try { await api(`/api/avaria/${item.id}/fotos-ok`, { method: 'POST', body: JSON.stringify({ de: copia.id }) }); }
+    catch (err) { erroFoto = err; }
   }
+  let atual = item;
+  try { atual = (await api('/api/avaria?' + qs({ ids: item.id }))).itens[0] || item; } catch {}
   fim();
-  const dia = diaDe(new Date(item.created_at));
-  if (REL.dia !== dia) $('#avDia').value = REL.dia = dia;
+  if (falharam.nc.length || falharam.ok.length) {
+    // o relatório já está salvo: fica aberto em edição só com as fotos que faltaram
+    abrirEdicaoAv(atual, falharam, false);
+    const k = falharam.nc.length + falharam.ok.length;
+    toast(`${numAv(atual)} salvo, mas ${k === 1 ? '1 foto não foi enviada' : k + ' fotos não foram enviadas'} (${erroFoto.message}). Toque em Salvar para tentar de novo.`, true);
+  } else {
+    toast(editando ? `${numAv(atual)} atualizado` : `${numAv(atual)} salvo · ${atual.material}`);
+    limparAv();
+    if (!CELULAR && !enviar) $('#avMat').focus();
+  }
+  const dia = diaDe(new Date(atual.created_at));
+  if (!REL.busca && REL.dia !== dia) $('#avDia').value = REL.dia = dia;
   await carregarRelatorio();
-  destacarAv(item.id, editando);
+  destacarAv(atual.id, editando && !enviar);
+  if (enviar && !falharam.nc.length && !falharam.ok.length) abrirEmail(atual);
 }
 
-/* ações na folha: situação, editar, foto e excluir */
-$('#avFolha').addEventListener('click', (e) => {
+/* ações na lista: PDF, e-mail, situação, editar, foto e excluir */
+async function acaoAv(e, lista) {
   const img = e.target.closest('img[data-gal]');
   if (img) return abrirGaleria(img.dataset.gal.split(','), Number(img.dataset.i), img.dataset.tit);
   const b = e.target.closest('button[data-avacao]');
-  const a = b && REL.itens.find((x) => String(x.id) === b.dataset.id);
+  const a = b && lista().find((x) => String(x.id) === b.dataset.id);
   if (!a) return;
-  if (b.dataset.avacao === 'editar') abrirEdicaoAv(a);
-  else if (b.dataset.avacao === 'foto') pedirFotoAv(a);
-  else if (b.dataset.avacao === 'excluir') excluirAv(a);
-});
-$('#avFolha').addEventListener('change', async (e) => {
+  if (b.dataset.avacao === 'pdf') return verPdfAv(a, b);
+  if (b.dataset.avacao === 'email') return abrirEmail(a);
+  if (b.dataset.avacao === 'editar') return abrirEdicaoAv(a);
+  if (b.dataset.avacao === 'foto') return pedirFotoAv(a);
+  if (b.dataset.avacao === 'excluir') return excluirAv(a);
+}
+$('#avLista').addEventListener('click', (e) => acaoAv(e, () => REL.itens));
+$('#avLista').addEventListener('change', async (e) => {
   const s = e.target.closest('select[data-sitid]');
   if (!s) return;
   if (!OP) { renderRelatorio(); return exigirOperador(true); }
@@ -2573,8 +3016,8 @@ $('#avFotoItem').addEventListener('change', async (e) => {
   const arqs = [...e.target.files].filter(ehImagem), a = FOTO_AV;
   e.target.value = '';
   if (!a || !arqs.length) return;
-  const livres = MAX_FOTOS_AV - fotosDe(a).length;
-  if (arqs.length > livres) toast(`Máximo de ${MAX_FOTOS_AV} fotos por formulário: ${livres === 1 ? 'entra só 1' : 'entram só ' + livres}.`, true);
+  const livres = MAX_FOTOS_AV.nc - fotosDe(a).length;
+  if (arqs.length > livres) toast(`Máximo de ${MAX_FOTOS_AV.nc} fotos da avaria: ${livres === 1 ? 'entra só 1' : 'entram só ' + livres}.`, true);
   const btn = document.querySelector(`#av-${a.id} button[data-avacao="foto"]`);
   if (btn) { btn.disabled = true; btn.lastChild.textContent = 'Enviando…'; }
   let ok = 0;
@@ -2582,7 +3025,7 @@ $('#avFotoItem').addEventListener('change', async (e) => {
     try {
       const mini = miniatura(await carregarImagem(arq));
       const foto = await prepararFoto(arq, { rotulo: 'Avaria ' + numAv(a), material: a.material, projeto: a.projeto });
-      await api(`/api/avaria/${a.id}/fotos`, { method: 'POST', body: JSON.stringify({ fotos: [{ foto, mini }], nome: OP.nome, matricula: OP.matricula }) });
+      await api(`/api/avaria/${a.id}/fotos`, { method: 'POST', body: JSON.stringify({ categoria: 'nc', fotos: [{ foto, mini }], nome: OP.nome, matricula: OP.matricula }) });
       ok++;
     } catch (err) { toast(err.message, true); break; }
   }
@@ -2591,75 +3034,619 @@ $('#avFotoItem').addEventListener('change', async (e) => {
 });
 
 async function excluirAv(a) {
-  if (!await confirmar(`Excluir ${numAv(a)}?`, `O formulário de avaria do material ${a.material} sai do relatório e dos registros. A exclusão fica registrada.`, 'Excluir')) return;
+  const enviado = a.email_em ? ' Ele já saiu por e-mail, então o número não volta a ser usado.' : ' O número volta a ficar livre.';
+  if (!await confirmar(`Excluir o ${numAv(a)}?`, `O relatório de avaria do material ${a.material} sai da lista e dos registros. A exclusão fica registrada.${enviado}`, 'Excluir')) return;
   try {
     await api('/api/avaria/' + a.id, { method: 'DELETE', body: JSON.stringify({ nome: OP?.nome || '', matricula: OP?.matricula || '' }) });
-    toast(`${numAv(a)} excluído do relatório`);
-    if (AV.id === a.id) limparAv();
+    toast(`${numAv(a)} excluído`);
+    if (AV.id === a.id) limparAv(); else carregarProximo();
     carregarRelatorio();
   } catch (err) { toast(err.message, true); }
 }
 
-/* imprimir / PDF e Excel do dia */
-function prepararImpressao() {
-  const data = dataDia(REL.dia || hojeStr()).toLocaleDateString('pt-BR');
-  document.body.classList.add('imprimindo');
-  document.title = `Relatório de avarias ${data.replace(/\//g, '-')}`;   // nome sugerido para o PDF
-  const fonte = 'font:500 8.5pt Barlow,system-ui,sans-serif;color:#6b6b73';
-  $('#avPagina').textContent = `@page{@bottom-left{content:"Relatório de avarias · ${data} · Qualidade";${fonte}}`
-    + `@bottom-right{content:"Página " counter(page) " de " counter(pages);${fonte}}}`;
-}
-window.addEventListener('beforeprint', () => { if ($('#tab-relatorio').classList.contains('ativo')) prepararImpressao(); });
-window.addEventListener('afterprint', () => { document.body.classList.remove('imprimindo'); document.title = TITULO; $('#avPagina').textContent = ''; });
-$('#avImprimir').addEventListener('click', async () => {
-  if (!REL.itens.length) return toast('Nenhuma avaria neste dia para imprimir', true);
-  const btn = $('#avImprimir');
-  btn.disabled = true;
-  // espera as fotos carregarem para nenhuma sair em branco no PDF
-  const imgs = [...document.querySelectorAll('#avFolha img')].filter((i) => !i.complete);
-  await Promise.race([
-    Promise.all(imgs.map((i) => new Promise((ok) => { i.addEventListener('load', ok, { once: true }); i.addEventListener('error', ok, { once: true }); }))),
-    new Promise((ok) => setTimeout(ok, 10000)),
-  ]);
-  btn.disabled = false;
-  prepararImpressao();
-  window.print();
-});
-$('#avExport').addEventListener('click', () => {
-  if (!REL.itens.length) return toast('Nenhuma avaria neste dia para exportar', true);
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.json_to_sheet(REL.itens.map((a, i) => {
-    const lig = ligadosAv(a, REL.scraps);
-    return {
-      Item: i + 1, 'Nº': numAv(a), 'Data/hora': dataHora(a.created_at), Material: a.material, 'Descrição': a.descricao_material || '',
-      Projeto: a.projeto || '', Classe: a.classe || '', Quantidade: a.quantidade, Unidade: unOk(a.unidade), Defeito: a.defeito || '',
-      'Situação': ST_NOME[a.situacao] || a.situacao, 'Observação': a.observacao || '', 'Fora da BOM': a.fora_bom ? 'SIM' : '',
-      [`Registros de scrap (${JANELA_AV} dias)`]: lig.length, Postos: [...new Set(lig.map((s) => 'P' + s.posto))].join(', '),
-      Qualidade: a.registrado_por || '', 'Matrícula': a.matricula || '', Fotos: fotosDe(a).length,
-    };
-  }));
-  ws['!cols'] = [6, 14, 15, 16, 36, 12, 7, 10, 8, 20, 22, 44, 11, 14, 14, 22, 12, 7].map((w) => ({ wch: w }));
-  XLSX.utils.book_append_sheet(wb, ws, 'Avarias');
-  const regs = REL.itens.flatMap((a) => ligadosAv(a, REL.scraps).map((s) => ({
-    'Formulário': numAv(a), 'Data/hora': dataHora(s.created_at), Posto: 'P' + s.posto, Material: s.material, Projeto: s.projeto,
-    Quantidade: s.quantidade, Unidade: unOk(s.unidade), Defeito: s.defeito, 'O que aconteceu': s.descricao_problema,
-    Operador: s.registrado_por || '', 'Matrícula': s.matricula || '', 'Situação': ST_NOME[s.status || 'analise'],
-  })));
-  if (regs.length) {
-    const ws2 = XLSX.utils.json_to_sheet(regs);
-    ws2['!cols'] = [14, 15, 7, 16, 12, 10, 8, 20, 50, 22, 12, 20].map((w) => ({ wch: w }));
-    XLSX.utils.book_append_sheet(wb, ws2, 'Registros de scrap');
+/* ----- PDF (FO.QA.A.049) ----- */
+/* ---------- PDF do Relatório de Avarias (FO.QA.A.049 · Rev.02 · Set/26) ----------
+   Mesmo layout do formulário da Qualidade (cabeçalho, descrição do problema, rastreabilidade,
+   evidências fotográficas e plano de ação), montado no navegador com o pdf-lib.
+   d: dados já prontos para imprimir; img: { logo: bytes PNG, ok: [{ bytes, tipo }], nc: [{ bytes, tipo }] } */
+const RA_PDF = {
+  form: 'FO.QA.A.049', rev: 'Rev.02', revData: 'Set/26', rodape: 'FO.QA.A.049 - rev.02 - Set/26',
+  // colunas do formulário (fração da largura útil, iguais às do modelo)
+  col: { a: 0.18097, b: 0.29410, c: 0.41530, d: 0.49639, e: 0.61759, f: 0.74708, g: 0.83221 },
+};
+// Só caracteres que as fontes padrão do PDF (WinAnsi) desenham; o resto vira o mais parecido
+const WIN_ANSI = new Set([...Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)),
+  ...'€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ', ...Array.from({ length: 96 }, (_, i) => String.fromCharCode(160 + i))]);
+function textoPdf(s) {
+  let out = '';
+  for (const ch of String(s ?? '').replace(/\r\n?/g, '\n').replace(/\t/g, ' ')) {
+    if (ch === '\n' || WIN_ANSI.has(ch)) { out += ch; continue; }
+    const base = ch.normalize('NFD').replace(/[̀-ͯ]/g, '');
+    out += [...base].every((c) => WIN_ANSI.has(c)) ? base : ch.charCodeAt(0) < 32 ? '' : '?';
   }
-  XLSX.writeFile(wb, `relatorio_avarias_${REL.dia}.xlsx`);
+  return out;
+}
+// Quebra em linhas que cabem na largura (respeita as quebras de linha digitadas)
+function quebrarLinhas(texto, fonte, tam, largura) {
+  const linhas = [];
+  for (const par of textoPdf(texto).split('\n')) {
+    let atual = '';
+    for (const palavra of par.split(/ +/)) {
+      let p = palavra;
+      while (fonte.widthOfTextAtSize(p, tam) > largura) {        // palavra maior que a coluna: corta
+        let k = p.length - 1;
+        while (k > 1 && fonte.widthOfTextAtSize(p.slice(0, k), tam) > largura) k--;
+        if (atual) { linhas.push(atual); atual = ''; }
+        linhas.push(p.slice(0, k));
+        p = p.slice(k);
+      }
+      const tent = atual ? atual + ' ' + p : p;
+      if (fonte.widthOfTextAtSize(tent, tam) <= largura) atual = tent;
+      else { linhas.push(atual); atual = p; }
+    }
+    linhas.push(atual);
+  }
+  while (linhas.length > 1 && !linhas[linhas.length - 1]) linhas.pop();
+  return linhas;
+}
+// Distribui as fotos (razões largura/altura) numa área W×H: testa todas as divisões em linhas e em
+// colunas e fica com a que mostra as fotos maiores (sem deixar nenhuma minúscula)
+function arranjarFotos(razoes, W, H, g = 5) {
+  const n = razoes.length;
+  if (!n) return [];
+  const soma = (l) => l.reduce((t, v) => t + v, 0);
+  const divisoes = [];
+  (function gerar(i, atual) {
+    if (i === n) return divisoes.push(atual.slice());
+    for (let j = i + 1; j <= n; j++) { atual.push([i, j]); gerar(j, atual); atual.pop(); }
+  })(0, []);
+  let melhor = null;
+  for (const emLinhas of [true, false]) {
+    for (const div of divisoes) {
+      const rects = [];
+      if (emLinhas) {
+        let alt = div.map(([a, b]) => (W - (b - a - 1) * g) / soma(razoes.slice(a, b)));
+        const f = Math.min(1, (H - (div.length - 1) * g) / soma(alt));
+        alt = alt.map((h) => h * f);
+        let y = (H - soma(alt) - (div.length - 1) * g) / 2;
+        div.forEach(([a, b], k) => {
+          const h = alt[k];
+          let x = (W - (soma(razoes.slice(a, b)) * h + (b - a - 1) * g)) / 2;
+          for (let i = a; i < b; i++) { rects[i] = { x, y, w: razoes[i] * h, h }; x += razoes[i] * h + g; }
+          y += h + g;
+        });
+      } else {
+        let larg = div.map(([a, b]) => (H - (b - a - 1) * g) / soma(razoes.slice(a, b).map((r) => 1 / r)));
+        const f = Math.min(1, (W - (div.length - 1) * g) / soma(larg));
+        larg = larg.map((w) => w * f);
+        let x = (W - soma(larg) - (div.length - 1) * g) / 2;
+        div.forEach(([a, b], k) => {
+          const w = larg[k];
+          let y = (H - (soma(razoes.slice(a, b).map((r) => w / r)) + (b - a - 1) * g)) / 2;
+          for (let i = a; i < b; i++) { rects[i] = { x, y, w, h: w / razoes[i] }; y += w / razoes[i] + g; }
+          x += w + g;
+        });
+      }
+      const areas = rects.map((r) => r.w * r.h);
+      const nota = soma(areas) + Math.min(...areas) * n * 0.6;
+      if (!melhor || nota > melhor.nota + 0.01) melhor = { nota, rects };
+    }
+  }
+  return melhor.rects;
+}
+
+async function montarPdfRA(PDFLib, d, img) {
+  const { PDFDocument, StandardFonts, rgb } = PDFLib;
+  const doc = await PDFDocument.create();
+  const W = 595.28, H = 841.89, X0 = 36, X1 = W - 36, LARG = X1 - X0;
+  const page = doc.addPage([W, H]);
+  const reg = await doc.embedFont(StandardFonts.Helvetica);
+  const neg = await doc.embedFont(StandardFonts.HelveticaBold);
+  const soma = (l) => l.reduce((t, v) => t + v, 0);
+  const cor = (h) => rgb(parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255);
+  const C = {
+    azul: cor('#1A365D'), claro: cor('#EDF2F7'), grade: cor('#CBD5E0'), titulo: cor('#244062'), rotulo: cor('#333333'),
+    preto: cor('#000000'), branco: cor('#FFFFFF'), ok: cor('#00B050'), nc: cor('#FF0000'), mudo: cor('#7A7A7A'),
+    sap: cor('#F2F2F2'), sapLinha: cor('#D9D9D9'),
+    status: { 'Concluído': cor('#276749'), Pendente: cor('#9C4221'), 'Em andamento': cor('#2B6CB0') },
+  };
+  const x = (f) => X0 + LARG * RA_PDF.col[f];
+  const caixa = (x0, top, w, h, o = {}) => page.drawRectangle({
+    x: x0, y: H - top - h, width: w, height: h, color: o.fundo, borderColor: o.borda, borderWidth: o.borda ? o.lw || 0.6 : 0 });
+  const hLinha = (x0, x1, top) => page.drawLine({ start: { x: x0, y: H - top }, end: { x: x1, y: H - top }, thickness: 0.6, color: C.grade });
+  const vLinha = (x0, t0, t1) => page.drawLine({ start: { x: x0, y: H - t0 }, end: { x: x0, y: H - t1 }, thickness: 0.6, color: C.grade });
+  // texto numa célula: quebra em linhas, centraliza na vertical; encolhe a letra se não couber na altura
+  function escrever(t, x0, x1, top, h, o = {}) {
+    const fonte = o.negrito ? neg : reg, pad = o.pad ?? 3, larg = x1 - x0 - pad * 2;
+    let tam = o.tam || 7;
+    if (o.umaLinha) while (tam > 5 && fonte.widthOfTextAtSize(textoPdf(t), tam) > larg) tam -= 0.2;
+    let linhas = o.umaLinha ? [textoPdf(t)] : quebrarLinhas(t, fonte, tam, larg);
+    while (!o.umaLinha && tam > 4.8 && linhas.length * tam * 1.22 > h - 2) { tam -= 0.3; linhas = quebrarLinhas(t, fonte, tam, larg); }
+    const lh = tam * 1.22, alturaBloco = linhas.length * lh;
+    let topo = top + (h - alturaBloco) / 2;
+    for (const l of linhas) {
+      const w = fonte.widthOfTextAtSize(l, tam);
+      const px = o.alinhar === 'centro' ? x0 + (x1 - x0 - w) / 2 : o.alinhar === 'direita' ? x1 - pad - w : x0 + pad;
+      page.drawText(l, { x: px, y: H - topo - (lh + tam * 0.716) / 2, size: tam, font: fonte, color: o.cor || C.preto });
+      topo += lh;
+    }
+  }
+  // altura que um texto precisa numa coluna (para as linhas que crescem)
+  const alturaTexto = (t, larg, tam = 7, fonte = reg) => quebrarLinhas(t, fonte, tam, larg - 6).length * tam * 1.22 + 7;
+  const barra = (top, titulo) => { caixa(X0, top, LARG, 18, { fundo: C.azul }); escrever(titulo, X0, X1, top, 18, { negrito: true, tam: 7.6, cor: C.branco, alinhar: 'centro' }); return top + 18; };
+  // [ x ] opção
+  const largOpcao = (rotulo, tam) => reg.widthOfTextAtSize('[', tam) + reg.widthOfTextAtSize(' ', tam) * 2 + neg.widthOfTextAtSize('x', tam) + reg.widthOfTextAtSize('] ' + textoPdf(rotulo), tam);
+  function opcao(x0, top, h, marcado, rotulo, tam = 7) {
+    const y = H - top - (h + tam * 0.716) / 2;
+    let px = x0;
+    const parte = (t, f) => { page.drawText(t, { x: px, y, size: tam, font: f, color: C.preto }); px += f.widthOfTextAtSize(t, tam); };
+    parte('[', reg);
+    const espaco = reg.widthOfTextAtSize(' ', tam), xis = neg.widthOfTextAtSize('x', tam);
+    if (marcado) page.drawText('x', { x: px + espaco, y, size: tam, font: neg, color: C.preto });
+    px += espaco * 2 + xis;
+    parte('] ' + textoPdf(rotulo), reg);
+    return px;
+  }
+
+  /* cabeçalho */
+  let top = 30;
+  caixa(X0, top, LARG, 33, { borda: C.grade });
+  vLinha(x('e'), top, top + 33); vLinha(x('f'), top, top + 33); vLinha(x('g'), top, top + 33);
+  hLinha(x('f'), X1, top + 16.5);
+  if (img.logo) {
+    const logo = await doc.embedPng(img.logo);
+    const lh = 21, lw = lh * logo.width / logo.height;
+    page.drawImage(logo, { x: X0 + 12, y: H - top - (33 + lh) / 2, width: lw, height: lh });
+  }
+  escrever('RELATÓRIO DE AVARIAS', X0, x('e'), top, 33, { negrito: true, tam: 11, cor: C.titulo, alinhar: 'centro' });
+  escrever(`${RA_PDF.form}\n${RA_PDF.rev}\n${RA_PDF.revData}`, x('e'), x('f'), top, 33, { negrito: true, tam: 6.8, cor: C.rotulo, alinhar: 'centro' });
+  escrever('Nº Relatório:', x('f'), x('g'), top, 16.5, { negrito: true, cor: C.rotulo, umaLinha: true, pad: 2.5 });
+  escrever(d.ra, x('g'), X1, top, 16.5, { negrito: true, alinhar: 'centro', umaLinha: true });
+  escrever('Data:', x('f'), x('g'), top + 16.5, 16.5, { negrito: true, cor: C.rotulo, umaLinha: true, pad: 2.5 });
+  escrever(d.data, x('g'), X1, top + 16.5, 16.5, { negrito: true, alinhar: 'centro', umaLinha: true });
+  top += 35;
+
+  caixa(X0, top, LARG, 37, { borda: C.grade });
+  hLinha(X0, X1, top + 18.5);
+  vLinha(x('e'), top, top + 37); vLinha(x('f'), top, top + 37);
+  vLinha(x('a'), top + 18.5, top + 37); vLinha(x('c'), top + 18.5, top + 37);
+  escrever('Responsável pela Abertura:', X0, x('a') + 14, top, 18.5, { negrito: true, cor: C.rotulo, umaLinha: true });
+  escrever(d.responsavel, x('a') + 14, x('e'), top, 18.5, { negrito: true, alinhar: 'centro', umaLinha: true });
+  escrever('Turno:', x('e'), x('f'), top, 18.5, { negrito: true, cor: C.rotulo, umaLinha: true });
+  escrever(d.turno, x('f'), X1, top, 18.5, { alinhar: 'centro', umaLinha: true });
+  escrever('Classificação da Avaria:', X0, x('a'), top + 18.5, 18.5, { negrito: true, cor: C.rotulo, umaLinha: true });
+  opcao(x('a') + 3, top + 18.5, 18.5, d.classificacao === 'processo', 'Processo');
+  opcao(x('c') + 3, top + 18.5, 18.5, d.classificacao === 'recebimento', 'Recebimento');
+  escrever('Severidade:', x('e'), x('f'), top + 18.5, 18.5, { negrito: true, cor: C.rotulo, umaLinha: true });
+  const sev = [['baixa', 'Baixa'], ['media', 'Média'], ['alta', 'Alta'], ['critica', 'Crítica']];
+  let tamS = 7;
+  while (tamS > 5 && soma(sev.map(([, r]) => largOpcao(r, tamS))) + 3 * 3.5 > X1 - x('f') - 5) tamS -= 0.1;
+  let px = x('f') + 3;
+  for (const [k, rot] of sev) px = opcao(px, top + 18.5, 18.5, d.severidade === k, rot, tamS) + 3.5;
+  top += 37 + 11;
+
+  /* alturas que dependem do texto (descrição do problema e plano de ação) */
+  const largValor = X1 - x('b');
+  const perguntas = [
+    ['O QUE é o problema?', d.o_que, 30], ['POR QUÊ é um problema?', d.por_que, 36], ['QUEM detectou?', d.quem, 15],
+    ['COMO detectou?', d.como, 15], ['ONDE detectou?', d.onde, 15], ['QUANDO detectou?', d.quando, 15], ['QUANTO detectou?', d.quanto, 17],
+  ].map(([rot, val, min]) => [rot, val, Math.max(min, alturaTexto(val, largValor))]);
+  const tiposAcao = ['CONTENÇÃO /\nSEGREGAÇÃO', 'CORRETIVA\n(DEFINITIVA)'];
+  const acoes = [0, 1].map((n) => {
+    const a = (d.acoes || [])[n] || {};
+    const h = Math.max(n ? 54 : 44, alturaTexto(a.descricao, x('e') - x('b')), alturaTexto(a.responsavel, x('f') - x('e')));
+    return { ...a, tipo: tiposAcao[n], h };
+  });
+  const fixo = 18 + soma(perguntas.map((p) => p[2])) + 11 + 18 + 15 + 18.5 * 4 + 4 + 18 + 15.5 + 11 + 18 + 15 + soma(acoes.map((a) => a.h));
+  const alturaFotos = Math.max(150, Math.min(300, H - 46 - top - fixo));
+
+  /* descrição do problema */
+  top = barra(top, 'DESCRIÇÃO DO PROBLEMA');
+  const t5 = top, alt5 = soma(perguntas.map((p) => p[2]));
+  caixa(X0, t5, x('b') - X0, alt5, { fundo: C.claro });
+  caixa(X0, t5, LARG, alt5, { borda: C.grade });
+  vLinha(x('b'), t5, t5 + alt5);
+  for (const [i, [rot, val, h]] of perguntas.entries()) {
+    if (i) hLinha(X0, X1, top);
+    escrever(rot, X0, x('b'), top, h, { negrito: true, cor: C.rotulo });
+    escrever(val, x('b'), X1, top, h, { pad: 4 });
+    top += h;
+  }
+  top += 11;
+
+  /* rastreabilidade */
+  top = barra(top, 'RASTREABILIDADE');
+  const colsR = [X0, x('b'), x('c'), x('d'), x('e'), X1];
+  caixa(X0, top, LARG, 15, { fundo: C.claro });
+  caixa(X0, top, LARG, 15 + 18.5 * 4, { borda: C.grade });
+  for (const c of colsR.slice(1, -1)) vLinha(c, top, top + 15 + 18.5 * 4);
+  ['Código / Nº Série', 'Item', 'Qtd', 'Nota Fiscal', 'Observação / Descrição do Componente'].forEach((t, i) =>
+    escrever(t, colsR[i], colsR[i + 1], top, 15, { negrito: true, alinhar: 'centro' }));
+  top += 15;
+  for (let r = 0; r < 4; r++) {
+    hLinha(X0, X1, top);
+    const l = (d.linhas || [])[r];
+    if (l) [l.codigo, l.item, l.qtd, l.nf, l.descricao].forEach((t, i) => escrever(t, colsR[i], colsR[i + 1], top, 18.5, { alinhar: 'centro' }));
+    top += 18.5;
+  }
+  top += 4;
+
+  /* evidências fotográficas */
+  top = barra(top, 'EVIDÊNCIAS FOTOGRÁFICAS');
+  caixa(X0, top, LARG, 15.5, { fundo: C.claro, borda: C.grade });
+  vLinha(x('d'), top, top + 15.5);
+  escrever('FOTO OK (Padrão de Aceitável)', X0, x('d'), top, 15.5, { negrito: true, cor: C.ok, alinhar: 'centro' });
+  escrever('FOTO NC (Evidência da Avaria)', x('d'), X1, top, 15.5, { negrito: true, cor: C.nc, alinhar: 'centro' });
+  top += 15.5;
+  const okX0 = X0 + 0.7, okX1 = x('d') - 1.2, ncX0 = x('d') + 1.2, ncX1 = X1 - 0.7;
+  caixa(okX0, top + 0.7, okX1 - okX0, alturaFotos - 1.4, { borda: C.ok, lw: 1.3 });
+  caixa(ncX0, top + 0.7, ncX1 - ncX0, alturaFotos - 1.4, { borda: C.nc, lw: 1.45 });
+  // quadro do material (como no SAP: Material / TxtBreveMaterial)
+  const sapX0 = okX0 + 7, sapW = Math.min(okX1 - okX0 - 14, 250), sapT = top + 7, sapC = sapX0 + sapW * 0.3;
+  caixa(sapX0, sapT, sapW, 11, { fundo: C.sap });
+  caixa(sapX0, sapT, sapW, 22, { borda: C.sapLinha, lw: 0.5 });
+  page.drawLine({ start: { x: sapX0, y: H - sapT - 11 }, end: { x: sapX0 + sapW, y: H - sapT - 11 }, thickness: 0.5, color: C.sapLinha });
+  page.drawLine({ start: { x: sapC, y: H - sapT }, end: { x: sapC, y: H - sapT - 22 }, thickness: 0.5, color: C.sapLinha });
+  escrever('Material', sapX0, sapC, sapT, 11, { tam: 6.5, cor: C.rotulo });
+  escrever('TxtBreveMaterial', sapC, sapX0 + sapW, sapT, 11, { tam: 6.5, cor: C.rotulo });
+  escrever(d.material, sapX0, sapC, sapT + 11, 11, { tam: 6.5, negrito: true });
+  escrever(d.descricao, sapC, sapX0 + sapW, sapT + 11, 11, { tam: 6.5 });
+  async function fotos(lista, ax0, atop, aw, ah, vazio, corVazio) {
+    if (!lista.length) return escrever(vazio, ax0, ax0 + aw, atop, ah, { alinhar: 'centro', cor: corVazio, tam: 7.5 });
+    const imgs = [];
+    for (const f of lista) imgs.push(f.tipo === 'png' ? await doc.embedPng(f.bytes) : await doc.embedJpg(f.bytes));
+    arranjarFotos(imgs.map((i) => i.width / i.height), aw, ah, 5).forEach((r, i) =>
+      page.drawImage(imgs[i], { x: ax0 + r.x, y: H - atop - r.y - r.h, width: r.w, height: r.h }));
+  }
+  const okTop = sapT + 22 + 7;
+  await fotos(img.ok || [], okX0 + 7, okTop, okX1 - okX0 - 14, top + alturaFotos - 7 - okTop, 'Sem foto do padrão aceitável', C.mudo);
+  await fotos(img.nc || [], ncX0 + 9, top + 9, ncX1 - ncX0 - 18, alturaFotos - 18, 'Sem foto da avaria', C.nc);
+  top += alturaFotos + 11;
+
+  /* plano de ação */
+  top = barra(top, 'PLANO DE AÇÃO (CONTENÇÃO E CORREÇÃO)');
+  const colsA = [X0, x('b'), x('e'), x('f'), x('g'), X1];
+  const altA = 15 + soma(acoes.map((a) => a.h));
+  caixa(X0, top, LARG, 15, { fundo: C.claro });
+  caixa(X0, top, LARG, altA, { borda: C.grade });
+  for (const c of colsA.slice(1, -1)) vLinha(c, top, top + altA);
+  ['Tipo de Ação', 'Descrição da Conduta / Bloqueio', 'Responsável', 'Prazo', 'Status'].forEach((t, i) =>
+    escrever(t, colsA[i], colsA[i + 1], top, 15, { negrito: true, alinhar: 'centro' }));
+  top += 15;
+  for (const a of acoes) {
+    hLinha(X0, X1, top);
+    [a.tipo, a.descricao, a.responsavel, a.prazo].forEach((t, i) => escrever(t, colsA[i], colsA[i + 1], top, a.h, { alinhar: 'centro' }));
+    escrever(a.status, colsA[4], colsA[5], top, a.h, { alinhar: 'centro', negrito: true, cor: C.status[a.status] || C.preto });
+    top += a.h;
+  }
+
+  /* rodapé */
+  const yRod = 26, tamR = 7.2;
+  page.drawText('BYD do Brasil', { x: X0, y: yRod, size: tamR, font: reg, color: C.preto });
+  page.drawText('QA', { x: (W - reg.widthOfTextAtSize('QA', tamR)) / 2, y: yRod, size: tamR, font: reg, color: C.preto });
+  page.drawText(RA_PDF.rodape, { x: X1 - reg.widthOfTextAtSize(RA_PDF.rodape, tamR), y: yRod, size: tamR, font: reg, color: C.preto });
+
+  const titulo = `${RA_PDF.form} - Relatório de avarias ${d.ra}`;
+  doc.setTitle(textoPdf(titulo));
+  doc.setSubject(textoPdf(`${d.material} - ${d.descricao || ''}`));
+  doc.setAuthor(textoPdf(d.responsavel || 'Qualidade'));
+  doc.setKeywords(['Relatório de avarias', RA_PDF.form, d.ra, d.material].map(textoPdf));
+  doc.setCreator('Qualidade - Registro de scrap');
+  doc.setProducer('Qualidade - Registro de scrap');
+  doc.setLanguage('pt-BR');
+  doc.setCreationDate(new Date());
+  return doc.save();
+}
+
+let PDF_LIB = null;
+function carregarPdfLib() {
+  if (window.PDFLib) return Promise.resolve(window.PDFLib);
+  if (!PDF_LIB) {
+    PDF_LIB = new Promise((ok, erro) => {
+      const s = document.createElement('script');
+      s.src = PDF_LIB_URL;
+      s.onload = () => (window.PDFLib ? ok(window.PDFLib) : erro(Error('Gerador de PDF não carregou.')));
+      s.onerror = () => { PDF_LIB = null; s.remove(); erro(Error('Não foi possível carregar o gerador de PDF. Confira a internet e tente de novo.')); };
+      document.head.appendChild(s);
+    });
+  }
+  return PDF_LIB;
+}
+const bytesDeB64 = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+// Foto para o PDF: JPEG de até 1400 px (o PDF fica leve para o e-mail)
+async function jpegParaPdf(fonte) {
+  let blob = fonte;
+  if (typeof fonte === 'string') {
+    const r = await fetch(fonte);
+    if (!r.ok) throw Error('Não foi possível abrir uma das fotos do relatório.');
+    blob = await r.blob();
+  }
+  const img = await carregarImagem(blob);
+  const k = Math.min(1, 1400 / Math.max(img.naturalWidth, img.naturalHeight));
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(img.naturalWidth * k));
+  c.height = Math.max(1, Math.round(img.naturalHeight * k));
+  const g = c.getContext('2d');
+  g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+  g.drawImage(img, 0, 0, c.width, c.height);
+  const b = await new Promise((ok) => c.toBlob(ok, 'image/jpeg', 0.85));
+  return { bytes: new Uint8Array(await b.arrayBuffer()), tipo: 'jpg' };
+}
+// Dados do relatório como saem no PDF
+function dadosPdf(a, responsavel) {
+  const d = a.dados || {}, nf = d.nota_fiscal || 'Não aplicável';
+  return {
+    ra: numAv(a), data: dataBR(d.data || diaDe(new Date(a.created_at || Date.now()))), responsavel: responsavel || a.registrado_por || '',
+    turno: d.turno || '', classificacao: d.classificacao || '', severidade: d.severidade || '',
+    o_que: d.o_que || '', por_que: d.por_que || '', quem: d.quem || '', como: d.como || '', onde: d.onde || '', quando: d.quando || '',
+    quanto: d.quanto || quantoTxt(a.quantidade, a.unidade),
+    linhas: [{ codigo: a.material, item: '1', qtd: qtdBR(a.quantidade), nf, descricao: a.descricao_material || '' },
+      ...(d.itens || []).map((i, n) => ({ codigo: i.codigo, item: String(n + 2), qtd: i.qtd || '', nf: i.nf || nf, descricao: i.descricao }))],
+    material: a.material, descricao: a.descricao_material || '',
+    acoes: acoesDe(a),
+  };
+}
+async function montarPdf(dados, fontes) {
+  const PDFLib = await carregarPdfLib();
+  const [ok, nc] = await Promise.all([Promise.all(fontes.ok.map(jpegParaPdf)), Promise.all(fontes.nc.map(jpegParaPdf))]);
+  return montarPdfRA(PDFLib, dados, { logo: bytesDeB64(LOGO_FORM), ok, nc });
+}
+const pdfDoItem = (a) => montarPdf(dadosPdf(a), { nc: fotosDe(a).map((id) => '/api/foto/' + id), ok: fotosOkDe(a).map((id) => '/api/foto/' + id) });
+const nomePdfAv = (a) => `FO.QA.A.049 - Relatório de avarias ${numAv(a)}.pdf`;
+// Nome do arquivo baixado sem acento: com acento, alguns navegadores salvam como "download"
+function baixarArquivo(bytes, nome, tipo = 'application/pdf') {
+  const url = URL.createObjectURL(new Blob([bytes], { type: tipo }));
+  const a = document.createElement('a');
+  a.href = url; a.download = nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+// Abre o PDF numa aba (no celular e se o navegador bloquear, baixa)
+async function abrirPdf(gerar, nome, botao) {
+  const janela = CELULAR ? null : window.open('', '_blank');
+  const antes = botao?.innerHTML;
+  if (botao) { botao.disabled = true; botao.lastChild.textContent = 'Gerando PDF…'; }
+  try {
+    const bytes = await gerar();
+    const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+    if (janela && !janela.closed) janela.location.href = url;
+    else baixarArquivo(bytes, nome);
+    setTimeout(() => URL.revokeObjectURL(url), 300000);
+  } catch (e) {
+    if (janela) janela.close();
+    toast(e.message, true);
+  }
+  if (botao) { botao.disabled = false; botao.innerHTML = antes; }
+}
+async function verPdfAv(a, botao) {
+  if (!a.numero && podeFoto()) {          // relatório antigo sem número: ganha o próximo
+    try { a = Object.assign(a, (await api('/api/avaria/' + a.id, { method: 'PATCH', body: JSON.stringify({ nome: OP?.nome || '', matricula: OP?.matricula || '' }) })).item); } catch {}
+  }
+  abrirPdf(() => pdfDoItem(a), nomePdfAv(a), botao);
+}
+// Prévia do formulário ainda não salvo: o PDF como vai ficar
+$('#avPrevia').addEventListener('click', () => {
+  if (!$('#avMat').value.trim()) return toast('Digite o código da peça', true);
+  const m = materialAtual(), dados = dadosDoForm();
+  const ano = Number(dados.data.slice(0, 4));
+  const num = Number($('#avNum').value) || (AV.item?.ano === ano ? AV.item.numero : AV.proximo?.numero) || 0;
+  const a = { ...(AV.item || {}), numero: num, ano, ra: num ? `RA-${pad4(num)}-${ano}` : `RA-____-${ano}`, material: m.codigo, descricao_material: m.descricao,
+    quantidade: Number(String($('#avQtd').value).replace(',', '.')) || 1, unidade: m.unidade, situacao: AV.sit, dados, created_at: AV.item?.created_at || new Date().toISOString() };
+  const F = AV.fotos, copia = !AV.okDispensado && F.ok.copiar && !F.ok.ex.length && !F.ok.novas.length ? F.ok.copiar.fotos : [];
+  abrirPdf(async () => {
+    const nc = [...F.nc.ex.map((id) => '/api/foto/' + id)];
+    for (const f of F.nc.novas) nc.push(await prepararFoto(f.arquivo, { rotulo: 'Avaria ' + a.ra, material: a.material, projeto: m.projeto, em: f.em }));
+    const ok = [...F.ok.ex.map((id) => '/api/foto/' + id), ...copia.map((id) => '/api/foto/' + id), ...F.ok.novas.map((f) => f.arquivo)];
+    return montarPdf(dadosPdf(a, AV.item?.registrado_por || OP?.nome || ''), { nc, ok });
+  }, nomePdfAv(a), $('#avPrevia'));
 });
 
-/* selo "Formulário de avaria" nos registros: abre o(s) formulário(s) do material */
+/* ----- e-mail: já vem escrito, com o PDF anexado ----- */
+const saudacao = (d = new Date()) => (d.getHours() < 12 ? 'bom dia' : d.getHours() < 18 ? 'boa tarde' : 'boa noite');
+function emailAv(a, remetente) {
+  const d = a.dados || {}, ra = numAv(a), acoes = acoesDe(a);
+  const mat = `${a.material}${a.descricao_material ? ' – ' + a.descricao_material : ''}`;
+  const sev = SEVER[d.severidade] || '';
+  const assunto = `Relatório de Avarias ${ra} – ${a.material}${a.descricao_material ? ' – ' + a.descricao_material : ''}${sev ? ` (severidade ${sev.toLowerCase()})` : ''}`;
+  const fatos = [['O quê', d.o_que], ['Por quê', d.por_que], ['Quem detectou', d.quem], ['Como', d.como], ['Onde', d.onde], ['Quando', d.quando],
+    ['Quantidade', d.quanto || quantoTxt(a.quantidade, a.unidade)], ['Classificação', CLASSIF[d.classificacao]], ['Severidade', sev],
+    ['Nota fiscal', d.nota_fiscal || 'Não aplicável']].filter(([, v]) => v);
+  const linhas = dadosPdf(a).linhas;
+  const pendentes = acoes.filter((x) => x.status !== 'Concluído');
+  const pedido = pendentes.length
+    ? 'Solicito, por gentileza, que as áreas responsáveis deem andamento às ações pendentes dentro do prazo indicado e retornem com a confirmação.'
+    : 'Todas as ações do plano estão concluídas. Encaminho para conhecimento e registro.';
+  const intro = `Encaminho, em anexo, o Relatório de Avarias nº ${ra} (FO.QA.A.049), aberto em ${dataBR(d.data || a.created_at)}${d.turno ? ` (${d.turno})` : ''}, referente à avaria identificada no material ${mat}.`;
+  const fotos = fotosDe(a).length + fotosOkDe(a).length;
+  const evid = fotos ? 'As evidências fotográficas (foto OK e foto NC) estão no relatório em anexo.' : '';
+  const acaoTxt = (x, n) => `${n ? 'Corretiva (definitiva)' : 'Contenção / segregação'} – ${[x.responsavel.replace(/\n/g, ' / '), x.prazo, x.status].filter(Boolean).join(' – ')}: ${x.descricao}`;
+  const texto = [
+    `Prezados, ${saudacao()}.`, intro,
+    ['Descrição do problema:', ...fatos.map(([k, v]) => `• ${k}: ${v}`)].join('\n'),
+    ['Rastreabilidade:', ...linhas.map((l) => `• ${l.codigo} · Qtd ${l.qtd} · NF: ${l.nf}${l.descricao ? ' · ' + l.descricao : ''}`)].join('\n'),
+    ['Plano de ação:', ...acoes.map((x, n) => `• ${acaoTxt(x, n)}`)].join('\n'),
+    [pedido, evid].filter(Boolean).join(' '),
+    'Fico à disposição para qualquer esclarecimento.',
+    ['Atenciosamente,', remetente, 'Qualidade – BYD do Brasil'].filter(Boolean).join('\n'),
+  ].join('\n\n');
+  const curto = [
+    `Prezados, ${saudacao()}.`, intro,
+    `O quê: ${d.o_que || '—'}\nOnde: ${d.onde || '—'} · Quando: ${d.quando || '—'} · Quantidade: ${d.quanto || quantoTxt(a.quantidade, a.unidade)}\nClassificação: ${CLASSIF[d.classificacao] || '—'} · Severidade: ${sev || '—'}`,
+    `${pedido} O relatório completo, com as fotos e o plano de ação, está em anexo.`,
+    'Fico à disposição para qualquer esclarecimento.',
+    ['Atenciosamente,', remetente, 'Qualidade – BYD do Brasil'].filter(Boolean).join('\n'),
+  ].join('\n\n');
+  const F = "font-family:Calibri,'Segoe UI',Arial,sans-serif", P = 'margin:0 0 12px', T = 'margin:18px 0 6px;font-weight:bold;color:#1A365D';
+  const CEL = 'border:1px solid #CBD5E0;padding:5px 8px;vertical-align:top';
+  const cor = { 'Concluído': '#276749', Pendente: '#9C4221', 'Em andamento': '#2B6CB0' };
+  const html = `<div style="${F};font-size:11pt;color:#1f1f1f;line-height:1.45">`
+    + `<p style="${P}">Prezados, ${saudacao()}.</p>`
+    + `<p style="${P}">Encaminho, em anexo, o <b>Relatório de Avarias nº ${esc(ra)}</b> (FO.QA.A.049), aberto em <b>${esc(dataBR(d.data || a.created_at))}</b>${d.turno ? ` (${esc(d.turno)})` : ''}, referente à avaria identificada no material <b>${esc(mat)}</b>.</p>`
+    + `<p style="${T}">Descrição do problema</p><table cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 6px;font-size:10.5pt">`
+    + fatos.map(([k, v]) => `<tr><td style="${CEL};background:#EDF2F7;font-weight:bold;white-space:nowrap">${esc(k)}</td><td style="${CEL}">${esc(v)}</td></tr>`).join('') + '</table>'
+    + `<p style="${T}">Rastreabilidade</p><table cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 6px;font-size:10pt">`
+    + `<tr>${['Código / Nº Série', 'Item', 'Qtd', 'Nota Fiscal', 'Descrição do Componente'].map((h) => `<th style="${CEL};background:#EDF2F7;text-align:left;white-space:nowrap">${h}</th>`).join('')}</tr>`
+    + linhas.map((l) => `<tr>${[l.codigo, l.item, l.qtd, l.nf, l.descricao].map((v) => `<td style="${CEL}">${esc(v || '—')}</td>`).join('')}</tr>`).join('') + '</table>'
+    + `<p style="${T}">Plano de ação</p><table cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 12px;font-size:10pt">`
+    + `<tr>${['Tipo de ação', 'Descrição da conduta', 'Responsável', 'Prazo', 'Status'].map((h) => `<th style="${CEL};background:#EDF2F7;text-align:left;white-space:nowrap">${h}</th>`).join('')}</tr>`
+    + acoes.map((x, n) => `<tr><td style="${CEL};white-space:nowrap">${n ? 'Corretiva (definitiva)' : 'Contenção / segregação'}</td><td style="${CEL}">${esc(x.descricao)}</td><td style="${CEL}">${esc(x.responsavel).replace(/\n/g, '<br>')}</td><td style="${CEL};white-space:nowrap">${esc(x.prazo)}</td><td style="${CEL};font-weight:bold;color:${cor[x.status] || '#1f1f1f'};white-space:nowrap">${esc(x.status)}</td></tr>`).join('') + '</table>'
+    + `<p style="${P}">${esc(pedido)}${evid ? ' ' + esc(evid) : ''}</p>`
+    + `<p style="${P}">Fico à disposição para qualquer esclarecimento.</p>`
+    + `<p style="margin:18px 0 0">Atenciosamente,${remetente ? `<br><b>${esc(remetente)}</b>` : ''}<br>Qualidade – BYD do Brasil</p></div>`;
+  return { assunto, texto, html, curto };
+}
+
+// Rascunho .eml: o Outlook abre como mensagem nova, com o texto formatado e o PDF anexado
+const utf8 = (t) => new TextEncoder().encode(t);
+function base64Bytes(u8) {
+  let s = '';
+  for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+const quebra76 = (t) => t.replace(/.{1,76}/g, '$&\r\n');
+function cabecalhoEml(t) {          // RFC 2047: acentos no assunto e no nome do anexo
+  if (/^[\x20-\x7e]*$/.test(t)) return t;
+  const palavras = [];
+  let parte = '';
+  for (const ch of t) { if (utf8(parte + ch).length > 45) { palavras.push(parte); parte = ''; } parte += ch; }
+  if (parte) palavras.push(parte);
+  return palavras.map((p) => `=?UTF-8?B?${base64Bytes(utf8(p))}?=`).join('\r\n ');
+}
+const enderecos = (v) => String(v || '').split(/[;,\s]+/).map((x) => x.trim()).filter((x) => /^[^@\s<>"]+@[^@\s<>"]+$/.test(x));
+function montarEml({ para, cc, assunto, texto, html, anexo }) {
+  const mix = '----=_QA_mixed', alt = '----=_QA_alt';
+  const l = ['X-Unsent: 1'];
+  if (enderecos(para).length) l.push(`To: ${enderecos(para).join(', ')}`);
+  if (enderecos(cc).length) l.push(`Cc: ${enderecos(cc).join(', ')}`);
+  l.push(`Subject: ${cabecalhoEml(assunto)}`, 'MIME-Version: 1.0', `Content-Type: multipart/mixed; boundary="${mix}"`, '', 'This is a multi-part message in MIME format.', '');
+  l.push(`--${mix}`, `Content-Type: multipart/alternative; boundary="${alt}"`, '');
+  l.push(`--${alt}`, 'Content-Type: text/plain; charset="utf-8"', 'Content-Transfer-Encoding: base64', '', quebra76(base64Bytes(utf8(texto))));
+  l.push(`--${alt}`, 'Content-Type: text/html; charset="utf-8"', 'Content-Transfer-Encoding: base64', '',
+    quebra76(base64Bytes(utf8(`<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>${html}</body></html>`))));
+  l.push(`--${alt}--`, '');
+  if (anexo) {
+    const nome = cabecalhoEml(anexo.nome).replace(/\r\n /g, ' ');
+    l.push(`--${mix}`, `Content-Type: application/pdf; name="${nome}"`, 'Content-Transfer-Encoding: base64',
+      `Content-Disposition: attachment; filename="${nome}"`, '', quebra76(base64Bytes(anexo.bytes)));
+  }
+  l.push(`--${mix}--`, '');
+  return l.join('\r\n').replace(/\r\n\r\n\r\n/g, '\r\n\r\n');
+}
+
+const EM = { item: null, msg: null, pdf: null };
+async function configEmail() {
+  if (!CFG_EMAIL) { try { CFG_EMAIL = await api('/api/avaria/config'); } catch { CFG_EMAIL = { para: '', cc: '' }; } }
+  return CFG_EMAIL;
+}
+async function abrirEmail(a) {
+  if (!OP) return exigirOperador(true);
+  if (!a.numero) {                       // relatório antigo sem número: ganha o próximo
+    try { a = (await api('/api/avaria/' + a.id, { method: 'PATCH', body: JSON.stringify({ nome: OP.nome, matricula: OP.matricula }) })).item; }
+    catch (e) { return toast(e.message, true); }
+  }
+  EM.item = a;
+  EM.msg = emailAv(a, OP.nome);
+  const cfg = await configEmail();
+  $('#emTit').textContent = `Enviar o ${numAv(a)} por e-mail`;
+  $('#emPara').value = cfg.para; $('#emCc').value = cfg.cc;
+  $('#emAssunto').value = EM.msg.assunto;
+  $('#emPrevia').srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:16px 18px;background:#fff">${EM.msg.html}</body></html>`;
+  $('#emAviso').hidden = true;
+  $('#emCompartilhar').hidden = !(navigator.canShare && navigator.canShare({ files: [new File([''], 'x.pdf', { type: 'application/pdf' })] }));
+  $('#emPronto').textContent = 'Gerando o PDF do relatório…';
+  $('#modalEmail').hidden = false;
+  EM.pdf = pdfDoItem(a);
+  EM.pdf.then(() => { if (EM.item === a) $('#emPronto').textContent = `PDF pronto: ${nomePdfAv(a)}`; },
+    (e) => { if (EM.item === a) $('#emPronto').textContent = 'Não foi possível gerar o PDF: ' + e.message; });
+  setTimeout(() => (CELULAR ? $('#emOutlook') : $('#emPara')).focus(), 60);
+}
+function avisoEmail(t) { $('#emAviso').textContent = t; $('#emAviso').hidden = false; }
+// Destinatários usados ficam salvos no site (valem para todos os aparelhos)
+async function lembrarDestinatarios() {
+  const para = $('#emPara').value.trim(), cc = $('#emCc').value.trim();
+  if (CFG_EMAIL && para === CFG_EMAIL.para && cc === CFG_EMAIL.cc) return;
+  try { CFG_EMAIL = await api('/api/avaria/config', { method: 'PUT', body: JSON.stringify({ para, cc }) }); } catch {}
+}
+async function marcarEnviado() {
+  try {
+    const d = await api(`/api/avaria/${EM.item.id}/email`, { method: 'POST', body: JSON.stringify({ nome: OP?.nome || '', matricula: OP?.matricula || '' }) });
+    EM.item = d.item;
+    const i = REL.itens.findIndex((x) => x.id === d.item.id);
+    if (i >= 0) { REL.itens[i] = d.item; renderRelatorio(); }
+  } catch {}
+}
+async function comPdf(botao, fazer) {
+  const antes = botao.innerHTML;
+  botao.disabled = true;
+  try {
+    const bytes = await EM.pdf;
+    await fazer(bytes, nomePdfAv(EM.item), $('#emAssunto').value.trim() || EM.msg.assunto);
+  } catch (e) { if (e.name !== 'AbortError') toast(e.message, true); }
+  botao.disabled = false; botao.innerHTML = antes;
+}
+$('#emOutlook').addEventListener('click', () => comPdf($('#emOutlook'), async (bytes, nome, assunto) => {
+  if (!enderecos($('#emPara').value).length && !await confirmar('Sem destinatário?', 'O e-mail vai abrir sem ninguém no "Para". Você pode completar no Outlook.', 'Continuar')) return;
+  const eml = montarEml({ para: $('#emPara').value, cc: $('#emCc').value, assunto, texto: EM.msg.texto, html: EM.msg.html, anexo: { nome, bytes } });
+  baixarArquivo(utf8(eml), nome.replace(/\.pdf$/i, ' - e-mail.eml'), 'message/rfc822');
+  avisoEmail('E-mail pronto baixado. Abra o arquivo baixado: o Outlook mostra a mensagem com o texto e o PDF anexado. Confira e clique em Enviar.');
+  await lembrarDestinatarios();
+  await marcarEnviado();
+}));
+$('#emCompartilhar').addEventListener('click', () => comPdf($('#emCompartilhar'), async (bytes, nome, assunto) => {
+  const arq = new File([bytes], nome, { type: 'application/pdf' });
+  await navigator.share({ files: [arq], title: assunto, text: EM.msg.texto });
+  avisoEmail('Compartilhado. No e-mail, confira os destinatários e envie.');
+  await lembrarDestinatarios();
+  await marcarEnviado();
+}));
+$('#emMailto').addEventListener('click', () => comPdf($('#emMailto'), async (bytes, nome, assunto) => {
+  baixarArquivo(bytes, nome);
+  const lista = (v) => enderecos(v).join(',');
+  location.href = `mailto:${lista($('#emPara').value)}?${new URLSearchParams({ ...(lista($('#emCc').value) ? { cc: lista($('#emCc').value) } : {}), subject: assunto, body: EM.msg.curto }).toString().replace(/\+/g, '%20')}`;
+  avisoEmail(`PDF baixado (${nome}). Anexe-o no e-mail que abriu.`);
+  await lembrarDestinatarios();
+  await marcarEnviado();
+}));
+$('#emCopiar').addEventListener('click', async () => {
+  try {
+    if (typeof ClipboardItem === 'function' && navigator.clipboard?.write) {
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html': new Blob([EM.msg.html], { type: 'text/html' }), 'text/plain': new Blob([EM.msg.texto], { type: 'text/plain' }) })]);
+    } else await navigator.clipboard.writeText(`${$('#emAssunto').value}\n\n${EM.msg.texto}`);
+    avisoEmail('Texto copiado. Cole no e-mail e anexe o PDF (botão Baixar PDF).');
+  } catch { toast('Não foi possível copiar. Selecione o texto da prévia e copie.', true); }
+});
+$('#emPdf').addEventListener('click', () => comPdf($('#emPdf'), async (bytes, nome) => { baixarArquivo(bytes, nome); avisoEmail(`PDF baixado: ${nome}`); }));
+$('#emFechar').addEventListener('click', () => { $('#modalEmail').hidden = true; });
+
+/* Excel dos relatórios na tela */
+$('#avExport').addEventListener('click', () => {
+  if (!REL.itens.length) return toast('Nenhum relatório para exportar', true);
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(REL.itens.map((a) => {
+    const d = a.dados || {}, ac = acoesDe(a), lig = ligadosAv(a, REL.scraps);
+    return {
+      'Nº': numAv(a), Data: dataBR(d.data || a.created_at), Turno: d.turno || '', Material: a.material, 'Descrição': a.descricao_material || '',
+      Projeto: a.projeto || '', Classe: a.classe || '', Quantidade: a.quantidade, Unidade: unOk(a.unidade), 'Nota fiscal': d.nota_fiscal || 'Não aplicável',
+      'Classificação': CLASSIF[d.classificacao] || '', Severidade: SEVER[d.severidade] || '', 'Tipo de avaria': a.defeito || '',
+      'O quê': d.o_que || '', 'Por quê': d.por_que || '', Quem: d.quem || '', Como: d.como || '', Onde: d.onde || '', Quando: d.quando || '', Quanto: d.quanto || '',
+      'Contenção': ac[0].descricao, 'Contenção - responsável': ac[0].responsavel, 'Contenção - prazo': ac[0].prazo, 'Contenção - status': ac[0].status,
+      'Corretiva': ac[1].descricao, 'Corretiva - responsável': ac[1].responsavel.replace(/\n/g, ' / '), 'Corretiva - prazo': ac[1].prazo, 'Corretiva - status': ac[1].status,
+      'Situação da peça': ST_NOME[a.situacao] || a.situacao, [`Registros de scrap (${JANELA_AV} dias)`]: lig.length,
+      'Aberto por': quemAv(a), 'E-mail': a.email_em ? dataHora(a.email_em) : '', 'Fotos NC': fotosDe(a).length, 'Fotos OK': fotosOkDe(a).length,
+    };
+  }));
+  ws['!cols'] = [14, 11, 11, 16, 34, 12, 7, 10, 8, 14, 13, 10, 18, 44, 44, 28, 20, 14, 18, 12, 44, 20, 12, 12, 44, 22, 12, 12, 20, 12, 22, 16, 9, 9].map((w) => ({ wch: w }));
+  XLSX.utils.book_append_sheet(wb, ws, 'Relatórios de avaria');
+  XLSX.writeFile(wb, REL.busca ? `relatorios_avaria_${REL.busca.replace(/[^\w-]+/g, '_')}.xlsx` : `relatorios_avaria_${REL.dia}.xlsx`);
+});
+
+/* selo "Formulário de avaria" nos registros: abre o(s) relatório(s) do material */
 async function abrirFormulariosAv(ids) {
   MAV.ids = ids.map(String);
   $('#mavTit').textContent = 'Formulário de avaria';
   $('#mavInfo').textContent = 'Carregando…';
   $('#mavLista').innerHTML = '';
-  $('#mavLista').hidden = true;
   $('#mavAbrir').hidden = true;
   $('#modalAv').hidden = false;
   try {
@@ -2667,11 +3654,10 @@ async function abrirFormulariosAv(ids) {
     MAV.itens = d.itens.sort((x, y) => y.created_at.localeCompare(x.created_at));
     MAV.scraps = d.scraps;
     const a = MAV.itens[0];
-    $('#mavTit').textContent = MAV.itens.length > 1 ? `${MAV.itens.length} formulários de avaria` : 'Formulário de avaria';
-    $('#mavInfo').textContent = a ? `Material ${a.material}${a.descricao_material ? ' · ' + a.descricao_material : ''}. Feito pela Qualidade no relatório de avarias.`
-      : 'Esse formulário foi excluído do relatório de avarias.';
-    $('#mavLista').innerHTML = MAV.itens.map((x) => itemAvHtml(x, null, ligadosAv(x, MAV.scraps), false)).join('');
-    $('#mavLista').hidden = !a;
+    $('#mavTit').textContent = MAV.itens.length > 1 ? `${MAV.itens.length} relatórios de avaria` : `Formulário de avaria ${a ? numAv(a) : ''}`;
+    $('#mavInfo').textContent = a ? `Material ${a.material}${a.descricao_material ? ' · ' + a.descricao_material : ''}. Feito pela Qualidade (FO.QA.A.049).`
+      : 'Esse relatório foi excluído.';
+    $('#mavLista').innerHTML = MAV.itens.map((x) => cardAv(x, ligadosAv(x, MAV.scraps), false)).join('');
     $('#mavAbrir').hidden = !a;
   } catch (err) { $('#mavInfo').textContent = err.message; }
 }
@@ -2686,10 +3672,8 @@ $('#mavAbrir').addEventListener('click', () => {
   $('#modalAv').hidden = true;
   if (a) mostrarAba('relatorio', { dia: diaDe(new Date(a.created_at)), destacar: a.id });
 });
-$('#mavLista').addEventListener('click', (e) => {
-  const img = e.target.closest('img[data-gal]');
-  if (img) abrirGaleria(img.dataset.gal.split(','), Number(img.dataset.i), img.dataset.tit);
-});
+$('#mavLista').addEventListener('click', (e) => acaoAv(e, () => MAV.itens));
+
 
 /* ---------- registros ---------- */
 let REGISTROS = [];
@@ -3210,6 +4194,7 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft' && GAL.lista.length > 1) passoGaleria(-1);
     if (e.key === 'ArrowRight' && GAL.lista.length > 1) passoGaleria(1);
   }
+  else if (e.key === 'Escape' && !$('#modalEmail').hidden) $('#modalEmail').hidden = true;
   else if (e.key === 'Escape' && !$('#modalAv').hidden) $('#modalAv').hidden = true;
 });
 
