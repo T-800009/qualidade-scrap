@@ -2,13 +2,15 @@ import APP_HTML from './app.html';
 import LOGIN_HTML from './login.html';
 import { temPalavrao } from './palavras.js';
 
-// Logo QA: Q + check vermelho + A (o check é o rabo do Q e a perna do A)
-const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="qaFundo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1d22"/><stop offset="1" stop-color="#09090b"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#qaFundo)"/><rect x="1" y="1" width="62" height="62" rx="14" fill="none" stroke="#e4002b" stroke-width="2"/><g fill="none" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="17.9" width="15.8" height="28.2" rx="7.9" stroke="#fff"/><path d="M43 17.9 50 46.1M38.2 37.3h9.6" stroke="#fff"/><path d="M25.4 35.5 36 46.1 43 17.9" stroke="#ff1f47"/></g></svg>';
+// Marca: etiqueta de inspeção branca com o check vermelho, na faixa azul-marinho
+const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#1a365d"/><path fill="#fff" fill-rule="evenodd" d="M24 10h16l10 10v31a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3V20zm8 5.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"/><path d="m22.5 37.5 6.8 6.8 12.7-13" fill="none" stroke="#c8102e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-07 · FO.QA.A.049 + e-mail';
+const VERSAO = '2026-10-07 · PCP + visual novo';
+// A página leva a versão (rodapé e aviso de versão nova)
+const APP_PAGINA = APP_HTML.replaceAll('__VERSAO__', VERSAO);
 const SESSAO_HORAS = 12;
 const MAX_FALHAS = 10;          // a fábrica sai por um IP só: limite folgado para um erro não travar todo mundo
 const BLOQUEIO_MS = 5 * 60 * 1000;
@@ -82,6 +84,11 @@ const MIGRACOES = [
   'ALTER TABLE scrap ADD COLUMN analisado_por TEXT',
   'ALTER TABLE scrap ADD COLUMN analisado_em TEXT',
   'ALTER TABLE scrap ADD COLUMN material_anterior TEXT',
+  // PCP: baixa do scrap feita e peça arrumada (quem marcou e quando)
+  'ALTER TABLE scrap ADD COLUMN scrap_feito_em TEXT',
+  'ALTER TABLE scrap ADD COLUMN scrap_feito_por TEXT',
+  'ALTER TABLE scrap ADD COLUMN arrumado_em TEXT',
+  'ALTER TABLE scrap ADD COLUMN arrumado_por TEXT',
 ];
 let schemaOk = null;
 function garantirSchema(env) {
@@ -166,7 +173,7 @@ async function rotear(req, env) {
     return Response.redirect(url.origin + '/login', 302);
   }
 
-  if (p === '/' && m === 'GET') return html(APP_HTML);
+  if (p === '/' && m === 'GET') return html(APP_PAGINA);
   if (p === '/api/me') return json({ role });
   if (p === '/api/material' && m === 'GET') return buscarMaterial(url, env);
   if (p === '/api/projetos' && m === 'GET') return listarNomesProjetos(env);
@@ -221,6 +228,12 @@ async function rotear(req, env) {
   if (mAnalise && m === 'POST') {
     if (!podeFoto) return json({ erro: 'Só a Qualidade pode dar o parecer.' }, 403);
     return analisarScrap(req, env, Number(mAnalise[1]));
+  }
+
+  // PCP: marcar (ou desmarcar) "scrap feito" e "arrumado" em um ou vários registros
+  if (p === '/api/scrap/pcp' && m === 'POST') {
+    if (!podeFoto) return json({ erro: 'Só a Qualidade e o administrador marcam o que o PCP já resolveu.' }, 403);
+    return marcarPcp(req, env);
   }
 
   const mScrap = p.match(/^\/api\/scrap\/(\d+)$/);
@@ -748,6 +761,11 @@ function filtros(url) {
   if (sp.get('foto') === 'com') w.push('EXISTS (SELECT 1 FROM foto WHERE foto.scrap_id = scrap.id)');
   const mat2 = texto(sp.get('matricula'), 20).toUpperCase();
   if (mat2) { w.push('matricula = ?'); v.push(mat2); }
+  // PCP: sim / nao
+  for (const [param, col] of [['scrap_feito', 'scrap_feito_em'], ['arrumado', 'arrumado_em']]) {
+    if (sp.get(param) === 'sim') w.push(`${col} IS NOT NULL`);
+    if (sp.get(param) === 'nao') w.push(`${col} IS NULL`);
+  }
   return { where: 'WHERE ' + w.join(' AND '), v };
 }
 
@@ -795,7 +813,7 @@ async function anexarAvarias(env, rows) {
 async function estatisticas(url, env) {
   const { where, v } = filtros(url);
   const rows = (await env.DB.prepare(
-    `SELECT posto, projeto, defeito, material, descricao_material, unidade, quantidade, classe, status FROM scrap ${where}`
+    `SELECT posto, projeto, defeito, material, descricao_material, unidade, quantidade, classe, status, scrap_feito_em, arrumado_em FROM scrap ${where}`
   ).bind(...v).all()).results;
 
   const grupo = (chave) => {
@@ -825,7 +843,10 @@ async function estatisticas(url, env) {
     .map(({ r, ...a }) => ({ material: r.material, projeto: r.projeto, classe: r.classe || '', descricao: desc.get(r.material + '|' + r.projeto) || '', unidade: normUn(r.unidade), ...a }))
     .sort(porRegistros).slice(0, 10);
 
-  return json({ total, porPosto, porProjeto, porDefeito, porClasse, porStatus, topMateriais });
+  // Andamento de cada registro: análise da Qualidade -> baixa do scrap (PCP) -> peça arrumada
+  const porEtapa = { analise: 0, aguardando_scrap: 0, falta_arrumar: 0, resolvido: 0 };
+  for (const r of rows) porEtapa[etapaScrap(r)]++;
+  return json({ total, porPosto, porProjeto, porDefeito, porClasse, porStatus, porEtapa, topMateriais });
 }
 
 async function buscarOperador(url, env) {
@@ -1008,6 +1029,37 @@ async function removerFoto(env, id) {
     env.DB.prepare('DELETE FROM foto WHERE id = ?').bind(id),
   ]);
   return json({ ok: true });
+}
+
+/* ---------------- PCP: scrap feito e arrumado ----------------
+ * "Scrap feito": a baixa do scrap já foi feita. "Arrumado": a peça/o problema já foi resolvido.
+ * Guarda quem marcou e quando; marcar de novo não troca o carimbo de quem marcou primeiro. */
+const CAMPOS_PCP = { scrap_feito: ['scrap_feito_em', 'scrap_feito_por'], arrumado: ['arrumado_em', 'arrumado_por'] };
+// Em que pé está o registro (a tela usa a mesma regra)
+const etapaScrap = (r) => ((r.status || 'analise') === 'analise' ? 'analise'
+  : r.status === 'scrap' && !r.scrap_feito_em ? 'aguardando_scrap'
+    : !r.arrumado_em ? 'falta_arrumar' : 'resolvido');
+
+async function marcarPcp(req, env) {
+  const b = await req.json().catch(() => null);
+  const par = CAMPOS_PCP[b?.campo];
+  if (!par) return json({ erro: 'Escolha o que marcar: scrap feito ou arrumado.' }, 400);
+  const ids = [...new Set((Array.isArray(b.ids) ? b.ids : []).map(Number).filter((n) => Number.isInteger(n) && n > 0))];
+  if (!ids.length) return json({ erro: 'Escolha pelo menos um registro.' }, 400);
+  if (ids.length > 500) return json({ erro: 'Marque no máximo 500 registros de uma vez.' }, 400);
+  const [colEm, colPor] = par;
+  const marcar = b.valor !== false;
+  const em = new Date().toISOString(), por = quemFez(b) || 'Qualidade';
+  const lotes = [];
+  for (let i = 0; i < ids.length; i += 90) lotes.push(ids.slice(i, i + 90));   // limite de variáveis do D1
+  const res = await env.DB.batch(lotes.map((l) => {
+    const q = l.map(() => '?').join(',');
+    return marcar
+      ? env.DB.prepare(`UPDATE scrap SET ${colEm} = ?, ${colPor} = ? WHERE id IN (${q}) AND excluido_em IS NULL AND ${colEm} IS NULL`).bind(em, por, ...l)
+      : env.DB.prepare(`UPDATE scrap SET ${colEm} = NULL, ${colPor} = NULL WHERE id IN (${q}) AND excluido_em IS NULL`).bind(...l);
+  }));
+  const alterados = res.reduce((t, r) => t + (r.meta?.changes ?? 0), 0);
+  return json({ ok: true, campo: b.campo, valor: marcar, alterados, em: marcar ? em : null, por: marcar ? por : null });
 }
 
 /* ---------------- análise da Qualidade ---------------- */

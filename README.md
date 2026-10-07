@@ -1,13 +1,14 @@
-# Qualidade · Scrap
+# Qualidade · Scrap e avarias
 
-Registro de scrap por posto (P1–P10) com identificação automática do projeto pela BOM.
+Registro de scrap por posto (P1–P10) com identificação automática do projeto pela BOM, parecer da Qualidade,
+relatório de avarias (FO.QA.A.049) e acompanhamento do PCP (scrap feito / arrumado).
 Cloudflare Worker + D1, publicado pelo GitHub (igual ao Controle de Produção).
 
 ## Perfis
 - **Operador** (`QUALIDADE_PASSWORD`): registra scrap, vê registros e painel, exporta Excel.
   Ao abrir o site, informa matrícula e nome (ficam gravados em cada registro).
-- **Qualidade** (`INSPECAO_PASSWORD`): tudo do operador + **adicionar e remover fotos** dos registros (filtro "Sem foto" em Registros) + montar o **relatório de avarias**.
-- **Admin** (`ADMIN_PASSWORD`): tudo acima + importar/excluir BOMs + **editar e apagar registros** (inclusive corrigir o SAP digitado errado). Também pode adicionar fotos.
+- **Qualidade** (`INSPECAO_PASSWORD`): tudo do operador + **adicionar e remover fotos** dos registros (filtro "Sem foto" em Registros) + montar o **relatório de avarias** + marcar **scrap feito** e **arrumado**.
+- **Admin** (`ADMIN_PASSWORD`): tudo acima + importar/excluir BOMs + **editar e apagar registros** (inclusive corrigir o SAP digitado errado).
 
 Registros apagados não somem do banco: ficam marcados com quem apagou e quando.
 Registros editados ficam marcados como "editado", com data e hora da edição.
@@ -77,6 +78,19 @@ Edite ou reenvie os arquivos no GitHub. Cada commit publica sozinho.
 Todo scrap registrado entra como **Em análise**. A Qualidade (ou o admin) dá o parecer na aba **Em análise**:
 Scrap confirmado, Retrabalho, Devolver ao fornecedor ou Liberado para uso, sempre com um texto de parecer.
 Itens com mais de 2 dias aparecem em vermelho. O número na aba mostra quantos estão pendentes.
+
+## Registros e PCP
+A aba **Registros** usa a largura toda da tela e mostra cada registro numa linha só (no celular, um cartão por registro).
+- **Andamento** (faixa no topo, também no Painel): cada registro está em uma etapa, e clicar numa etapa filtra a lista:
+  **Em análise** → **Aguardando scrap** (scrap confirmado, falta a baixa) → **Falta arrumar** → **Resolvidos**.
+- **Coluna PCP**: dois quadradinhos por registro, **Scrap feito** (a baixa já foi feita) e **Arrumado** (a peça/o problema já foi resolvido).
+  Guardam quem marcou e quando (passe o mouse). Qualidade e admin marcam; o operador só vê. Desmarcar pede confirmação.
+  Marcou errado? O aviso que aparece embaixo tem **Desfazer**.
+- **Marcar vários**: selecione as linhas (ou todas do filtro, pela caixa do cabeçalho) e use **Marcar scrap feito** / **Marcar arrumado**.
+- **Busca** na hora (código com ou sem hífen, descrição, defeito, operador, RA), **Filtros** (período, posto, projeto, defeito, classe,
+  situação, scrap feito, arrumado, fotos, avaria) e ordenação clicando no título da coluna.
+- **Exportar Excel** sai com o que está na tela, já com as colunas Andamento, Scrap feito/Arrumado (sim/não, quando e quem) e autofiltro.
+- Quando sai uma versão nova do site, quem está com ele aberto vê o aviso **Atualizar agora**. A versão fica no rodapé.
 
 ## Relatório de avarias (FO.QA.A.049)
 Aba **Relatório**: a Qualidade (ou o admin) monta; o operador só vê e baixa o PDF.
