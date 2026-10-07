@@ -457,6 +457,139 @@ td .proj{height:22px;font-size:13px}
 #mbMat[readonly]{color:var(--mut);background:var(--s2)}
 @media (max-width:720px){.bom-ed{padding:16px}.bom-ed-acoes{width:100%}.bom-ed-acoes .btn{flex:1 1 auto;justify-content:center;padding:0 12px;white-space:nowrap}.bom-busca{max-width:none}}
 
+/* ---------- relatório de avarias ---------- */
+.av-entrada{padding:22px 24px;margin-bottom:18px;scroll-margin-top:84px;transition:border-color .2s,box-shadow .2s}
+.av-entrada.editando{border-color:var(--red-line);box-shadow:0 0 0 3px var(--red-soft)}
+.av-entrada.arrastando{outline:2px dashed var(--red);outline-offset:-8px}
+/* computador: botão logo abaixo dos defeitos (a coluna da esquerda ocupa as duas linhas) */
+.av-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-areas:"esq dir" "esq botao";grid-template-rows:auto 1fr;gap:0 28px}
+.av-esq{grid-area:esq}
+.av-dir{grid-area:dir}
+.av-grid .campo:last-child{margin-bottom:0}
+.av-ed-aviso{display:flex;align-items:center;justify-content:space-between;gap:8px 14px;flex-wrap:wrap;margin:0 0 18px;padding:10px 14px;border-radius:var(--r-sm);background:var(--red-soft);border:1px solid var(--red-line);font-size:14px}
+.av-ed-aviso .link-btn{margin:0}
+.av-sit{display:flex;flex-wrap:wrap;gap:8px}
+.av-sit button{height:38px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line2);background:var(--bg);color:var(--mut);font-weight:700;font-size:13px;transition:color .15s,border-color .15s,background .15s}
+.av-sit button:hover{color:var(--txt)}
+.av-sit button.sel{border-color:currentColor}
+.av-sit [data-sit="analise"].sel{color:#d69e2e;background:rgba(214,158,46,.12)}
+.av-sit [data-sit="scrap"].sel{color:var(--red-h);background:var(--red-soft)}
+.av-sit [data-sit="retrabalho"].sel{color:#3b82f6;background:rgba(59,130,246,.1)}
+.av-sit [data-sit="devolucao"].sel{color:#9b6bf2;background:rgba(155,107,242,.1)}
+.av-sit [data-sit="liberado"].sel{color:var(--ok);background:var(--ok-soft)}
+html[data-tema="claro"] .av-sit [data-sit="analise"].sel{color:#975a16}
+.chips-p{gap:6px}
+.chips-p .chip{height:34px;padding:0 12px;font-size:13px}
+#avMat{text-transform:uppercase}
+#avMat::placeholder{text-transform:none}
+.av-aviso{display:flex;gap:10px;align-items:flex-start;margin-top:10px;padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--red-line);background:var(--red-soft);font-size:13px;animation:surge .22s ease-out}
+.av-aviso>svg{color:var(--red-h);margin-top:3px}
+.av-aviso b{display:block;margin-bottom:2px}
+.av-aviso .tag-av{margin:4px 6px 0 0}
+.av-regs{margin-top:10px;padding:10px 12px;border-radius:var(--r-sm);background:var(--s2);border:1px solid var(--line);font-size:13px;animation:surge .22s ease-out}
+.av-regs>small{display:block;color:var(--mut);font-weight:700;margin-bottom:2px}
+.av-regs ul,.av-scraps ul{margin:0;padding:0;list-style:none}
+.av-regs li,.av-scraps li{padding:5px 0;border-top:1px solid var(--line);line-height:1.45}
+.av-regs li:first-child,.av-scraps li:first-child{border-top:0}
+.av-regs .posto-tag,.av-scraps .posto-tag{min-width:26px;height:20px;font-size:13px;margin-right:2px}
+.av-regs .st,.av-scraps .st{height:20px;padding:0 8px;font-size:11px;margin-left:4px;vertical-align:1px}
+.av-fotos-ed.arrastando .foto-add{border-color:var(--red);background:var(--red-soft)}
+.av-dica{flex-basis:100%;margin:2px 0 0;color:var(--mut2);font-size:12px}
+.thumb-erro{position:absolute;left:0;right:0;bottom:0;padding:3px 4px;background:var(--red);color:#fff;font-size:11px;font-weight:700;text-align:center}
+.tag-av{display:inline-flex;align-items:center;gap:5px;max-width:100%;height:24px;margin-top:4px;padding:0 9px;border-radius:6px;border:1px solid var(--red-line);background:var(--red-soft);color:var(--txt);font:700 12px/1 Barlow,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
+.tag-av svg{color:var(--red-h);flex:none}
+.tag-av:hover{border-color:var(--red)}
+.mat-cel .tag-av{display:flex;width:max-content}
+.item-top .tag-av,.an-top .tag-av{margin-top:0}
+.av-barra{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.av-dias{display:flex;align-items:center;gap:8px}
+.av-dias input{width:auto;height:42px;padding:0 12px;font-size:14px}
+.av-seta{width:42px;justify-content:center;padding:0;font-size:22px;line-height:1}
+.av-seta:disabled{opacity:.35;cursor:default}
+.av-botoes{display:flex;gap:8px;flex-wrap:wrap}
+/* folha do relatório: sempre clara (é o que sai na impressão e no PDF) */
+.folha{--txt:#101013;--mut:#5c5c66;--mut2:#a0a0a8;--line:#e3e3e8;--line2:#cbcbd2;--s1:#fff;--s2:#f4f4f6;--s3:#e9e9ee;--bg:#fff;
+  --inv:#101013;--inv-txt:#fff;--red:#d9002a;--red-h:#d9002a;--red-soft:rgba(217,0,42,.07);--red-line:rgba(217,0,42,.35);--ok:#1f9d5a;--ok-soft:rgba(31,157,90,.1);
+  color-scheme:light;background:#fff;color:var(--txt);border-radius:var(--r);padding:28px 32px;box-shadow:0 1px 2px rgba(0,0,0,.25),0 18px 50px var(--sombra);transition:opacity .15s}
+.folha.carregando{opacity:.55}
+.folha .st-analise{color:#975a16}
+.folha-cab{display:flex;align-items:center;gap:14px;padding-bottom:14px;border-bottom:2px solid var(--txt)}
+.folha-cab svg{width:46px;height:46px;flex:none}
+.folha-tit{flex:1;min-width:0}
+.folha-tit b{display:block;font:700 27px/1.05 var(--cond);letter-spacing:.4px;text-transform:uppercase}
+.folha-tit span{color:var(--mut);font-size:13px}
+.folha-data{text-align:right}
+.folha-data b{display:block;font:700 26px/1 var(--cond);letter-spacing:.3px}
+.folha-data span{color:var(--mut);font-size:13px}
+.folha-resumo{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 26px;padding:14px 0;border-bottom:1px solid var(--line)}
+.folha-resumo small{display:block;color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.folha-resumo b{font:700 24px/1.1 var(--cond)}
+.folha-resumo .resp{margin-left:auto;text-align:right}
+.folha-resumo .resp b{font:600 14px/1.35 Barlow,sans-serif}
+.av-item{display:grid;grid-template-columns:30px minmax(0,1fr) 290px;gap:6px 18px;padding:18px 0;border-bottom:1px solid var(--line);break-inside:avoid;page-break-inside:avoid;scroll-margin-top:96px}
+.av-item:last-child{border-bottom:0}
+.av-item.destaque{animation:destaque 2.6s ease-out}
+@keyframes destaque{0%,35%{background:rgba(217,0,42,.09);box-shadow:-10px 0 0 rgba(217,0,42,.09),10px 0 0 rgba(217,0,42,.09)}100%{background:transparent}}
+.av-n{font:700 22px/1.1 var(--cond);color:var(--mut2)}
+.av-topo{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap}
+.av-num{font:700 13px/1 Barlow,sans-serif;letter-spacing:.3px}
+.av-hora{color:var(--mut);font-size:13px}
+.av-mat{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+.av-cod{font:700 25px/1 var(--cond);letter-spacing:.5px}
+.av-mat .proj{height:22px;font-size:13px}
+.folha .av-desc{margin:4px 0 0;font-size:14px;color:var(--txt)}
+.av-campos{display:flex;flex-wrap:wrap;gap:4px 22px;margin:10px 0 0;font-size:13px}
+.av-campos div{white-space:nowrap}
+.av-campos dt{display:inline;color:var(--mut)}
+.av-campos dd{display:inline;margin:0 0 0 5px;font-weight:700}
+.folha .av-obs{margin:8px 0 0;font-size:14px;white-space:pre-line;color:var(--txt)}
+.av-obs b{font-weight:700}
+.av-scraps{margin-top:10px;padding:8px 11px;border-radius:8px;background:var(--s2);font-size:12.5px}
+.av-scraps>small{display:block;color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+.av-scraps.nenhum{background:none;padding:0;color:var(--mut)}
+.av-por{margin-top:8px;color:var(--mut);font-size:12px}
+.av-acoes{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.av-acoes button{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--txt);font-size:12px;font-weight:700}
+.av-acoes button:hover{border-color:var(--red);color:var(--red)}
+.av-acoes button svg{width:14px;height:14px}
+.av-sit-sel{width:auto;height:28px;padding:0 30px 0 11px;border-radius:999px;border:1.5px solid var(--line2);background-color:#fff;font-size:12px;font-weight:700;background-position:right 11px center}
+.av-sit-sel.s-analise{color:#975a16;border-color:rgba(214,158,46,.6)}
+.av-sit-sel.s-scrap{color:var(--red);border-color:var(--red-line)}
+.av-sit-sel.s-retrabalho{color:#2563eb;border-color:rgba(59,130,246,.5)}
+.av-sit-sel.s-devolucao{color:#7c4ddb;border-color:rgba(155,107,242,.5)}
+.av-sit-sel.s-liberado{color:var(--ok);border-color:rgba(31,157,90,.5)}
+.av-fotos{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-content:start}
+.av-fotos.uma{grid-template-columns:1fr}
+.av-fotos img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:var(--s3);cursor:zoom-in}
+.av-sem-foto{display:grid;place-items:center;grid-column:1/-1;aspect-ratio:4/3;max-height:140px;border:1.5px dashed var(--red-line);border-radius:6px;color:var(--red);font-size:12px;font-weight:700}
+.folha-rodape{display:flex;justify-content:space-between;gap:6px 14px;flex-wrap:wrap;margin-top:4px;padding-top:12px;border-top:1px solid var(--line);color:var(--mut);font-size:11px}
+.folha .vazio{padding:46px 20px}
+.so-papel{display:none}
+.modal-caixa.av-modal{width:min(860px,100%)}
+.av-modal .folha{margin-bottom:18px;padding:4px 20px;box-shadow:none;border:1px solid var(--line2)}
+.av-modal .av-item{grid-template-columns:minmax(0,1fr) 250px}
+.av-botao{grid-area:botao;align-self:start;margin-top:20px}
+@media (max-width:980px){
+  .av-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"esq" "dir" "botao";grid-template-rows:auto}
+  .av-botao{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom));z-index:5;margin-top:22px;box-shadow:0 10px 30px var(--sombra)}
+}
+@media (max-width:720px){
+  .av-entrada{padding:18px 16px}
+  .folha{padding:18px 16px;border-radius:12px}
+  .folha-cab svg{width:38px;height:38px}
+  .folha-tit b{font-size:20px}
+  .folha-data b{font-size:19px}
+  .folha-resumo{gap:8px 18px}
+  .folha-resumo .resp{margin-left:0;text-align:left;flex-basis:100%}
+  .av-item,.av-modal .av-item{grid-template-columns:22px minmax(0,1fr)}
+  .av-modal .av-item{grid-template-columns:minmax(0,1fr)}
+  .av-fotos{grid-column:2}
+  .av-modal .av-fotos{grid-column:1}
+  .av-n{font-size:17px}
+  .av-cod{font-size:22px}
+  .av-barra .btn{padding:0 12px}
+}
+
 /* ---------- modal / toast ---------- */
 .modal{position:fixed;inset:0;z-index:30;display:flex;overflow-y:auto;overscroll-behavior:contain;padding:16px;background:var(--vidro);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fade .18s ease-out}
 @keyframes fade{from{opacity:0}}
@@ -514,7 +647,37 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
 }
 @media (max-width:420px){.foto-add,.thumb{width:96px;height:96px}.tema{width:34px;height:34px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* impressão / PDF do relatório de avarias (botão "Imprimir / PDF" ou Ctrl+P na aba Relatório) */
+@page{size:A4;margin:11mm 11mm 12mm}
+@media print{
+  body.imprimindo{background:#fff!important;color:#101013}
+  body.imprimindo .topo,body.imprimindo #toast,body.imprimindo .modal,body.imprimindo .galeria,
+  body.imprimindo .tab:not(#tab-relatorio),body.imprimindo #tab-relatorio>:not(.folha),body.imprimindo .so-tela{display:none!important}
+  body.imprimindo main{max-width:none;margin:0;padding:0}
+  body.imprimindo #tab-relatorio{display:block!important}
+  body.imprimindo .so-papel{display:inline-flex}
+  body.imprimindo .folha{padding:0;border-radius:0;box-shadow:none;opacity:1;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.imprimindo .folha-cab svg{width:40px;height:40px}
+  body.imprimindo .folha-tit b{font-size:22px}
+  body.imprimindo .folha-data b{font-size:20px}
+  body.imprimindo .folha-resumo{gap:6px 22px;padding:10px 0}
+  body.imprimindo .folha-resumo b{font-size:19px}
+  body.imprimindo .folha-resumo .resp{margin-left:auto;text-align:right;flex-basis:auto}
+  body.imprimindo .av-item{grid-template-columns:7mm minmax(0,1fr) 70mm;gap:4px 5mm;padding:4mm 0}
+  body.imprimindo .av-fotos{grid-column:auto}
+  body.imprimindo .av-n{font-size:17px}
+  body.imprimindo .av-cod{font-size:21px}
+  body.imprimindo .av-desc,body.imprimindo .av-obs{font-size:12.5px}
+  body.imprimindo .av-campos{font-size:12px;margin-top:6px}
+  body.imprimindo .av-scraps{font-size:11px;padding:5px 8px;margin-top:6px}
+  body.imprimindo .av-scraps.nenhum{padding:0}
+  body.imprimindo .av-item,body.imprimindo .folha{animation:none!important;transition:none!important;background:none}
+  body.imprimindo .av-fotos img{border-radius:3px}
+  body.imprimindo .folha-rodape{padding-top:8px}
+}
 </style>
+<style id="avPagina">/* rodapé de cada página do PDF (data e "Página 1 de 2"), montado na hora de imprimir */</style>
 </head>
 <body>
 <header class="topo">
@@ -525,6 +688,7 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
   <nav id="nav">
     <button data-tab="registrar" class="ativo">Registrar</button>
     <button data-tab="analise">Em análise<span class="nav-badge" id="badgeAnalise" hidden></span></button>
+    <button data-tab="relatorio">Relatório</button>
     <button data-tab="registros">Registros</button>
     <button data-tab="painel">Painel</button>
     <button data-tab="boms" id="navBoms" hidden>BOMs</button>
@@ -614,6 +778,7 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
         <label>Situação<select id="rStatus"><option value="">Todas</option><option value="analise">Em análise</option><option value="scrap">Scrap confirmado</option><option value="retrabalho">Retrabalho</option><option value="devolucao">Devolver ao fornecedor</option><option value="liberado">Liberado para uso</option></select></label>
         <label>Classe<select id="rClasse"><option value="">Todas</option><option>A</option><option>B</option><option>C</option><option value="-">Sem classe</option></select></label>
         <label>Fotos<select id="rFoto"><option value="">Todos</option><option value="sem">Sem foto</option><option value="com">Com foto</option></select></label>
+        <label>Avaria<select id="rAvaria"><option value="">Todos</option><option value="com">Com formulário de avaria</option><option value="sem">Sem formulário</option></select></label>
       </div>
       <div class="acoes">
         <div class="atalhos" data-alvo="r">
@@ -649,6 +814,85 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
     </div>
     <div class="an-resumo" id="aResumo"></div>
     <div class="an-lista" id="aLista"></div>
+  </section>
+
+  <!-- RELATÓRIO DE AVARIAS -->
+  <section id="tab-relatorio" class="tab">
+    <div class="cab-pag"><div><h1>Relatório de avarias</h1><p>Peças com avaria, sendo scrap ou não. Digite o código e tire a foto: o relatório do dia se monta sozinho.</p></div></div>
+
+    <div class="painel av-entrada" id="avEntrada" hidden>
+      <div class="av-ed-aviso" id="avEdAviso" hidden><span id="avEdTxt"></span><button type="button" class="link-btn" id="avEdCancelar">Cancelar edição</button></div>
+      <div class="av-grid">
+        <div class="av-esq">
+          <div class="campo">
+            <label for="avMat">Código da peça</label>
+            <div class="busca">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              <input id="avMat" placeholder="Código do material (SAP)" autocomplete="off" spellcheck="false" autocapitalize="characters" enterkeyhint="search" maxlength="40">
+            </div>
+            <div id="avMatRes" aria-live="polite"></div>
+          </div>
+          <div class="campo">
+            <span class="rot">Fotos <span class="opcional">· até 4: peça inteira, detalhe da avaria, etiqueta</span></span>
+            <div class="fotos av-fotos-ed" id="avFotos"></div>
+          </div>
+          <div class="campo">
+            <label for="avObs">Observação <span class="opcional">(opcional)</span></label>
+            <textarea id="avObs" rows="2" maxlength="1000" placeholder="Ex.: embalagem chegou rasgada, amassado na aba de fixação"></textarea>
+          </div>
+        </div>
+        <div class="av-dir">
+          <div class="campo">
+            <span class="rot">Situação</span>
+            <div class="av-sit" id="avSit">
+              <button type="button" data-sit="analise" class="sel">Em análise</button>
+              <button type="button" data-sit="scrap">Scrap</button>
+              <button type="button" data-sit="retrabalho">Retrabalho</button>
+              <button type="button" data-sit="devolucao">Devolver ao fornecedor</button>
+              <button type="button" data-sit="liberado">Liberado para uso</button>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="avQtd">Quantidade</label>
+            <div class="stepper">
+              <button type="button" data-avstep="-1" aria-label="Diminuir">−</button>
+              <input id="avQtd" type="number" min="0" step="any" inputmode="decimal" value="1">
+              <button type="button" data-avstep="1" aria-label="Aumentar">+</button>
+              <span class="un" id="avUn">PC</span>
+            </div>
+          </div>
+          <div class="campo">
+            <span class="rot">Defeito <span class="opcional">(opcional)</span></span>
+            <div id="avDefeitos" class="chips chips-p"></div>
+          </div>
+        </div>
+        <!-- no celular o botão fica preso embaixo da tela enquanto o formulário está aberto -->
+        <button id="avSalvar" class="btn-prim av-botao" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          <span>Adicionar ao relatório</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="av-barra">
+      <div class="av-dias">
+        <button class="btn av-seta" id="avAnt" aria-label="Dia anterior" title="Dia anterior">‹</button>
+        <input type="date" id="avDia" aria-label="Dia do relatório">
+        <button class="btn av-seta" id="avProx" aria-label="Próximo dia" title="Próximo dia">›</button>
+        <button class="atalho" id="avHoje">Hoje</button>
+      </div>
+      <div class="av-botoes">
+        <button class="btn" id="avExport">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+          Excel
+        </button>
+        <button class="btn claro" id="avImprimir">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>
+          Imprimir / PDF
+        </button>
+      </div>
+    </div>
+    <article class="folha" id="avFolha" aria-label="Relatório de avarias do dia"></article>
   </section>
 
   <!-- PAINEL -->
@@ -845,7 +1089,22 @@ html[data-tema="claro"] .proj.op.sel{background-color:var(--red);border-color:va
   </div>
 </div>
 
+<!-- formulário(s) de avaria de um material (selo "Formulário de avaria" nos registros) -->
+<div class="modal" id="modalAv" hidden>
+  <div class="modal-caixa av-modal" role="dialog" aria-modal="true" aria-labelledby="mavTit">
+    <div class="linha-sinal"></div>
+    <h2 id="mavTit">Formulário de avaria</h2>
+    <p id="mavInfo"></p>
+    <div class="folha" id="mavLista"></div>
+    <div class="modal-acoes">
+      <button type="button" class="btn" id="mavFechar">Fechar</button>
+      <button type="button" class="btn-prim" id="mavAbrir">Abrir o relatório do dia</button>
+    </div>
+  </div>
+</div>
+
 <input type="file" id="fotoIn" accept="image/*" capture="environment" hidden aria-label="Tirar foto da peça">
+<input type="file" id="avFotoItem" accept="image/*" multiple hidden aria-label="Adicionar foto ao formulário de avaria">
 
 <div class="galeria" id="galeria" hidden role="dialog" aria-modal="true" aria-label="Fotos do registro">
   <div class="galeria-topo"><span id="galInfo"></span>
@@ -946,18 +1205,27 @@ function preencherSelect(sel, itens, primeiro) {
 /* ---------- navegação ---------- */
 let ROLE = 'operador';
 let PROJETOS = [];
+const REL = { dia: '', itens: [], scraps: [], seq: 0 };   // relatório de avarias na tela
+const MAV = { ids: [], itens: [], scraps: [] };           // formulários abertos pelo selo "Formulário de avaria"
 
 $('#nav').addEventListener('click', (e) => {
   const b = e.target.closest('button[data-tab]');
-  if (!b) return;
-  document.querySelectorAll('#nav button').forEach((x) => x.classList.toggle('ativo', x === b));
-  document.querySelectorAll('.tab').forEach((s) => s.classList.toggle('ativo', s.id === 'tab-' + b.dataset.tab));
-  if (b.dataset.tab === 'registrar') { exigirOperador(); carregarHoje(); }
-  if (b.dataset.tab === 'registros') { if (PER.r) aplicarPeriodo('r', PER.r); carregarRegistros(); }
-  if (b.dataset.tab === 'analise') carregarAnalise();
-  if (b.dataset.tab === 'painel') { if (PER.p) aplicarPeriodo('p', PER.p); carregarPainel(); }
-  if (b.dataset.tab === 'boms') carregarProjetosBom();
+  if (b) mostrarAba(b.dataset.tab);
 });
+// opts (relatório): { dia: 'aaaa-mm-dd', destacar: id do formulário }
+function mostrarAba(aba, opts = {}) {
+  const b = document.querySelector(`#nav button[data-tab="${aba}"]`);
+  if (!b || b.hidden) return;
+  document.querySelectorAll('#nav button').forEach((x) => x.classList.toggle('ativo', x === b));
+  document.querySelectorAll('.tab').forEach((s) => s.classList.toggle('ativo', s.id === 'tab-' + aba));
+  try { history.replaceState(null, '', aba === 'registrar' ? location.pathname : '?aba=' + aba); } catch {}
+  if (aba === 'registrar') { exigirOperador(); carregarHoje(); }
+  if (aba === 'registros') { if (PER.r) aplicarPeriodo('r', PER.r); carregarRegistros(); }
+  if (aba === 'analise') carregarAnalise();
+  if (aba === 'relatorio') abrirRelatorio(opts);
+  if (aba === 'painel') { if (PER.p) aplicarPeriodo('p', PER.p); carregarPainel(); }
+  if (aba === 'boms') carregarProjetosBom();
+}
 
 async function carregarProjetos() {
   try { PROJETOS = (await api('/api/projetos')).projetos; } catch { PROJETOS = []; }
@@ -1002,9 +1270,16 @@ function tique() {
   const data = d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
   $('#relData').textContent = data.charAt(0).toUpperCase() + data.slice(1);
   if (hojeStr() !== diaAtual) {          // virou o dia: atualiza tudo que depende de "hoje"
+    const ontem = diaAtual;
     diaAtual = hojeStr();
     ['r', 'p'].forEach((a) => PER[a] && aplicarPeriodo(a, PER[a]));
     carregarHoje();
+    $('#avDia').max = diaAtual;
+    if (REL.dia === ontem) {             // relatório aberto no dia de hoje passa para o dia novo
+      REL.dia = diaAtual;
+      $('#avDia').value = diaAtual;
+      if ($('#tab-relatorio').classList.contains('ativo')) carregarRelatorio();
+    }
   }
 }
 tique(); setInterval(tique, 1000);
@@ -1012,6 +1287,7 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) return;
   ['r', 'p'].forEach((a) => PER[a] && aplicarPeriodo(a, PER[a]));
   if ($('#tab-registrar').classList.contains('ativo')) carregarHoje();
+  if ($('#tab-relatorio').classList.contains('ativo')) carregarRelatorio();
 });
 
 /* ---------- erros por campo ---------- */
@@ -1077,7 +1353,7 @@ $('#formOp').addEventListener('submit', async (e) => {
   mostrarOperador();
   carregarHoje();
   toast('Olá, ' + nome.split(' ')[0]);
-  $('#mat').focus();
+  ($('#tab-relatorio').classList.contains('ativo') ? $('#avMat') : $('#mat')).focus();
 });
 
 $('#opChip').addEventListener('click', async () => {
@@ -1153,23 +1429,29 @@ $('#mat').addEventListener('keydown', (e) => {
 });
 
 const CACHE_MAT = new Map();   // buscas já feitas nesta tela (zera ao importar/excluir BOM)
+async function materialDaBom(q) {
+  const chave = q.toUpperCase();
+  let d = CACHE_MAT.get(chave);
+  if (!d) {
+    d = await api('/api/material?' + qs({ q }));
+    if (CACHE_MAT.size > 300) CACHE_MAT.clear();
+    CACHE_MAT.set(chave, d);
+  }
+  return d;
+}
 async function buscarMaterial() {
   const q = $('#mat').value.trim();
-  est.busca = null; est.projeto = null; est.foraBom = false;
+  est.busca = null; est.projeto = null; est.foraBom = false; est.avarias = [];
   $('#un').textContent = 'UN';
   if (!q) { $('#matRes').innerHTML = ''; return; }
   const seq = ++est.seq;
   $('#matRes').innerHTML = '<p class="mut" style="margin:12px 0 0">Procurando nas BOMs…</p>';
   try {
-    const chave = q.toUpperCase();
-    let d = CACHE_MAT.get(chave);
-    if (!d) {
-      d = await api('/api/material?' + qs({ q }));
-      if (CACHE_MAT.size > 300) CACHE_MAT.clear();
-      CACHE_MAT.set(chave, d);
-    }
+    // junto com a BOM: se a Qualidade já fez formulário de avaria desse material
+    const [d, av] = await Promise.all([materialDaBom(q), api('/api/avaria/material?' + qs({ q })).catch(() => null)]);
     if (seq !== est.seq) return;
     est.busca = d;
+    est.avarias = av?.avarias || [];
     renderMaterial();
   } catch (e) {
     if (seq === est.seq) $('#matRes').innerHTML = `<p class="mut">${esc(e.message)}</p>`;
@@ -1177,6 +1459,10 @@ async function buscarMaterial() {
 }
 
 function renderMaterial() {
+  fichaMaterial();
+  $('#matRes').insertAdjacentHTML('beforeend', avisoAvaria(est.avarias));
+}
+function fichaMaterial() {
   const d = est.busca, el = $('#matRes');
   if (est.foraBom) {
     el.innerHTML = `
@@ -1242,7 +1528,8 @@ function carregarImagem(arquivo) {
   });
 }
 
-// Reduz para no máximo 1600 px e carimba data/hora, posto e material embaixo da foto.
+// Reduz para no máximo 1600 px e carimba data/hora, posto (ou rótulo) e material embaixo da foto.
+// info: { posto | rotulo, material, projeto, em (hora em que a foto foi tirada) }
 async function prepararFoto(arquivo, info) {
   const img = await carregarImagem(arquivo);
   const escala = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
@@ -1259,7 +1546,8 @@ async function prepararFoto(arquivo, info) {
   g.fillStyle = '#fff';
   g.font = `600 ${fs}px Barlow, system-ui, sans-serif`;
   g.textBaseline = 'middle';
-  const partes = [new Date().toLocaleString('pt-BR'), 'Posto ' + info.posto, info.material, info.projeto, OP ? 'Qualidade: ' + OP.nome : ''].filter(Boolean);
+  const partes = [(info.em || new Date()).toLocaleString('pt-BR'), info.posto ? 'Posto ' + info.posto : info.rotulo,
+    info.material, info.projeto, OP ? 'Qualidade: ' + OP.nome : ''].filter(Boolean);
   g.fillText(partes.join('   ·   '), Math.round(fs * 1), h - faixa / 2, w - fs * 2);
   return c.toDataURL('image/jpeg', 0.78);
 }
@@ -1291,6 +1579,8 @@ function atualizarListas() {
   if ($('#tab-registrar').classList.contains('ativo')) carregarUltimos();
   if ($('#tab-registros').classList.contains('ativo')) carregarRegistros();
   if ($('#tab-analise').classList.contains('ativo')) carregarAnalise();
+  if ($('#tab-relatorio').classList.contains('ativo')) carregarRelatorio();
+  if (!$('#modalAv').hidden && MAV.ids.length) abrirFormulariosAv(MAV.ids);
 }
 
 /* ---------- galeria ---------- */
@@ -1499,7 +1789,7 @@ async function carregarUltimos() {
       <div class="item">
         <div class="item-hora">${hora(r.created_at)}</div>
         <div>
-          <div class="item-top"><b>${esc(r.material)}</b><span class="proj">${esc(r.projeto)}</span>${clsHtml(r.classe)}${r.fora_bom ? '<span class="proj fora">fora BOM</span>' : ''}${tagSap(r)}</div>
+          <div class="item-top"><b>${esc(r.material)}</b><span class="proj">${esc(r.projeto)}</span>${clsHtml(r.classe)}${r.fora_bom ? '<span class="proj fora">fora BOM</span>' : ''}${tagSap(r)}${tagAvaria(r)}</div>
           <p>${esc(r.defeito)} · ${esc(qtdTxt(r.quantidade, r.unidade))}</p>
           <small>${esc(r.registrado_por || '')}${r.matricula ? ' (' + esc(r.matricula) + ')' : ''}</small>${tagEditado(r)}<div style="margin-top:6px">${stHtml(r.status)}</div>${botaoFotos(r)}
         </div>
@@ -1735,7 +2025,7 @@ async function carregarAnalise() {
       const atrasado = !fechado && Date.now() - Date.parse(r.created_at) > PRAZO_DIAS * 864e5;
       return `<div class="painel an-card ${fechado ? 'fechado' : ''} ${atrasado ? 'atrasado' : ''}">
         <div>
-          <div class="an-top"><span class="cod">${esc(r.material)}</span><span class="proj">${esc(r.projeto)}</span>${clsHtml(r.classe)}${r.fora_bom ? '<span class="proj fora">fora BOM</span>' : ''}${stHtml(r.status)}${tagSap(r)}</div>
+          <div class="an-top"><span class="cod">${esc(r.material)}</span><span class="proj">${esc(r.projeto)}</span>${clsHtml(r.classe)}${r.fora_bom ? '<span class="proj fora">fora BOM</span>' : ''}${stHtml(r.status)}${tagSap(r)}${tagAvaria(r)}</div>
           <p class="an-desc">${esc(r.descricao_material)}</p>
           <div class="an-meta"><span>Posto <b>P${r.posto}</b></span><span>Quantidade <b>${esc(qtdTxt(r.quantidade, r.unidade))}</b></span>
             <span>Defeito <b>${esc(r.defeito)}</b></span><span>Registrado por <b>${esc(r.registrado_por || '–')}</b> em ${dataHora(r.created_at)}</span></div>
@@ -1812,6 +2102,595 @@ $('#aLista').addEventListener('click', async (e) => {
   }
 });
 
+/* ---------- relatório de avarias ----------
+   A Qualidade digita o código da peça e tira a foto. Descrição, projeto, unidade e classe vêm da BOM, e os
+   registros de scrap do mesmo material (7 dias) entram sozinhos no formulário. O relatório do dia é a folha
+   com todos os formulários daquele dia, pronta para imprimir/PDF ou Excel. Nos registros de scrap (Registrar,
+   Em análise e Registros) o material aparece com o selo "Formulário de avaria". */
+const MAX_FOTOS_AV = 4;
+const JANELA_AV = 7;       // dias de registros de scrap que entram no formulário (igual ao servidor)
+const CELULAR = matchMedia('(pointer: coarse)').matches;
+const TITULO = document.title;
+const ICONE_DOC = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
+const ICONE_GALERIA = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="m21 15-5-5L5 21"/></svg>';
+const LOGO_FOLHA = '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="qaFundoF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1d22"/><stop offset="1" stop-color="#09090b"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#qaFundoF)"/><rect x="1" y="1" width="62" height="62" rx="14" fill="none" stroke="#e4002b" stroke-width="2"/><g fill="none" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="17.9" width="15.8" height="28.2" rx="7.9" stroke="#fff"/><path d="M43 17.9 50 46.1M38.2 37.3h9.6" stroke="#fff"/><path d="M25.4 35.5 36 46.1 43 17.9" stroke="#ff1f47"/></g></svg>';
+const AV = { id: null, item: null, q: '', busca: null, info: null, projeto: null, foraBom: false, seq: 0, buscando: null,
+  novas: [], existentes: [], sit: 'analise', defeito: '', qtdTocada: false, defTocado: false, salvando: false };
+let tAv, FOTO_AV = null;
+
+function numAv(a) { return `AV-${new Date(a.created_at || a.em).getFullYear()}-${String(a.id).padStart(4, '0')}`; }
+function dataCurta(iso) { return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }); }
+const diaDe = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const dataDia = (dia) => { const [y, m, d] = dia.split('-').map(Number); return new Date(y, m - 1, d); };
+const somaDias = (dia, n) => { const d = dataDia(dia); d.setDate(d.getDate() + n); return diaDe(d); };
+const fotosDe = (a) => (a.fotos ? String(a.fotos).split(',').filter(Boolean) : []);
+// miniatura que não abre (estragada): usa a foto inteira
+const SEM_MINI = (id) => `onerror="this.onerror=null;this.src='/api/foto/${Number(id)}'"`;
+const quemAv = (a) => `${a.registrado_por || ''}${a.matricula ? ' (' + a.matricula + ')' : ''}`;
+const ehImagem = (f) => /^image\//.test(f.type) || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name || '');
+
+// Registros de scrap do mesmo material: dos 6 dias antes até o fim do dia do formulário (7 dias)
+function ligadosAv(a, scraps) {
+  const d = new Date(a.created_at);
+  const ini = new Date(d.getFullYear(), d.getMonth(), d.getDate() - (JANELA_AV - 1)).getTime();
+  const fim = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1).getTime();
+  return scraps.filter((s) => s.chave === a.chave && Date.parse(s.created_at) >= ini && Date.parse(s.created_at) < fim)
+    .sort((x, y) => y.created_at.localeCompare(x.created_at));
+}
+
+// Selo nos registros de scrap cujo material já tem formulário de avaria (abre o formulário)
+function tagAvaria(r) {
+  const l = r.avarias;
+  if (!l?.length) return '';
+  const dica = l.map((a) => `${numAv(a)} de ${dataCurta(a.em)}: ${ST_NOME[a.situacao] || ''}`).join('\n');
+  return `<button type="button" class="tag-av" data-av="${l.map((a) => a.id).join(',')}" title="${esc(dica)}">${ICONE_DOC}Formulário de avaria · ${dataCurta(l[0].em)}${l.length > 1 ? ' +' + (l.length - 1) : ''}</button>`;
+}
+// Aviso na ficha do material (Registrar e Relatório)
+function avisoAvaria(lista) {
+  if (!lista?.length) return '';
+  return `<div class="av-aviso">${ICONE_DOC}<div><b>Esse material já tem formulário de avaria</b>${lista.slice(0, 3).map((a) =>
+    `<button type="button" class="tag-av" data-av="${a.id}" title="Ver o formulário">${numAv(a)} · ${dataCurta(a.created_at)} · ${esc(ST_NOME[a.situacao] || ST_NOME.analise)}</button>`).join('')}${
+    lista.length > 3 ? `<button type="button" class="tag-av" data-av="${lista.map((a) => a.id).join(',')}">ver os ${lista.length}</button>` : ''}</div></div>`;
+}
+function linhaScrapAv(s) {
+  return `<li><span class="posto-tag">P${esc(s.posto)}</span> <b>${esc(qtdTxt(s.quantidade, s.unidade))}</b> · ${esc(s.defeito)}`
+    + (s.descricao_problema ? ` · “${esc(s.descricao_problema)}”` : '')
+    + ` · ${esc(s.registrado_por || '')}${s.matricula ? ' (' + esc(s.matricula) + ')' : ''} · ${dataHora(s.created_at)}${stHtml(s.status)}</li>`;
+}
+
+// Um formulário na folha. n: posição no relatório do dia (null no modal); acoes: Qualidade pode mexer
+function itemAvHtml(a, n, ligados, acoes) {
+  const fotos = fotosDe(a), tit = `${numAv(a)} · ${a.material}`, sit = a.situacao || 'analise', MAX = 5;
+  const seletor = `<span class="so-papel">${stHtml(sit)}</span><select class="av-sit-sel so-tela s-${esc(sit)}" data-sitid="${a.id}" aria-label="Situação de ${esc(numAv(a))}">${
+    Object.entries(ST_NOME).map(([k, t]) => `<option value="${k}"${k === sit ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select>`;
+  return `<section class="av-item"${n != null ? ` id="av-${a.id}"` : ''} data-id="${a.id}">
+    ${n != null ? `<div class="av-n">${pad(n)}</div>` : ''}
+    <div class="av-corpo">
+      <div class="av-topo"><span class="av-num">${numAv(a)}</span><span class="av-hora">${n != null ? hora(a.created_at) : dataHora(a.created_at)}</span>${acoes ? seletor : stHtml(sit)}</div>
+      <div class="av-mat"><b class="av-cod">${esc(a.material)}</b>${a.projeto ? `<span class="proj">${esc(a.projeto)}</span>` : ''}${clsHtml(a.classe)}${a.fora_bom ? '<span class="proj fora">fora BOM</span>' : ''}</div>
+      ${a.descricao_material ? `<p class="av-desc">${esc(a.descricao_material)}</p>` : ''}
+      <dl class="av-campos"><div><dt>Quantidade</dt><dd>${esc(qtdTxt(a.quantidade, a.unidade))}</dd></div>${a.defeito ? `<div><dt>Defeito</dt><dd>${esc(a.defeito)}</dd></div>` : ''}</dl>
+      ${a.observacao ? `<p class="av-obs"><b>Observação:</b> ${esc(a.observacao)}</p>` : ''}
+      ${ligados.length
+        ? `<div class="av-scraps"><small>Registros de scrap deste material · ${JANELA_AV} dias</small><ul>${ligados.slice(0, MAX).map(linhaScrapAv).join('')}</ul>${ligados.length > MAX ? `<small>e mais ${ligados.length - MAX}</small>` : ''}</div>`
+        : `<div class="av-scraps nenhum">Sem registro de scrap deste material nos ${JANELA_AV} dias até o formulário.</div>`}
+      <div class="av-por">Qualidade: ${esc(quemAv(a)) || '–'}${a.editado_em ? ` · editado ${dataHora(a.editado_em)}${a.editado_por ? ' por ' + esc(a.editado_por) : ''}` : ''}</div>
+      ${acoes ? `<div class="av-acoes so-tela">
+        <button type="button" data-avacao="editar" data-id="${a.id}">${ICONE_LAPIS}Editar</button>
+        ${fotos.length < MAX_FOTOS_AV ? `<button type="button" data-avacao="foto" data-id="${a.id}">${ICONE_CAM}${fotos.length ? 'Outra foto' : 'Adicionar foto'}</button>` : ''}
+        <button type="button" data-avacao="excluir" data-id="${a.id}">${ICONE_LIXO}Excluir</button></div>` : ''}
+    </div>
+    <div class="av-fotos${fotos.length === 1 ? ' uma' : ''}">${fotos.length
+      ? fotos.map((id, i) => `<img src="/api/foto/${id}?mini=1" ${SEM_MINI(id)} alt="Foto ${i + 1} de ${esc(tit)}" data-gal="${fotos.join(',')}" data-i="${i}" data-tit="${esc(tit)}">`).join('')
+      : '<div class="av-sem-foto">Sem foto</div>'}</div>
+  </section>`;
+}
+
+function folhaHtml() {
+  const itens = REL.itens, d = dataDia(REL.dia), pode = podeFoto();
+  const semana = d.toLocaleDateString('pt-BR', { weekday: 'long' });
+  const cont = {};
+  for (const a of itens) cont[a.situacao || 'analise'] = (cont[a.situacao || 'analise'] || 0) + 1;
+  const resp = [...new Set(itens.map(quemAv).filter(Boolean))];
+  return `<header class="folha-cab">${LOGO_FOLHA}
+      <div class="folha-tit"><b>Relatório de avarias</b><span>Qualidade · peças com avaria, sendo scrap ou não</span></div>
+      <div class="folha-data"><b>${d.toLocaleDateString('pt-BR')}</b><span>${semana.charAt(0).toUpperCase() + semana.slice(1)}</span></div></header>
+    ${itens.length ? `<div class="folha-resumo">
+        <div><small>Formulários</small><b>${fmt(itens.length)}</b></div>
+        ${Object.keys(ST_NOME).filter((k) => cont[k]).map((k) => `<div><small>${esc(ST_NOME[k])}</small><b>${fmt(cont[k])}</b></div>`).join('')}
+        <div class="resp"><small>Responsável</small><b>${esc(resp.join(', ') || '–')}</b></div></div>
+      <div class="av-itens">${itens.map((a, i) => itemAvHtml(a, i + 1, ligadosAv(a, REL.scraps), pode)).join('')}</div>`
+    : `<div class="vazio"><b>Nenhuma avaria registrada em ${d.toLocaleDateString('pt-BR')}</b>${pode && REL.dia === hojeStr()
+        ? 'Digite o código da peça acima e tire a foto: o formulário entra aqui.' : 'Escolha outro dia nas setas acima.'}</div>`}
+    <footer class="folha-rodape"><span>Qualidade · Registro de scrap</span><span>Gerado em ${new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span></footer>`;
+}
+function renderRelatorio() { $('#avFolha').innerHTML = folhaHtml(); }
+
+function abrirRelatorio({ dia, destacar } = {}) {
+  $('#avEntrada').hidden = !podeFoto();
+  if (podeFoto()) { exigirOperador(); renderFotosAv(); }
+  if (dia && /^\d{4}-\d{2}-\d{2}$/.test(dia)) REL.dia = dia;
+  if (!REL.dia) REL.dia = hojeStr();
+  $('#avDia').max = hojeStr();
+  $('#avDia').value = REL.dia;
+  carregarRelatorio(destacar);
+}
+
+async function carregarRelatorio(destacar) {
+  const dia = REL.dia = $('#avDia').value || REL.dia || hojeStr();
+  const seq = ++REL.seq;
+  const ini = dataDia(dia), fim = new Date(dataDia(somaDias(dia, 1)).getTime() - 1);
+  $('#avProx').disabled = dia >= hojeStr();
+  $('#avHoje').classList.toggle('sel', dia === hojeStr());
+  $('#avFolha').classList.add('carregando');
+  try {
+    const d = await api('/api/avaria?' + qs({ de: ini.toISOString(), ate: fim.toISOString() }));
+    if (seq !== REL.seq) return;
+    REL.itens = d.itens; REL.scraps = d.scraps;
+    renderRelatorio();
+    // formulário aberto em edição: fotos atualizadas (foto removida pela galeria, por exemplo)
+    const ed = AV.id && REL.itens.find((x) => x.id === AV.id);
+    if (ed) { AV.item = ed; AV.existentes = fotosDe(ed).map(Number); renderFotosAv(); }
+    if (destacar) destacarAv(destacar);
+  } catch (e) {
+    if (seq === REL.seq) $('#avFolha').innerHTML = `<div class="vazio">${esc(e.message)}</div>`;
+  }
+  if (seq === REL.seq) $('#avFolha').classList.remove('carregando');
+}
+function destacarAv(id, rolar = true) {
+  const el = document.getElementById('av-' + id);
+  if (!el) return;
+  if (rolar) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.classList.remove('destaque'); void el.offsetWidth; el.classList.add('destaque');
+}
+
+$('#avDia').addEventListener('change', () => { if ($('#avDia').value) carregarRelatorio(); });
+$('#avAnt').addEventListener('click', () => { $('#avDia').value = somaDias(REL.dia || hojeStr(), -1); carregarRelatorio(); });
+$('#avProx').addEventListener('click', () => { if (REL.dia < hojeStr()) { $('#avDia').value = somaDias(REL.dia, 1); carregarRelatorio(); } });
+$('#avHoje').addEventListener('click', () => { $('#avDia').value = hojeStr(); carregarRelatorio(); });
+
+/* entrada: código + foto (+ situação, quantidade, defeito e observação, se quiser) */
+$('#avDefeitos').innerHTML = DEFEITOS.map((d) => `<button type="button" class="chip" data-def="${esc(d)}">${esc(d)}</button>`).join('');
+function marcarAvDefeito(v) {
+  AV.defeito = v || '';
+  document.querySelectorAll('#avDefeitos .chip').forEach((c) => c.classList.toggle('sel', c.dataset.def === AV.defeito));
+}
+$('#avDefeitos').addEventListener('click', (e) => {
+  const c = e.target.closest('.chip');
+  if (!c) return;
+  AV.defTocado = true;
+  marcarAvDefeito(c.classList.contains('sel') ? '' : c.dataset.def);
+});
+function marcarAvSit(s) {
+  AV.sit = ST_NOME[s] ? s : 'analise';
+  document.querySelectorAll('#avSit button').forEach((b) => b.classList.toggle('sel', b.dataset.sit === AV.sit));
+}
+$('#avSit').addEventListener('click', (e) => { const b = e.target.closest('button[data-sit]'); if (b) marcarAvSit(b.dataset.sit); });
+document.querySelectorAll('[data-avstep]').forEach((b) => b.addEventListener('click', () => {
+  const v = Number(String($('#avQtd').value).replace(',', '.')) || 0;
+  $('#avQtd').value = Math.max(1, Math.round(v + Number(b.dataset.avstep)));
+  AV.qtdTocada = true;
+}));
+$('#avQtd').addEventListener('input', () => { AV.qtdTocada = true; });
+
+$('#avMat').addEventListener('input', () => { clearTimeout(tAv); tAv = setTimeout(() => buscarAvMaterial(), 350); });
+$('#avMat').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); clearTimeout(tAv); buscarAvMaterial(); }
+});
+
+async function buscarAvMaterial(manterProjeto = false) {
+  const q = $('#avMat').value.trim();
+  const seq = ++AV.seq;
+  if (!manterProjeto) AV.projeto = null;
+  Object.assign(AV, { busca: null, info: null, foraBom: false, q: '' });
+  if (!q) { $('#avMatRes').innerHTML = ''; AV.buscando = null; return; }
+  $('#avMatRes').innerHTML = '<p class="mut" style="margin:12px 0 0">Procurando nas BOMs…</p>';
+  const tarefa = (async () => {
+    try {
+      const [d, info] = await Promise.all([
+        materialDaBom(q),
+        api('/api/avaria/material?' + qs({ q, scraps: 1 })).catch(() => ({ avarias: [], scraps: [] })),
+      ]);
+      if (seq !== AV.seq) return;
+      Object.assign(AV, { busca: d, info, q, foraBom: !d.exato.length });
+      if (d.exato.length === 1) AV.projeto = d.exato[0].projeto;
+      else if (!d.exato.some((x) => x.projeto === AV.projeto)) AV.projeto = null;
+      preencherDoScrap();
+      renderAvMaterial();
+    } catch (e) {
+      if (seq === AV.seq) $('#avMatRes').innerHTML = `<p class="mut" style="margin:12px 0 0">${esc(e.message)}</p>`;
+    }
+  })();
+  AV.buscando = tarefa;
+  await tarefa;
+  if (AV.buscando === tarefa) AV.buscando = null;
+}
+
+// O formulário novo já vem com o defeito e a quantidade do último registro de scrap desse material
+function preencherDoScrap() {
+  if (AV.id) return;
+  const ult = AV.info?.scraps?.[0];
+  if (!AV.defTocado) marcarAvDefeito(ult?.defeito || '');
+  if (!AV.qtdTocada) $('#avQtd').value = Number(ult?.quantidade) > 0 ? ult.quantidade : 1;
+}
+
+function renderAvMaterial() {
+  const d = AV.busca, el = $('#avMatRes');
+  if (!d) return;
+  const q = $('#avMat').value.trim().toUpperCase();
+  let h;
+  if (d.exato.length) {
+    const m = d.exato[0], linha = d.exato.find((x) => x.projeto === AV.projeto) || m;
+    $('#avUn').textContent = unOk(linha.unidade) || 'PC';
+    h = `<div class="ficha ok"><div class="ficha-top"><span class="ficha-ic">${ICONE_OK}</span>
+        <div><div class="ficha-cod">${esc(m.material)}</div><div class="ficha-desc">${esc(linha.descricao || m.descricao || 'Sem descrição na BOM')}</div></div></div>
+      ${d.exato.length === 1
+        ? `<div class="ficha-proj">Projeto <span class="proj">${esc(m.projeto)}</span>${clsHtml(m.classe, true)}</div>`
+        : `<div class="ficha-proj">Está em ${d.exato.length} projetos. Se souber, toque no desta peça:</div>
+           <div class="chips" style="margin-top:10px">${d.exato.map((x) => `<button type="button" class="proj op ${AV.projeto === x.projeto ? 'sel' : ''}" data-avproj="${esc(x.projeto)}">${esc(x.projeto)}${x.classe ? ' · ' + esc(x.classe) : ''}</button>`).join('')}</div>`}
+      </div>`;
+  } else {
+    // fora da BOM: entra assim mesmo; na edição, volta o que foi digitado antes
+    const it = AV.item && AV.item.fora_bom && chaveCod(AV.item.material) === chaveCod(q) ? AV.item : null;
+    h = `<div class="ficha alerta"><div class="ficha-top"><span class="ficha-ic">${ICONE_ALERTA}</span>
+        <div><div class="ficha-cod">${esc(q)}</div><div class="ficha-desc">Não está nas BOMs. Pode adicionar assim mesmo; se souber, preencha:</div></div></div>
+      <div class="grid2"><input id="avFbProj" list="avProjLista" placeholder="Projeto (ex.: BC22)" maxlength="40" value="${esc(it?.projeto || '')}">
+        <input id="avFbUn" placeholder="Unidade (ex.: PC)" maxlength="6" value="${esc(unOk(it?.unidade))}"></div>
+      <input id="avFbDesc" placeholder="Descrição da peça" maxlength="200" style="margin-top:12px" value="${esc(it?.descricao_material || '')}">
+      <datalist id="avProjLista">${PROJETOS.map((p) => `<option value="${esc(p)}">`).join('')}</datalist>
+      ${d.sugestoes.length ? `<p class="mut" style="margin:12px 0 0;font-size:13px">Ou é algum destes?</p>${d.sugestoes.slice(0, 5).map((s) => `<button type="button" class="sug" data-avmat="${esc(s.material)}"><b>${esc(s.material)}</b><span class="d">${esc(s.descricao || '')}</span><span class="proj">${esc((s.projetos || '').split(',').join(', '))}</span></button>`).join('')}` : ''}
+    </div>`;
+    $('#avUn').textContent = unOk(it?.unidade) || 'PC';
+  }
+  // o que já existe desse material: outros formulários de avaria e registros de scrap dos últimos dias
+  const regs = AV.info?.scraps || [];
+  h += avisoAvaria((AV.info?.avarias || []).filter((a) => a.id !== AV.id));
+  if (regs.length) {
+    h += `<div class="av-regs"><small>Registrado como scrap nos últimos ${JANELA_AV} dias${regs.length > 3 ? ` · ${regs.length} registros` : ''}</small>
+      <ul>${regs.slice(0, 3).map(linhaScrapAv).join('')}</ul></div>`;
+  }
+  el.innerHTML = h;
+}
+$('#avMatRes').addEventListener('click', (e) => {
+  const p = e.target.closest('button[data-avproj]');
+  if (p) { AV.projeto = AV.projeto === p.dataset.avproj ? null : p.dataset.avproj; return renderAvMaterial(); }
+  const s = e.target.closest('button[data-avmat]');
+  if (s) { $('#avMat').value = s.dataset.avmat; clearTimeout(tAv); buscarAvMaterial(); }
+});
+$('#avMatRes').addEventListener('input', (e) => { if (e.target.id === 'avFbUn') $('#avUn').textContent = unOk(e.target.value) || 'PC'; });
+
+/* fotos do formulário (antes de salvar ficam só na tela; ao salvar, recebem o carimbo e vão uma por vez) */
+function renderFotosAv() {
+  const total = AV.existentes.length + AV.novas.length;
+  const bloco = (rot, ic, extra) => `<label class="foto-add">${ic}<span>${rot}</span><input type="file" accept="image/*" ${extra} data-avfoto></label>`;
+  $('#avFotos').innerHTML =
+    AV.existentes.map((id) => `<div class="thumb"><img src="/api/foto/${id}?mini=1" ${SEM_MINI(id)} alt="Foto do formulário" data-galex="${id}"><button type="button" data-rmex="${id}" aria-label="Remover foto" title="Remover foto">×</button></div>`).join('')
+    + AV.novas.map((f, i) => `<div class="thumb"><img src="${f.mini}" alt="Foto nova" data-galnova="${i}"><button type="button" data-rmnova="${i}" aria-label="Tirar esta foto" title="Tirar esta foto">×</button>${f.erro ? '<span class="thumb-erro">não enviada</span>' : ''}</div>`).join('')
+    + (total < MAX_FOTOS_AV
+      ? (CELULAR ? bloco('Tirar foto', ICONE_CAM, 'capture="environment"') + bloco('Galeria', ICONE_GALERIA, 'multiple')
+        : bloco(total ? 'Outra foto' : 'Adicionar foto', ICONE_CAM, 'multiple') + '<p class="av-dica">Também dá para arrastar a foto para cá ou colar com Ctrl+V.</p>')
+      : '');
+}
+
+// Miniatura (~480 px) que aparece na folha e sai na impressão
+function miniatura(img) {
+  const k = Math.min(1, 480 / Math.max(img.naturalWidth, img.naturalHeight));
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(img.naturalWidth * k));
+  c.height = Math.max(1, Math.round(img.naturalHeight * k));
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  let url = c.toDataURL('image/jpeg', 0.72);
+  for (const q of [0.55, 0.4]) if (url.length > 80000) url = c.toDataURL('image/jpeg', q);
+  return url;
+}
+
+async function adicionarArquivosAv(arquivos) {
+  const imgs = arquivos.filter(ehImagem);
+  if (!imgs.length) return toast('Escolha uma imagem', true);
+  for (const arq of imgs) {
+    if (AV.existentes.length + AV.novas.length >= MAX_FOTOS_AV) { toast(`Máximo de ${MAX_FOTOS_AV} fotos por formulário`, true); break; }
+    try {
+      const img = await carregarImagem(arq);
+      AV.novas.push({ arquivo: arq, mini: miniatura(img), em: new Date() });
+      renderFotosAv();
+    } catch (err) { toast(err.message, true); }
+  }
+}
+$('#avFotos').addEventListener('change', (e) => {
+  if (!e.target.matches('input[data-avfoto]')) return;
+  const arqs = [...e.target.files];
+  e.target.value = '';
+  adicionarArquivosAv(arqs);
+});
+$('#avFotos').addEventListener('click', async (e) => {
+  const rn = e.target.closest('button[data-rmnova]');
+  if (rn) { AV.novas.splice(Number(rn.dataset.rmnova), 1); return renderFotosAv(); }
+  const rx = e.target.closest('button[data-rmex]');
+  if (rx) {
+    if (!await confirmar('Remover esta foto?', 'A foto sai do formulário de avaria. Essa ação não pode ser desfeita.', 'Remover foto')) return;
+    try {
+      await api('/api/foto/' + rx.dataset.rmex, { method: 'DELETE' });
+      AV.existentes = AV.existentes.filter((id) => String(id) !== rx.dataset.rmex);
+      renderFotosAv();
+      toast('Foto removida');
+      carregarRelatorio();
+    } catch (err) { toast(err.message, true); }
+    return;
+  }
+  const gx = e.target.closest('img[data-galex]');
+  if (gx) return abrirGaleria(AV.existentes.map(String), AV.existentes.map(String).indexOf(gx.dataset.galex), AV.item ? numAv(AV.item) : 'Avaria');
+  const gn = e.target.closest('img[data-galnova]');
+  if (gn) abrirGaleria(AV.novas.map((f) => f.mini), Number(gn.dataset.galnova), 'Foto nova, ainda não salva');
+});
+// arrastar a foto para o formulário ou colar (Ctrl+V), no computador
+const ENTRADA_AV = $('#avEntrada');
+const temArquivo = (e) => [...(e.dataTransfer?.types || [])].includes('Files');
+['dragenter', 'dragover'].forEach((ev) => ENTRADA_AV.addEventListener(ev, (e) => {
+  if (!temArquivo(e)) return;
+  e.preventDefault();
+  ENTRADA_AV.classList.add('arrastando');
+}));
+ENTRADA_AV.addEventListener('dragleave', (e) => { if (!ENTRADA_AV.contains(e.relatedTarget)) ENTRADA_AV.classList.remove('arrastando'); });
+ENTRADA_AV.addEventListener('drop', (e) => {
+  if (!temArquivo(e)) return;
+  e.preventDefault();
+  ENTRADA_AV.classList.remove('arrastando');
+  adicionarArquivosAv([...e.dataTransfer.files]);
+});
+document.addEventListener('paste', (e) => {
+  if (!$('#tab-relatorio').classList.contains('ativo') || ENTRADA_AV.hidden || !$('#modalOp').hidden) return;
+  const fs = [...(e.clipboardData?.files || [])].filter(ehImagem);
+  if (fs.length) { e.preventDefault(); adicionarArquivosAv(fs); }
+});
+
+function limparAv() {
+  clearTimeout(tAv);
+  Object.assign(AV, { id: null, item: null, q: '', busca: null, info: null, projeto: null, foraBom: false, buscando: null,
+    novas: [], existentes: [], qtdTocada: false, defTocado: false });
+  AV.seq++;
+  $('#avMat').value = ''; $('#avMatRes').innerHTML = ''; $('#avQtd').value = '1'; $('#avUn').textContent = 'PC'; $('#avObs').value = '';
+  marcarAvSit('analise'); marcarAvDefeito('');
+  document.querySelectorAll('#avEntrada .invalido').forEach(limparInvalido);
+  $('#avEdAviso').hidden = true;
+  ENTRADA_AV.classList.remove('editando');
+  $('#avSalvar span').textContent = 'Adicionar ao relatório';
+  renderFotosAv();
+}
+$('#avEdCancelar').addEventListener('click', limparAv);
+
+// Edita no próprio formulário de cima. novas: fotos que ainda faltam enviar
+function abrirEdicaoAv(a, novas = [], rolar = true) {
+  if (!podeFoto() || !a) return;
+  limparAv();
+  Object.assign(AV, { id: a.id, item: a, existentes: fotosDe(a).map(Number), novas, qtdTocada: true, defTocado: true,
+    projeto: a.projeto && !a.projeto.includes(',') ? a.projeto : null });
+  $('#avMat').value = a.material;
+  $('#avQtd').value = a.quantidade;
+  $('#avUn').textContent = unOk(a.unidade) || 'PC';
+  $('#avObs').value = a.observacao || '';
+  marcarAvDefeito(a.defeito || '');
+  marcarAvSit(a.situacao);
+  $('#avEdTxt').innerHTML = `Editando <b>${esc(numAv(a))}</b> · ${esc(a.material)} · ${dataHora(a.created_at)}`;
+  $('#avEdAviso').hidden = false;
+  ENTRADA_AV.classList.add('editando');
+  $('#avSalvar span').textContent = 'Salvar alterações';
+  renderFotosAv();
+  buscarAvMaterial(true);
+  if (rolar) ENTRADA_AV.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+$('#avSalvar').addEventListener('click', salvarAvaria);
+async function salvarAvaria() {
+  if (AV.salvando) return;
+  if (!OP) return exigirOperador(true);
+  const q = $('#avMat').value.trim();
+  if (!q) { $('#avMat').focus(); return toast('Digite o código da peça', true); }
+  const btn = $('#avSalvar'), rot = btn.querySelector('span'), editando = !!AV.id;
+  AV.salvando = true; btn.disabled = true;
+  const fim = () => { AV.salvando = false; btn.disabled = false; rot.textContent = AV.id ? 'Salvar alterações' : 'Adicionar ao relatório'; };
+  // salvou antes da busca da BOM responder para o código digitado: busca agora
+  if (AV.q !== q) { rot.textContent = 'Procurando o material…'; clearTimeout(tAv); await buscarAvMaterial(true); }
+  const body = { material: q, projeto: AV.projeto || '', quantidade: $('#avQtd').value, defeito: AV.defeito, situacao: AV.sit,
+    observacao: $('#avObs').value.trim(), nome: OP.nome, matricula: OP.matricula };
+  if (AV.foraBom) {
+    body.projeto = ($('#avFbProj')?.value || '').trim();
+    body.descricao_material = ($('#avFbDesc')?.value || '').trim();
+    body.unidade = ($('#avFbUn')?.value || '').trim();
+  }
+  rot.textContent = 'Salvando…';
+  let item;
+  try {
+    item = (await api(editando ? '/api/avaria/' + AV.id : '/api/avaria', { method: editando ? 'PATCH' : 'POST', body: JSON.stringify(body) })).item;
+  } catch (err) {
+    const alvo = { material: '#avMat', observacao: '#avObs', descricao_material: '#avFbDesc', projeto: '#avFbProj', quantidade: '#avQtd' }[err.campo];
+    if (err.campo === 'nome') { OP = null; ss.del('qs_op'); mostrarOperador(); exigirOperador(true); toast(err.message, true); }
+    else if (alvo && $(alvo)) marcarInvalido($(alvo), err.message);
+    else toast(err.message, true);
+    return fim();
+  }
+  // fotos uma por vez: cada envio é pequeno e, se a rede falhar, só as que faltaram ficam para tentar de novo
+  const falharam = [];
+  let erroFoto = null;
+  for (let i = 0; i < AV.novas.length; i++) {
+    const f = AV.novas[i];
+    rot.textContent = `Enviando foto ${i + 1} de ${AV.novas.length}…`;
+    try {
+      const foto = await prepararFoto(f.arquivo, { rotulo: 'Avaria ' + numAv(item), material: item.material, projeto: item.projeto, em: f.em });
+      await api(`/api/avaria/${item.id}/fotos`, { method: 'POST', body: JSON.stringify({ fotos: [{ foto, mini: f.mini }], nome: OP.nome, matricula: OP.matricula }) });
+      f.erro = false;
+    } catch (err) { f.erro = true; falharam.push(f); erroFoto = err; }
+  }
+  if (falharam.length) {
+    // o formulário já está salvo: fica aberto em edição só com as fotos que faltaram
+    let atual = item;
+    try { atual = (await api('/api/avaria?' + qs({ ids: item.id }))).itens[0] || item; } catch {}
+    abrirEdicaoAv(atual, falharam, false);
+    toast(`${numAv(item)} salvo, mas ${falharam.length === 1 ? '1 foto não foi enviada' : falharam.length + ' fotos não foram enviadas'} (${erroFoto.message}). Toque em "Salvar alterações" para tentar de novo.`, true);
+  } else {
+    toast(editando ? `${numAv(item)} atualizado` : `${numAv(item)} entrou no relatório · ${item.material}`);
+    limparAv();
+    if (!CELULAR) $('#avMat').focus();
+  }
+  fim();
+  const dia = diaDe(new Date(item.created_at));
+  if (REL.dia !== dia) $('#avDia').value = REL.dia = dia;
+  await carregarRelatorio();
+  destacarAv(item.id, editando);
+}
+
+/* ações na folha: situação, editar, foto e excluir */
+$('#avFolha').addEventListener('click', (e) => {
+  const img = e.target.closest('img[data-gal]');
+  if (img) return abrirGaleria(img.dataset.gal.split(','), Number(img.dataset.i), img.dataset.tit);
+  const b = e.target.closest('button[data-avacao]');
+  const a = b && REL.itens.find((x) => String(x.id) === b.dataset.id);
+  if (!a) return;
+  if (b.dataset.avacao === 'editar') abrirEdicaoAv(a);
+  else if (b.dataset.avacao === 'foto') pedirFotoAv(a);
+  else if (b.dataset.avacao === 'excluir') excluirAv(a);
+});
+$('#avFolha').addEventListener('change', async (e) => {
+  const s = e.target.closest('select[data-sitid]');
+  if (!s) return;
+  if (!OP) { renderRelatorio(); return exigirOperador(true); }
+  const a = REL.itens.find((x) => String(x.id) === s.dataset.sitid);
+  s.disabled = true;
+  try {
+    const d = await api('/api/avaria/' + s.dataset.sitid, { method: 'PATCH', body: JSON.stringify({ situacao: s.value, nome: OP.nome, matricula: OP.matricula }) });
+    if (a) Object.assign(a, d.item);
+    if (AV.id === d.item.id) { AV.item = d.item; marcarAvSit(d.item.situacao); }
+    toast(`${numAv(d.item)}: ${ST_NOME[d.item.situacao]}`);
+  } catch (err) { toast(err.message, true); }
+  renderRelatorio();
+});
+
+function pedirFotoAv(a) {
+  if (!OP) return exigirOperador(true);
+  FOTO_AV = a;
+  $('#avFotoItem').click();
+}
+$('#avFotoItem').addEventListener('change', async (e) => {
+  const arqs = [...e.target.files].filter(ehImagem), a = FOTO_AV;
+  e.target.value = '';
+  if (!a || !arqs.length) return;
+  const livres = MAX_FOTOS_AV - fotosDe(a).length;
+  if (arqs.length > livres) toast(`Máximo de ${MAX_FOTOS_AV} fotos por formulário: ${livres === 1 ? 'entra só 1' : 'entram só ' + livres}.`, true);
+  const btn = document.querySelector(`#av-${a.id} button[data-avacao="foto"]`);
+  if (btn) { btn.disabled = true; btn.lastChild.textContent = 'Enviando…'; }
+  let ok = 0;
+  for (const arq of arqs.slice(0, Math.max(0, livres))) {
+    try {
+      const mini = miniatura(await carregarImagem(arq));
+      const foto = await prepararFoto(arq, { rotulo: 'Avaria ' + numAv(a), material: a.material, projeto: a.projeto });
+      await api(`/api/avaria/${a.id}/fotos`, { method: 'POST', body: JSON.stringify({ fotos: [{ foto, mini }], nome: OP.nome, matricula: OP.matricula }) });
+      ok++;
+    } catch (err) { toast(err.message, true); break; }
+  }
+  if (ok) toast(ok === 1 ? `Foto adicionada ao ${numAv(a)}` : `${ok} fotos adicionadas ao ${numAv(a)}`);
+  carregarRelatorio();
+});
+
+async function excluirAv(a) {
+  if (!await confirmar(`Excluir ${numAv(a)}?`, `O formulário de avaria do material ${a.material} sai do relatório e dos registros. A exclusão fica registrada.`, 'Excluir')) return;
+  try {
+    await api('/api/avaria/' + a.id, { method: 'DELETE', body: JSON.stringify({ nome: OP?.nome || '', matricula: OP?.matricula || '' }) });
+    toast(`${numAv(a)} excluído do relatório`);
+    if (AV.id === a.id) limparAv();
+    carregarRelatorio();
+  } catch (err) { toast(err.message, true); }
+}
+
+/* imprimir / PDF e Excel do dia */
+function prepararImpressao() {
+  const data = dataDia(REL.dia || hojeStr()).toLocaleDateString('pt-BR');
+  document.body.classList.add('imprimindo');
+  document.title = `Relatório de avarias ${data.replace(/\//g, '-')}`;   // nome sugerido para o PDF
+  const fonte = 'font:500 8.5pt Barlow,system-ui,sans-serif;color:#6b6b73';
+  $('#avPagina').textContent = `@page{@bottom-left{content:"Relatório de avarias · ${data} · Qualidade";${fonte}}`
+    + `@bottom-right{content:"Página " counter(page) " de " counter(pages);${fonte}}}`;
+}
+window.addEventListener('beforeprint', () => { if ($('#tab-relatorio').classList.contains('ativo')) prepararImpressao(); });
+window.addEventListener('afterprint', () => { document.body.classList.remove('imprimindo'); document.title = TITULO; $('#avPagina').textContent = ''; });
+$('#avImprimir').addEventListener('click', async () => {
+  if (!REL.itens.length) return toast('Nenhuma avaria neste dia para imprimir', true);
+  const btn = $('#avImprimir');
+  btn.disabled = true;
+  // espera as fotos carregarem para nenhuma sair em branco no PDF
+  const imgs = [...document.querySelectorAll('#avFolha img')].filter((i) => !i.complete);
+  await Promise.race([
+    Promise.all(imgs.map((i) => new Promise((ok) => { i.addEventListener('load', ok, { once: true }); i.addEventListener('error', ok, { once: true }); }))),
+    new Promise((ok) => setTimeout(ok, 10000)),
+  ]);
+  btn.disabled = false;
+  prepararImpressao();
+  window.print();
+});
+$('#avExport').addEventListener('click', () => {
+  if (!REL.itens.length) return toast('Nenhuma avaria neste dia para exportar', true);
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(REL.itens.map((a, i) => {
+    const lig = ligadosAv(a, REL.scraps);
+    return {
+      Item: i + 1, 'Nº': numAv(a), 'Data/hora': dataHora(a.created_at), Material: a.material, 'Descrição': a.descricao_material || '',
+      Projeto: a.projeto || '', Classe: a.classe || '', Quantidade: a.quantidade, Unidade: unOk(a.unidade), Defeito: a.defeito || '',
+      'Situação': ST_NOME[a.situacao] || a.situacao, 'Observação': a.observacao || '', 'Fora da BOM': a.fora_bom ? 'SIM' : '',
+      [`Registros de scrap (${JANELA_AV} dias)`]: lig.length, Postos: [...new Set(lig.map((s) => 'P' + s.posto))].join(', '),
+      Qualidade: a.registrado_por || '', 'Matrícula': a.matricula || '', Fotos: fotosDe(a).length,
+    };
+  }));
+  ws['!cols'] = [6, 14, 15, 16, 36, 12, 7, 10, 8, 20, 22, 44, 11, 14, 14, 22, 12, 7].map((w) => ({ wch: w }));
+  XLSX.utils.book_append_sheet(wb, ws, 'Avarias');
+  const regs = REL.itens.flatMap((a) => ligadosAv(a, REL.scraps).map((s) => ({
+    'Formulário': numAv(a), 'Data/hora': dataHora(s.created_at), Posto: 'P' + s.posto, Material: s.material, Projeto: s.projeto,
+    Quantidade: s.quantidade, Unidade: unOk(s.unidade), Defeito: s.defeito, 'O que aconteceu': s.descricao_problema,
+    Operador: s.registrado_por || '', 'Matrícula': s.matricula || '', 'Situação': ST_NOME[s.status || 'analise'],
+  })));
+  if (regs.length) {
+    const ws2 = XLSX.utils.json_to_sheet(regs);
+    ws2['!cols'] = [14, 15, 7, 16, 12, 10, 8, 20, 50, 22, 12, 20].map((w) => ({ wch: w }));
+    XLSX.utils.book_append_sheet(wb, ws2, 'Registros de scrap');
+  }
+  XLSX.writeFile(wb, `relatorio_avarias_${REL.dia}.xlsx`);
+});
+
+/* selo "Formulário de avaria" nos registros: abre o(s) formulário(s) do material */
+async function abrirFormulariosAv(ids) {
+  MAV.ids = ids.map(String);
+  $('#mavTit').textContent = 'Formulário de avaria';
+  $('#mavInfo').textContent = 'Carregando…';
+  $('#mavLista').innerHTML = '';
+  $('#mavLista').hidden = true;
+  $('#mavAbrir').hidden = true;
+  $('#modalAv').hidden = false;
+  try {
+    const d = await api('/api/avaria?' + qs({ ids: MAV.ids.join(',') }));
+    MAV.itens = d.itens.sort((x, y) => y.created_at.localeCompare(x.created_at));
+    MAV.scraps = d.scraps;
+    const a = MAV.itens[0];
+    $('#mavTit').textContent = MAV.itens.length > 1 ? `${MAV.itens.length} formulários de avaria` : 'Formulário de avaria';
+    $('#mavInfo').textContent = a ? `Material ${a.material}${a.descricao_material ? ' · ' + a.descricao_material : ''}. Feito pela Qualidade no relatório de avarias.`
+      : 'Esse formulário foi excluído do relatório de avarias.';
+    $('#mavLista').innerHTML = MAV.itens.map((x) => itemAvHtml(x, null, ligadosAv(x, MAV.scraps), false)).join('');
+    $('#mavLista').hidden = !a;
+    $('#mavAbrir').hidden = !a;
+  } catch (err) { $('#mavInfo').textContent = err.message; }
+}
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('.tag-av');
+  if (t) abrirFormulariosAv(t.dataset.av.split(','));
+});
+$('#mavFechar').addEventListener('click', () => { $('#modalAv').hidden = true; });
+$('#modalAv').addEventListener('click', (e) => { if (e.target.id === 'modalAv') $('#modalAv').hidden = true; });
+$('#mavAbrir').addEventListener('click', () => {
+  const a = MAV.itens[0];
+  $('#modalAv').hidden = true;
+  if (a) mostrarAba('relatorio', { dia: diaDe(new Date(a.created_at)), destacar: a.id });
+});
+$('#mavLista').addEventListener('click', (e) => {
+  const img = e.target.closest('img[data-gal]');
+  if (img) abrirGaleria(img.dataset.gal.split(','), Number(img.dataset.i), img.dataset.tit);
+});
+
 /* ---------- registros ---------- */
 let REGISTROS = [];
 preencherSelect($('#rPosto'), Array.from({ length: 10 }, (_, i) => ({ v: i + 1, t: 'Posto ' + (i + 1) })), 'Todos');
@@ -1823,6 +2702,7 @@ async function carregarRegistros() {
     const d = await api('/api/scrap?' + qs({
       de: isoDe($('#rDe').value), ate: isoAte($('#rAte').value), posto: $('#rPosto').value,
       projeto: $('#rProjeto').value, defeito: $('#rDefeito').value, material: $('#rMat').value.trim(), foto: $('#rFoto').value, classe: $('#rClasse').value, status: $('#rStatus').value,
+      avaria: $('#rAvaria').value,
     }));
     REGISTROS = d.registros;
     $('#rInfo').textContent = `${fmt(REGISTROS.length)} registro(s)` + (REGISTROS.length >= 5000 ? '. Limite atingido, reduza o período.' : '');
@@ -1833,7 +2713,7 @@ async function carregarRegistros() {
         <td class="hora">${dataHora(r.created_at)}</td>
         <td><span class="posto-tag">P${r.posto}</span></td>
         <td class="mat-cel"><span class="cod">${esc(r.material)}${r.fora_bom ? ' <span class="proj fora">fora BOM</span>' : ''}</span>
-          ${tagSap(r)}<span class="desc">${esc(r.descricao_material)}</span>${botaoFotos(r)}</td>
+          ${tagSap(r)}${tagAvaria(r)}<span class="desc">${esc(r.descricao_material)}</span>${botaoFotos(r)}</td>
         <td><span class="proj">${esc(r.projeto)}</span></td>
         <td>${clsHtml(r.classe, true)}</td>
         <td class="n">${qtdHtml(r.quantidade, r.unidade)}</td>
@@ -1866,9 +2746,10 @@ $('#rExport').addEventListener('click', () => {
     'Data/hora': dataHora(r.created_at), Posto: 'P' + r.posto, Material: r.material, 'SAP antes da correção': r.material_anterior || '', 'Descrição': r.descricao_material,
     Projeto: r.projeto, Classe: r.classe || '', Quantidade: r.quantidade, Unidade: unOk(r.unidade), Defeito: r.defeito,
     'O que aconteceu': r.descricao_problema, Operador: r.registrado_por, 'Matrícula': r.matricula || '', 'Fora da BOM': r.fora_bom ? 'SIM' : '', Situação: ST_NOME[r.status || 'analise'], Parecer: r.parecer || '', 'Analisado por': r.analisado_por || '', 'Analisado em': r.analisado_em ? dataHora(r.analisado_em) : '', 'Editado em': r.editado_em ? dataHora(r.editado_em) : '', Fotos: r.fotos ? String(r.fotos).split(',').length : 0,
+    'Formulário de avaria': (r.avarias || []).map((a) => `${numAv(a)} (${dataCurta(a.em)})`).join(', '),
   }));
   const ws = XLSX.utils.json_to_sheet(dados);
-  ws['!cols'] = [16, 7, 16, 18, 36, 10, 7, 10, 8, 20, 50, 22, 12, 11, 20, 40, 22, 16, 16, 7].map((w) => ({ wch: w }));
+  ws['!cols'] = [16, 7, 16, 18, 36, 10, 7, 10, 8, 20, 50, 22, 12, 11, 20, 40, 22, 16, 16, 7, 26].map((w) => ({ wch: w }));
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Scrap');
   XLSX.writeFile(wb, `scrap_${$('#rDe').value.slice(0, 10)}_a_${$('#rAte').value.slice(0, 10)}.xlsx`);
@@ -2329,6 +3210,7 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft' && GAL.lista.length > 1) passoGaleria(-1);
     if (e.key === 'ArrowRight' && GAL.lista.length > 1) passoGaleria(1);
   }
+  else if (e.key === 'Escape' && !$('#modalAv').hidden) $('#modalAv').hidden = true;
 });
 
 /* ---------- início ---------- */
@@ -2337,8 +3219,12 @@ document.addEventListener('keydown', (e) => {
   montarPostos();
   try { ROLE = (await api('/api/me')).role; } catch {}
   $('#navBoms').hidden = ROLE !== 'admin';
+  $('#avEntrada').hidden = !podeFoto();
   exigirOperador();
   await carregarProjetos();
+  // link direto: ?aba=relatorio&dia=2026-10-07&av=12 (o site também guarda a aba aberta no endereço)
+  const pr = new URLSearchParams(location.search);
+  if (pr.get('aba') && pr.get('aba') !== 'registrar') mostrarAba(pr.get('aba'), { dia: pr.get('dia'), destacar: Number(pr.get('av')) || null });
   carregarHoje();
   contarPendentes();
   setInterval(() => { if (!document.hidden) contarPendentes(); }, 60000);

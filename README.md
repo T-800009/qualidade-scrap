@@ -6,7 +6,7 @@ Cloudflare Worker + D1, publicado pelo GitHub (igual ao Controle de Produção).
 ## Perfis
 - **Operador** (`QUALIDADE_PASSWORD`): registra scrap, vê registros e painel, exporta Excel.
   Ao abrir o site, informa matrícula e nome (ficam gravados em cada registro).
-- **Qualidade** (`INSPECAO_PASSWORD`): tudo do operador + **adicionar e remover fotos** dos registros (filtro "Sem foto" em Registros).
+- **Qualidade** (`INSPECAO_PASSWORD`): tudo do operador + **adicionar e remover fotos** dos registros (filtro "Sem foto" em Registros) + montar o **relatório de avarias**.
 - **Admin** (`ADMIN_PASSWORD`): tudo acima + importar/excluir BOMs + **editar e apagar registros** (inclusive corrigir o SAP digitado errado). Também pode adicionar fotos.
 
 Registros apagados não somem do banco: ficam marcados com quem apagou e quando.
@@ -77,6 +77,16 @@ Edite ou reenvie os arquivos no GitHub. Cada commit publica sozinho.
 Todo scrap registrado entra como **Em análise**. A Qualidade (ou o admin) dá o parecer na aba **Em análise**:
 Scrap confirmado, Retrabalho, Devolver ao fornecedor ou Liberado para uso, sempre com um texto de parecer.
 Itens com mais de 2 dias aparecem em vermelho. O número na aba mostra quantos estão pendentes.
+
+## Relatório de avarias
+Aba **Relatório**: a Qualidade (ou o admin) monta; o operador só vê.
+- Digite o código da peça (com ou sem hífen) e tire a foto (até 4: peça inteira, detalhe, etiqueta). Descrição, projeto, unidade e classe vêm da BOM. O defeito e a quantidade já vêm do último registro de scrap do material. Situação (em análise, scrap, retrabalho, devolver ao fornecedor, liberado) e observação são opcionais.
+- Cada peça vira um **formulário de avaria** (nº AV-ano-número) e entra no relatório do dia, junto com os registros de scrap do mesmo material dos últimos 7 dias.
+- **Imprimir / PDF**: folha A4 com as fotos, resumo por situação e "Página 1 de N". **Excel**: aba Avarias + aba Registros de scrap. As setas mostram outros dias.
+- Na folha dá para mudar a situação, editar, pôr mais foto e excluir (a exclusão fica registrada, como nos registros).
+- Em **Registrar**, **Em análise** e **Registros**, o material que tem formulário aparece com o selo **Formulário de avaria** (clique abre o formulário com as fotos). Em Registros há o filtro "Avaria" e a coluna no Excel.
+- Material fora da BOM também entra: preencha projeto e descrição se souber.
+- Link direto para um dia: `/?aba=relatorio&dia=2026-10-07`.
 
 ## Editar BOM pelo site
 Admin → aba **BOMs** → **Editar** no projeto.
