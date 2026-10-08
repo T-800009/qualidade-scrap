@@ -2,13 +2,13 @@ import APP_HTML from './app.html';
 import LOGIN_HTML from './login.html';
 import { temPalavrao } from './palavras.js';
 
-// Marca WQA (Wesley Qualidade): W, Q e A em traço único; o check vermelho é o rabo do Q e a perna do A
-const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><title>WQA</title><rect width="64" height="64" rx="13" fill="#1a365d"/><g transform="translate(2.6 16.4) scale(.6)"><g fill="none" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 12 40 21 22 30 40 38 12" stroke="#fff"/><circle cx="60" cy="26" r="13" stroke="#fff"/><path d="M86 12 95 40M79.9 31h12.2" stroke="#fff"/><path d="M65 28 77 40 86 12" stroke="#e5484d"/></g></g></svg>';
+// Ícone da aba: selo vermelho com "QA" (o rabo do Q emenda na perna do A), igual ao selo do nome Scrap QA
+const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><title>Scrap QA</title><defs><linearGradient id="sqa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f05a5f"/><stop offset="1" stop-color="#d63a40"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="url(#sqa)"/><g fill="none" stroke="#fff" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="17.9" width="15.8" height="28.2" rx="7.9"/><path d="M25.4 35.5 36 46.1 43 17.9 50 46.1M38.2 37.3h9.6"/></g></svg>';
 
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-08 · relatório emitido no lugar do PCP';
+const VERSAO = '2026-10-08 · nome Scrap QA';
 // A página leva a versão (rodapé e aviso de versão nova)
 const APP_PAGINA = APP_HTML.replaceAll('__VERSAO__', VERSAO);
 const SESSAO_HORAS = 12;

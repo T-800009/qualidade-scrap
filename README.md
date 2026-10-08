@@ -1,4 +1,4 @@
-# WQA · Wesley Qualidade (scrap e avarias)
+# Scrap QA (scrap e avarias)
 
 Registro de scrap por posto (P0, P½ e P1–P10) com identificação automática do projeto pela BOM, parecer da Qualidade,
 relatório de avarias (FO.QA.A.049), relatório emitido (sim/não) por registro e saldo dos depósitos 1500 e 1600.

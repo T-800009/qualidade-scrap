@@ -14,7 +14,7 @@
     document.documentElement.setAttribute('data-tema', t);
   })();
 </script>
-<title>WQA · Scrap e avarias</title>
+<title>Scrap QA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -74,10 +74,9 @@ svg{flex:none}
 /* ---------- topo: faixa azul-marinho ---------- */
 .topo{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:22px;height:56px;padding:0 24px;background:var(--topo);color:var(--topo-txt);border-bottom:1px solid var(--topo-borda)}
 .marca{display:flex;align-items:center;gap:12px;min-width:max-content;color:var(--topo-txt)}
-.marca .logo{width:auto;height:23px}
-.marca>div{padding-left:12px;border-left:1px solid var(--topo-linha)}
-.marca strong{display:block;font:600 14px/1.15 var(--sans);letter-spacing:-.005em}
-.marca small{display:block;color:var(--topo-mut);font-size:11.5px;line-height:1.2;margin-top:2px}
+.marca .wm{display:inline-flex;align-items:center;gap:6px;font:700 18px/1 var(--sans);letter-spacing:-.015em;color:var(--topo-txt);white-space:nowrap}
+/* "Scrap" + selo vermelho "QA": o nome do sistema é a marca */
+.marca .wm b{display:inline-grid;place-items:center;height:21px;padding:0 6px;border-radius:5px;background:var(--red);color:#fff;font:700 12.5px/1 var(--sans);letter-spacing:.05em}
 nav{display:flex;gap:2px;height:100%;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
 nav button{position:relative;height:100%;padding:0 13px;border:0;background:none;color:var(--topo-mut);font-weight:500;font-size:14px;white-space:nowrap;transition:color .15s,background-color .15s}
@@ -977,7 +976,7 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
 }
 /* topo em telas médias: menos texto, o menu nunca empurra a página */
 @media (max-width:1200px){.op-chip span:last-child{display:none}.op-chip{padding:3px}}
-@media (max-width:1100px){.marca small{display:none}.sair span{display:none}nav button{padding:0 10px}nav button.ativo::after{left:10px;right:10px}.topo{gap:14px}}
+@media (max-width:1100px){.sair span{display:none}nav button{padding:0 10px}nav button.ativo::after{left:10px;right:10px}.topo{gap:14px}}
 /* tablet e celular: marca em cima, menu numa linha própria embaixo */
 @media (max-width:900px){
   .topo{position:relative;height:auto;flex-wrap:wrap;gap:0 10px;padding:9px 14px 0}
@@ -1010,10 +1009,7 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
 </head>
 <body data-aba="registrar">
 <header class="topo">
-  <div class="marca">
-    <svg class="logo" viewBox="0 7 100 38" role="img" aria-label="WQA"><g fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 12 40 21 22 30 40 38 12" stroke="currentColor"/><circle cx="60" cy="26" r="13" stroke="currentColor"/><path d="M86 12 95 40M79.9 31h12.2" stroke="currentColor"/><path d="M65 28 77 40 86 12" stroke="#e5484d"/></g></svg>
-    <div><strong>Wesley Qualidade</strong><small>Scrap e avarias</small></div>
-  </div>
+  <div class="marca"><span class="wm">Scrap <b>QA</b></span></div>
   <nav id="nav">
     <button data-tab="registrar" class="ativo">Registrar</button>
     <button data-tab="analise">Em análise<span class="nav-badge" id="badgeAnalise" hidden></span></button>
@@ -1455,7 +1451,7 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
   </section>
 </main>
 <footer class="rodape">
-  <span><b>WQA</b> · Wesley Qualidade, sistema de scrap e avarias da linha</span>
+  <span><b>Scrap QA</b> · sistema de scrap e avarias da linha</span>
   <span>Versão __VERSAO__</span>
   <span class="assinatura">Desenvolvido por <b>Wesley</b>, PCP</span>
 </footer>
@@ -3716,8 +3712,8 @@ async function montarPdfRA(PDFLib, d, img) {
   doc.setSubject(textoPdf(`${d.material} - ${d.descricao || ''}`));
   doc.setAuthor(textoPdf(d.responsavel || 'Qualidade'));
   doc.setKeywords(['Relatório de avarias', RA_PDF.form, d.ra, d.material].map(textoPdf));
-  doc.setCreator('WQA - Wesley Qualidade');
-  doc.setProducer('WQA - Wesley Qualidade');
+  doc.setCreator('Scrap QA');
+  doc.setProducer('Scrap QA');
   doc.setLanguage('pt-BR');
   doc.setCreationDate(new Date());
   return doc.save();

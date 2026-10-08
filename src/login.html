@@ -14,7 +14,7 @@
     document.documentElement.setAttribute('data-tema', t);
   })();
 </script>
-<title>WQA · Entrar</title>
+<title>Scrap QA · Entrar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap" rel="stylesheet">
@@ -24,17 +24,15 @@
   *{box-sizing:border-box}
   body{margin:0;min-height:100vh;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);background:var(--bg);color:var(--txt);font:400 15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
   .lado{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:40px;padding:44px 56px;background:var(--faixa);color:#fff;overflow:hidden}
-  .marca{display:flex;align-items:center;gap:14px;font:600 16px/1.15 "IBM Plex Sans",sans-serif}
-  .marca>div{padding-left:14px;border-left:1px solid rgba(255,255,255,.3)}
-  .marca small{display:block;font-size:12.5px;font-weight:400;color:rgba(255,255,255,.72);margin-top:2px}
-  .marca svg{width:auto;height:30px;color:#fff}
+  .marca{display:inline-flex;align-items:center;gap:8px;font:700 24px/1 "IBM Plex Sans",sans-serif;letter-spacing:-.015em;color:#fff}
+  .marca b{display:inline-grid;place-items:center;height:28px;padding:0 8px;border-radius:6px;background:#e5484d;color:#fff;font:700 16px/1 "IBM Plex Sans",sans-serif;letter-spacing:.05em}
   h1{margin:0;font:600 clamp(40px,4.6vw,64px)/1.04 "IBM Plex Sans",sans-serif;letter-spacing:-.025em;max-width:12ch}
   .lado p{margin:18px 0 0;color:rgba(255,255,255,.78);max-width:46ch;font-size:16px}
-  /* a linha: o posto ½ e os postos 1 a 10 */
-  .linha{position:relative;display:grid;grid-template-columns:repeat(11,1fr);margin-top:42px;max-width:560px}
-  .linha::before{content:"";position:absolute;left:calc(50% / 11);right:calc(50% / 11);top:50%;height:2px;background:rgba(255,255,255,.22)}
+  /* a linha: os postos 0 e ½ e os postos 1 a 10 */
+  .linha{position:relative;display:grid;grid-template-columns:repeat(12,1fr);margin-top:42px;max-width:600px}
+  .linha::before{content:"";position:absolute;left:calc(50% / 12);right:calc(50% / 12);top:50%;height:2px;background:rgba(255,255,255,.22)}
   .linha i{position:relative;justify-self:center;width:12px;height:12px;border-radius:50%;background:var(--faixa);border:2px solid rgba(255,255,255,.55)}
-  .linha i:nth-child(4){background:#c8102e;border-color:#c8102e;box-shadow:0 0 0 5px rgba(200,16,46,.28)}
+  .linha i:nth-child(5){background:#c8102e;border-color:#c8102e;box-shadow:0 0 0 5px rgba(200,16,46,.28)}
   .rodape{display:flex;flex-wrap:wrap;gap:6px 22px;color:rgba(255,255,255,.62);font-size:13px}
   .rodape b{color:#fff;font-weight:600}
   .form{display:grid;place-items:center;padding:32px}
@@ -63,11 +61,11 @@
 </head>
 <body>
 <section class="lado">
-  <div class="marca"><svg viewBox="0 7 100 38" role="img" aria-label="WQA"><g fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 12 40 21 22 30 40 38 12" stroke="currentColor"/><circle cx="60" cy="26" r="13" stroke="currentColor"/><path d="M86 12 95 40M79.9 31h12.2" stroke="currentColor"/><path d="M65 28 77 40 86 12" stroke="#e5484d"/></g></svg><div>Wesley Qualidade<small>Scrap e avarias</small></div></div>
+  <div class="marca">Scrap <b>QA</b></div>
   <div class="corpo">
     <h1>Scrap e avarias da linha</h1>
-    <p>Registro no posto, parecer da Qualidade, relatório de avarias e o acompanhamento do PCP, no mesmo lugar.</p>
-    <div class="linha" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <p>Registro no posto, parecer da Qualidade, relatório de avarias e saldo dos depósitos, no mesmo lugar.</p>
+    <div class="linha" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
   </div>
   <div class="rodape"><span>Acesso restrito à equipe</span><span>Desenvolvido por <b>Wesley</b>, PCP</span></div>
 </section>
