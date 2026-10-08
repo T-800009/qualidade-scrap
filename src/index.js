@@ -8,7 +8,7 @@ const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><t
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-08 · posto 0 + depósitos 1500 e 1600';
+const VERSAO = '2026-10-08 · relatório emitido no lugar do PCP';
 // A página leva a versão (rodapé e aviso de versão nova)
 const APP_PAGINA = APP_HTML.replaceAll('__VERSAO__', VERSAO);
 const SESSAO_HORAS = 12;
@@ -39,6 +39,7 @@ const COLUNAS_SCRAP = [
   ['status', "TEXT NOT NULL DEFAULT 'analise'"], ['parecer', 'TEXT'], ['analisado_por', 'TEXT'], ['analisado_em', 'TEXT'],
   ['material_anterior', 'TEXT'],
   ['scrap_feito_em', 'TEXT'], ['scrap_feito_por', 'TEXT'], ['arrumado_em', 'TEXT'], ['arrumado_por', 'TEXT'],
+  ['relatorio_em', 'TEXT'], ['relatorio_por', 'TEXT'],
 ];
 const sqlTabelaScrap = (nome, seNaoExiste) =>
   `CREATE TABLE ${seNaoExiste ? 'IF NOT EXISTS ' : ''}${nome} (${COLUNAS_SCRAP.map(([c, t]) => `${c} ${t}`).join(', ')})`;
@@ -119,6 +120,9 @@ const MIGRACOES = [
   'ALTER TABLE scrap ADD COLUMN scrap_feito_por TEXT',
   'ALTER TABLE scrap ADD COLUMN arrumado_em TEXT',
   'ALTER TABLE scrap ADD COLUMN arrumado_por TEXT',
+  // Relatório emitido (sim/não): substitui o "scrap feito / arrumado" do PCP na tela
+  'ALTER TABLE scrap ADD COLUMN relatorio_em TEXT',
+  'ALTER TABLE scrap ADD COLUMN relatorio_por TEXT',
 ];
 let schemaOk = null;
 function garantirSchema(env) {
@@ -291,9 +295,9 @@ async function rotear(req, env) {
     return analisarScrap(req, env, Number(mAnalise[1]));
   }
 
-  // PCP: marcar (ou desmarcar) "scrap feito" e "arrumado" em um ou vários registros
+  // Marcar (ou desmarcar) "relatório emitido" em um ou vários registros
   if (p === '/api/scrap/pcp' && m === 'POST') {
-    if (!podeFoto) return json({ erro: 'Só a Qualidade e o administrador marcam o que o PCP já resolveu.' }, 403);
+    if (!podeFoto) return json({ erro: 'Só a Qualidade e o administrador marcam o relatório emitido.' }, 403);
     return marcarPcp(req, env);
   }
 
@@ -833,8 +837,8 @@ function filtros(url) {
   if (sp.get('foto') === 'com') w.push('EXISTS (SELECT 1 FROM foto WHERE foto.scrap_id = scrap.id)');
   const mat2 = texto(sp.get('matricula'), 20).toUpperCase();
   if (mat2) { w.push('matricula = ?'); v.push(mat2); }
-  // PCP: sim / nao
-  for (const [param, col] of [['scrap_feito', 'scrap_feito_em'], ['arrumado', 'arrumado_em']]) {
+  // relatório emitido (e as marcas antigas do PCP): sim / nao
+  for (const [param, col] of [['relatorio', 'relatorio_em'], ['scrap_feito', 'scrap_feito_em'], ['arrumado', 'arrumado_em']]) {
     if (sp.get(param) === 'sim') w.push(`${col} IS NOT NULL`);
     if (sp.get(param) === 'nao') w.push(`${col} IS NULL`);
   }
@@ -885,7 +889,7 @@ async function anexarAvarias(env, rows) {
 async function estatisticas(url, env) {
   const { where, v } = filtros(url);
   const rows = (await env.DB.prepare(
-    `SELECT posto, projeto, defeito, material, descricao_material, unidade, quantidade, classe, status, scrap_feito_em, arrumado_em FROM scrap ${where}`
+    `SELECT posto, projeto, defeito, material, descricao_material, unidade, quantidade, classe, status, relatorio_em FROM scrap ${where}`
   ).bind(...v).all()).results;
 
   const grupo = (chave) => {
@@ -915,8 +919,8 @@ async function estatisticas(url, env) {
     .map(({ r, ...a }) => ({ material: r.material, projeto: r.projeto, classe: r.classe || '', descricao: desc.get(r.material + '|' + r.projeto) || '', unidade: normUn(r.unidade), ...a }))
     .sort(porRegistros).slice(0, 10);
 
-  // Andamento de cada registro: análise da Qualidade -> baixa do scrap (PCP) -> peça arrumada
-  const porEtapa = { analise: 0, aguardando_scrap: 0, falta_arrumar: 0, resolvido: 0 };
+  // Andamento de cada registro: análise da Qualidade -> relatório emitido
+  const porEtapa = { analise: 0, pendente: 0, emitido: 0 };
   for (const r of rows) porEtapa[etapaScrap(r)]++;
   return json({ total, porPosto, porProjeto, porDefeito, porClasse, porStatus, porEtapa, topMateriais });
 }
@@ -1105,19 +1109,21 @@ async function removerFoto(env, id) {
   return json({ ok: true });
 }
 
-/* ---------------- PCP: scrap feito e arrumado ----------------
- * "Scrap feito": a baixa do scrap já foi feita. "Arrumado": a peça/o problema já foi resolvido.
- * Guarda quem marcou e quando; marcar de novo não troca o carimbo de quem marcou primeiro. */
-const CAMPOS_PCP = { scrap_feito: ['scrap_feito_em', 'scrap_feito_por'], arrumado: ['arrumado_em', 'arrumado_por'] };
-// Em que pé está o registro (a tela usa a mesma regra)
-const etapaScrap = (r) => ((r.status || 'analise') === 'analise' ? 'analise'
-  : r.status === 'scrap' && !r.scrap_feito_em ? 'aguardando_scrap'
-    : !r.arrumado_em ? 'falta_arrumar' : 'resolvido');
+/* ---------------- relatório emitido (sim/não) ----------------
+ * A Qualidade marca quando o relatório do registro foi emitido. Guarda quem marcou e quando; marcar de
+ * novo não troca o carimbo de quem marcou primeiro. "scrap_feito" e "arrumado" eram as marcas do PCP:
+ * saíram da tela, mas continuam aceitas aqui e guardadas no banco. */
+const CAMPOS_PCP = {
+  relatorio: ['relatorio_em', 'relatorio_por'],
+  scrap_feito: ['scrap_feito_em', 'scrap_feito_por'], arrumado: ['arrumado_em', 'arrumado_por'],
+};
+// Em que pé está o registro (a tela usa a mesma regra): relatório emitido fecha o registro
+const etapaScrap = (r) => (r.relatorio_em ? 'emitido' : (r.status || 'analise') === 'analise' ? 'analise' : 'pendente');
 
 async function marcarPcp(req, env) {
   const b = await req.json().catch(() => null);
   const par = CAMPOS_PCP[b?.campo];
-  if (!par) return json({ erro: 'Escolha o que marcar: scrap feito ou arrumado.' }, 400);
+  if (!par) return json({ erro: 'Escolha o que marcar: relatório emitido.' }, 400);
   const ids = [...new Set((Array.isArray(b.ids) ? b.ids : []).map(Number).filter((n) => Number.isInteger(n) && n > 0))];
   if (!ids.length) return json({ erro: 'Escolha pelo menos um registro.' }, 400);
   if (ids.length > 500) return json({ erro: 'Marque no máximo 500 registros de uma vez.' }, 400);

@@ -688,14 +688,14 @@ td .proj{height:22px;font-size:12.5px}
   .em-botoes .btn,.em-botoes .btn-prim{flex:1 1 auto;justify-content:center}
 }
 
-/* ---------- registros: andamento, barra de busca, tabela e PCP ---------- */
+/* ---------- registros: andamento, barra de busca, tabela e relatório emitido ---------- */
 /* andamento: cada registro está em uma etapa, da análise da Qualidade até a peça arrumada */
 .fluxo{display:grid;grid-template-columns:minmax(150px,auto) minmax(0,1fr);margin-bottom:14px}
 .fluxo-total{display:flex;flex-direction:column;justify-content:center;gap:3px;padding:14px 20px;border-right:1px solid var(--line)}
 .fluxo-total b{font:600 34px/1 var(--cond);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .fluxo-total span{color:var(--mut);font-size:13px;line-height:1.3}
 .fluxo-corpo{display:flex;flex-direction:column;justify-content:center;min-width:0;padding:8px 10px 12px}
-.fluxo-etapas{display:grid;grid-template-columns:minmax(0,1fr) 16px minmax(0,1fr) 16px minmax(0,1fr) 16px minmax(0,1fr);align-items:stretch}
+.fluxo-etapas{display:grid;grid-template-columns:minmax(0,1fr) 16px minmax(0,1fr) 16px minmax(0,1fr);align-items:stretch}
 .seta{display:grid;place-items:center;color:var(--mut2)}
 .etapa{position:relative;display:flex;flex-direction:column;gap:2px;min-width:0;padding:8px 10px 8px 18px;border:0;border-radius:8px;background:none;color:var(--txt);text-align:left;transition:background-color .15s,box-shadow .15s}
 .etapa::before{content:"";position:absolute;left:6px;top:10px;bottom:10px;width:4px;border-radius:2px;background:var(--cor)}
@@ -709,9 +709,8 @@ td .proj{height:22px;font-size:12.5px}
 .fluxo-barra i{display:block;min-width:0;border-radius:2px;background:var(--cor)}
 .fluxo-barra:empty{background:var(--s3);border-radius:2px}
 .e-analise{--cor:var(--amb-edge)}
-.e-aguardando_scrap{--cor:var(--red)}
-.e-falta_arrumar{--cor:var(--azul)}
-.e-resolvido{--cor:var(--ok)}
+.e-pendente{--cor:var(--azul)}
+.e-emitido{--cor:var(--ok)}
 
 .r-barra{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;padding:12px 14px;border-bottom:1px solid var(--line)}
 .r-busca{position:relative;flex:1 1 320px;max-width:520px}
@@ -776,7 +775,8 @@ td .proj{height:22px;font-size:12.5px}
 .c-op b{display:block;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .c-op small{color:var(--mut);font-size:12px}
 .r-meta-cel{display:none}
-/* quadradinhos do PCP */
+/* quadradinho do relatório emitido (sim/não) */
+.so-cel{display:none;font-style:normal}
 .pcp{display:flex;align-items:center;gap:8px;min-height:26px;margin:0;font-size:13px;font-weight:600;color:var(--txt);cursor:pointer;user-select:none}
 .pcp+.pcp-quem+.pcp,.pcp+.pcp{margin-top:4px}
 .pcp input{appearance:none;-webkit-appearance:none;display:grid;place-items:center;flex:none;width:19px;height:19px;margin:0;border:1.5px solid var(--mut2);border-radius:4px;background:var(--campo);cursor:pointer;transition:background-color .12s,border-color .12s}
@@ -889,7 +889,7 @@ body[data-aba="d1500"] :is(main,.rodape),body[data-aba="d1600"] :is(main,.rodape
 /* celular: cada registro vira um cartão */
 @media (max-width:760px){
   .fluxo-corpo{padding:8px}
-  .fluxo-etapas{grid-template-columns:1fr 1fr;gap:4px}
+  .fluxo-etapas{grid-template-columns:1fr 1fr 1fr;gap:4px}
   .seta{display:none}
   .etapa{padding:7px 8px 7px 16px}
   .etapa .d{display:none}
@@ -913,6 +913,7 @@ body[data-aba="d1500"] :is(main,.rodape),body[data-aba="d1600"] :is(main,.rodape
   .r-tabela .c-pcp{grid-area:pcp;display:flex;flex-wrap:wrap;gap:4px 18px}
   .r-tabela .c-pcp .pcp{margin:0}
   .r-tabela .c-pcp .pcp-quem{display:none}
+  .r-tabela .c-pcp .so-cel{display:inline}
   .r-tabela .c-acoes{grid-area:acoes}
   .r-tabela .c-acoes .acoes-reg{justify-content:flex-start}
   .r-tabela .c-acoes:empty{display:none}
@@ -1098,7 +1099,7 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
   <!-- REGISTROS -->
   <section id="tab-registros" class="tab">
     <div class="cab-pag">
-      <div><h1>Registros</h1><p>Tudo o que foi registrado na linha. Filtre, acompanhe a análise da Qualidade e marque o que o PCP já resolveu.</p></div>
+      <div><h1>Registros</h1><p>Tudo o que foi registrado na linha. Filtre, acompanhe a análise da Qualidade e marque quando o relatório foi emitido.</p></div>
       <div class="cab-acoes">
         <button class="btn" id="rExport">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
@@ -1134,8 +1135,7 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
         <label>Defeito<select id="rDefeito" data-rotulo="Defeito"></select></label>
         <label>Classe<select id="rClasse" data-rotulo="Classe"><option value="">Todas</option><option>A</option><option>B</option><option>C</option><option value="-">Sem classe</option></select></label>
         <label>Situação<select id="rStatus" data-rotulo="Situação"><option value="">Todas</option><option value="analise">Em análise</option><option value="scrap">Scrap confirmado</option><option value="retrabalho">Retrabalho</option><option value="devolucao">Devolver ao fornecedor</option><option value="liberado">Liberado para uso</option></select></label>
-        <label>Scrap feito<select id="rScrapFeito" data-rotulo="Scrap feito"><option value="">Todos</option><option value="sim">Sim</option><option value="nao">Não</option></select></label>
-        <label>Arrumado<select id="rArrumado" data-rotulo="Arrumado"><option value="">Todos</option><option value="sim">Sim</option><option value="nao">Não</option></select></label>
+        <label>Relatório emitido<select id="rRelatorio" data-rotulo="Relatório emitido"><option value="">Todos</option><option value="sim">Sim</option><option value="nao">Não</option></select></label>
         <label>Fotos<select id="rFoto" data-rotulo="Fotos"><option value="">Todos</option><option value="sem">Sem foto</option><option value="com">Com foto</option></select></label>
         <label>Avaria<select id="rAvaria" data-rotulo="Avaria"><option value="">Todos</option><option value="com">Com formulário de avaria</option><option value="sem">Sem formulário</option></select></label>
         <button type="button" class="link-btn r-limpar" id="rLimpar">Limpar filtros</button>
@@ -1143,11 +1143,9 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
       <div class="r-ativos" id="rAtivos"></div>
       <div class="r-lote" id="rLote" hidden>
         <span><b id="rSelN">0</b> selecionado(s)</span>
-        <button type="button" class="btn" data-lote="scrap_feito">Marcar scrap feito</button>
-        <button type="button" class="btn" data-lote="arrumado">Marcar arrumado</button>
+        <button type="button" class="btn" data-lote="relatorio">Marcar relatório emitido</button>
         <span class="sep"></span>
-        <button type="button" class="link-btn" data-lote-tirar="scrap_feito">Desmarcar scrap feito</button>
-        <button type="button" class="link-btn" data-lote-tirar="arrumado">Desmarcar arrumado</button>
+        <button type="button" class="link-btn" data-lote-tirar="relatorio">Desmarcar relatório emitido</button>
         <button type="button" class="link-btn" id="rSelLimpar">Limpar seleção</button>
       </div>
       <div class="tabela r-tabela" id="rTabela"></div>
@@ -4064,23 +4062,20 @@ $('#mavLista').addEventListener('click', (e) => acaoAv(e, () => MAV.itens));
 
 /* ---------- registros ---------- */
 // REGISTROS: o que veio do servidor (período, posto, projeto, defeito, classe, fotos, avaria).
-// FILTRADOS: o que está na tabela (busca, situação, quadradinhos do PCP e etapa, filtrados aqui na tela).
+// FILTRADOS: o que está na tabela (busca, situação, relatório emitido e etapa, filtrados aqui na tela).
 let REGISTROS = [], FILTRADOS = [];
 const RG = { etapa: '', ord: 'data', dir: -1, mostrar: 200, sel: new Set() };
 const R_SERV = ['rPosto', 'rProjeto', 'rDefeito', 'rClasse', 'rFoto', 'rAvaria'];
-const R_TELA = ['rStatus', 'rScrapFeito', 'rArrumado'];
+const R_TELA = ['rStatus', 'rRelatorio'];
 const ICONE_SETA = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>';
-// Andamento de cada registro: parecer da Qualidade -> baixa do scrap (PCP) -> peça arrumada
+// Andamento de cada registro: parecer da Qualidade -> relatório emitido (o servidor usa a mesma regra)
 const ETAPAS = [
   { id: 'analise', t: 'Em análise', d: 'Esperando o parecer da Qualidade' },
-  { id: 'aguardando_scrap', t: 'Aguardando scrap', d: 'Scrap confirmado, falta a baixa' },
-  { id: 'falta_arrumar', t: 'Falta arrumar', d: 'Com parecer, peça ainda não arrumada' },
-  { id: 'resolvido', t: 'Resolvidos', d: 'Arrumados e com a baixa feita' },
+  { id: 'pendente', t: 'Relatório pendente', d: 'Com parecer, relatório ainda não emitido' },
+  { id: 'emitido', t: 'Relatório emitido', d: 'Relatório da Qualidade já emitido' },
 ];
-const etapaDe = (r) => ((r.status || 'analise') === 'analise' ? 'analise'
-  : r.status === 'scrap' && !r.scrap_feito_em ? 'aguardando_scrap'
-    : !r.arrumado_em ? 'falta_arrumar' : 'resolvido');
-const ROT_PCP = { scrap_feito: 'Scrap feito', arrumado: 'Arrumado' };
+const etapaDe = (r) => (r.relatorio_em ? 'emitido' : (r.status || 'analise') === 'analise' ? 'analise' : 'pendente');
+const ROT_PCP = { relatorio: 'Relatório emitido' };
 const podeMarcar = () => podeFoto();
 const primeiroNome = (s) => String(s || '').replace(/\s*\(.*\)\s*$/, '').trim().split(/\s+/)[0] || '';
 const diaCurto = (iso) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
@@ -4125,17 +4120,16 @@ async function carregarRegistros() {
 
 function filtrarRegistros() {
   const termo = normBusca($('#rBusca').value.trim()), termoCod = termo.replace(/[^A-Z0-9]/g, '');
-  const st = $('#rStatus').value, sf = $('#rScrapFeito').value, ar = $('#rArrumado').value;
+  const st = $('#rStatus').value, rel = $('#rRelatorio').value;
   const base = REGISTROS.filter((r) => {
     if (st && (r.status || 'analise') !== st) return false;
-    if (sf && (sf === 'sim') !== !!r.scrap_feito_em) return false;
-    if (ar && (ar === 'sim') !== !!r.arrumado_em) return false;
+    if (rel && (rel === 'sim') !== !!r.relatorio_em) return false;
     if (!termo) return true;
     if (termoCod.length >= 3 && chaveCod(r.material).includes(termoCod)) return true;
     return normBusca([r.material, r.descricao_material, r.projeto, r.defeito, r.descricao_problema, r.parecer,
       r.registrado_por, r.matricula, ST_NOME[r.status || 'analise'], tagPosto(r.posto), r.posto === 0.5 ? 'posto meio' : '', ...(r.avarias || []).map((a) => a.ra)].join(' | ')).includes(termo);
   });
-  const cont = { analise: 0, aguardando_scrap: 0, falta_arrumar: 0, resolvido: 0 };
+  const cont = { analise: 0, pendente: 0, emitido: 0 };
   for (const r of base) cont[etapaDe(r)]++;
   FILTRADOS = RG.etapa ? base.filter((r) => etapaDe(r) === RG.etapa) : base;
   const ORD = {
@@ -4150,10 +4144,11 @@ function filtrarRegistros() {
 
 function linhaRegistro(r) {
   const pode = podeMarcar(), sel = RG.sel.has(r.id);
-  const pcp = (campo) => {
-    const em = r[campo + '_em'], por = r[campo + '_por'], rot = ROT_PCP[campo];
-    const dica = em ? `${rot}: marcado por ${por || '—'} em ${dataHora(em)}` : pode ? `Marcar "${rot.toLowerCase()}"` : `${rot}: ainda não`;
-    return `<label class="pcp" title="${esc(dica)}"><input type="checkbox" data-pcp="${campo}" data-id="${r.id}"${em ? ' checked' : ''}${pode ? '' : ' disabled'}><span>${rot}</span></label>`
+  // relatório emitido: quadradinho marcado = Sim, desmarcado = Não
+  const relatorio = () => {
+    const em = r.relatorio_em, por = r.relatorio_por;
+    const dica = em ? `Relatório emitido: marcado por ${por || '—'} em ${dataHora(em)}` : pode ? 'Marcar como relatório emitido' : 'Relatório ainda não emitido';
+    return `<label class="pcp" title="${esc(dica)}"><input type="checkbox" data-pcp="relatorio" data-id="${r.id}"${em ? ' checked' : ''}${pode ? '' : ' disabled'} aria-label="Relatório emitido"><span><i class="so-cel">Relatório emitido: </i>${em ? 'Sim' : 'Não'}</span></label>`
       + (em ? `<small class="pcp-quem">${por ? esc(primeiroNome(por)) + ', ' : ''}${dataCurta(em)}</small>` : '');
   };
   const tags = [r.fora_bom ? '<span class="proj fora">fora da BOM</span>' : '', tagSap(r), tagAvaria(r, true), botaoFotos(r)].filter(Boolean).join('');
@@ -4168,7 +4163,7 @@ function linhaRegistro(r) {
     <td class="c-def"><b>${esc(r.defeito)}</b><p>${esc(r.descricao_problema)}</p>${tagEditado(r)}</td>
     <td class="c-sit">${stHtml(r.status)}${r.parecer ? `<p class="r-parecer" title="${esc(r.parecer)}">${esc(r.parecer)}</p>` : ''}${podeFoto()
       ? `<button class="editar-sit" data-editsit="${r.id}">${ICONE_LAPIS}${r.status && r.status !== 'analise' ? 'Editar situação' : 'Dar parecer'}</button>` : ''}</td>
-    <td class="c-pcp">${pcp('scrap_feito')}${pcp('arrumado')}</td>
+    <td class="c-pcp">${relatorio()}</td>
     <td class="c-op"><b title="${esc(r.registrado_por || '')}">${esc(r.registrado_por || '')}</b>${r.matricula ? `<small>${esc(r.matricula)}</small>` : ''}</td>
     ${ROLE === 'admin' ? `<td class="c-acoes">${acoesAdmin(r)}</td>` : ''}
   </tr>`;
@@ -4186,7 +4181,7 @@ function renderRegistros() {
   const th = (cls, rot, ord) => `<th class="${cls}"${ord ? ` data-ord="${ord}" tabindex="0"${RG.ord === ord ? ` aria-sort="${RG.dir > 0 ? 'ascending' : 'descending'}"` : ''}` : ''}>${rot}</th>`;
   $('#rTabela').innerHTML = FILTRADOS.length ? `<table><thead><tr>
       ${pode ? `<th class="c-ck"><input type="checkbox" id="rSelTodos" aria-label="Selecionar todos os registros filtrados"${todos ? ' checked' : ''}></th>` : ''}
-      ${th('c-data', 'Data', 'data')}${th('c-mat', 'Material', 'material')}${th('c-proj', 'Projeto', 'projeto')}${th('c-qtd', 'Qtd', 'qtd')}${th('c-def', 'Defeito')}${th('c-sit', 'Situação', 'situacao')}${th('c-pcp', 'PCP')}${th('c-op', 'Operador', 'operador')}${ROLE === 'admin' ? '<th class="c-acoes"><span class="sr">Ações</span></th>' : ''}
+      ${th('c-data', 'Data', 'data')}${th('c-mat', 'Material', 'material')}${th('c-proj', 'Projeto', 'projeto')}${th('c-qtd', 'Qtd', 'qtd')}${th('c-def', 'Defeito')}${th('c-sit', 'Situação', 'situacao')}${th('c-pcp', 'Relatório emitido')}${th('c-op', 'Operador', 'operador')}${ROLE === 'admin' ? '<th class="c-acoes"><span class="sr">Ações</span></th>' : ''}
     </tr></thead><tbody>${lista.map(linhaRegistro).join('')}</tbody></table>`
     : `<div class="r-vazio"><b>${n ? 'Nenhum registro com esses filtros' : 'Nenhum registro nesse período'}</b>${n ? 'Mude a busca ou limpe os filtros.' : 'Escolha outro período.'}${n ? '<br><button type="button" class="link-btn" data-limpar-tudo>Limpar busca e filtros</button>' : ''}</div>`;
   const resto = FILTRADOS.length - lista.length;
@@ -4217,7 +4212,7 @@ function atualizarLote() {
   $('#rSelN').textContent = fmt(n);
 }
 
-// Marca ou desmarca "scrap feito" / "arrumado" em um ou vários registros
+// Marca ou desmarca "relatório emitido" em um ou vários registros
 async function marcarPcp(ids, campo, valor) {
   if (!OP) { exigirOperador(); toast('Diga quem está marcando e marque de novo', true); return null; }
   const d = await api('/api/scrap/pcp', { method: 'POST', body: JSON.stringify({ ids, campo, valor, nome: OP.nome, matricula: OP.matricula }) });
@@ -4234,7 +4229,7 @@ async function clicarPcp(input) {
   const id = Number(input.dataset.id), campo = input.dataset.pcp, valor = input.checked, rot = ROT_PCP[campo];
   const r = REGISTROS.find((x) => x.id === id);
   if (!valor && !(await confirmar(`Desmarcar "${rot.toLowerCase()}"?`,
-    `${r?.material || 'O registro'} volta a aparecer como pendente para o PCP. Quem marcou e quando deixam de aparecer.`, 'Desmarcar'))) {
+    `${r?.material || 'O registro'} volta para Relatório pendente. Quem marcou e quando deixam de aparecer.`, 'Desmarcar'))) {
     input.checked = true; return;
   }
   const lb = input.closest('.pcp');
@@ -4243,7 +4238,7 @@ async function clicarPcp(input) {
     const d = await marcarPcp([id], campo, valor);
     if (!d) { input.checked = !valor; lb.classList.remove('salvando'); return; }
     renderRegistros();
-    toast(valor ? `${rot}: ${r?.material || ''}` : `${rot} desmarcado: ${r?.material || ''}`, false,
+    toast(valor ? `${rot}: ${r?.material || ''}` : `Relatório desmarcado: ${r?.material || ''}`, false,
       valor ? { rotulo: 'Desfazer', fn: async () => { try { await marcarPcp([id], campo, false); renderRegistros(); } catch (e) { toast(e.message, true); } } } : null);
   } catch (e) { input.checked = !valor; lb.classList.remove('salvando'); toast(e.message, true); }
 }
@@ -4328,14 +4323,14 @@ $('#rLote').addEventListener('click', async (e) => {
   const campo = b.dataset.lote || b.dataset.loteTirar, valor = !!b.dataset.lote, rot = ROT_PCP[campo];
   const ids = [...RG.sel], n = ids.length;
   if (!valor && !(await confirmar(`Desmarcar "${rot.toLowerCase()}" em ${n} registro(s)?`,
-    'Eles voltam a aparecer como pendentes para o PCP. Quem marcou e quando deixam de aparecer.', 'Desmarcar'))) return;
+    'Eles voltam para Relatório pendente. Quem marcou e quando deixam de aparecer.', 'Desmarcar'))) return;
   $('#rLote').querySelectorAll('button').forEach((x) => { x.disabled = true; });
   try {
     const d = await marcarPcp(ids, campo, valor);
     if (d) {
       RG.sel.clear();
       renderRegistros();
-      toast(valor ? `${rot}: ${d.alterados} registro(s) marcado(s)${d.alterados < n ? ` (${n - d.alterados} já estavam)` : ''}` : `${rot} desmarcado em ${d.alterados} registro(s)`);
+      toast(valor ? `${rot}: ${d.alterados} registro(s) marcado(s)${d.alterados < n ? ` (${n - d.alterados} já estavam)` : ''}` : `Relatório desmarcado em ${d.alterados} registro(s)`);
     }
   } catch (err) { toast(err.message, true); }
   $('#rLote').querySelectorAll('button').forEach((x) => { x.disabled = false; });
@@ -4349,13 +4344,12 @@ $('#rExport').addEventListener('click', () => {
     Projeto: r.projeto, Classe: r.classe || '', Quantidade: r.quantidade, Unidade: unOk(r.unidade), Defeito: r.defeito,
     'O que aconteceu': r.descricao_problema, Operador: r.registrado_por, 'Matrícula': r.matricula || '', 'Fora da BOM': r.fora_bom ? 'SIM' : '', Situação: ST_NOME[r.status || 'analise'], Parecer: r.parecer || '', 'Analisado por': r.analisado_por || '', 'Analisado em': r.analisado_em ? dataHora(r.analisado_em) : '',
     Andamento: ETAPAS.find((e) => e.id === etapaDe(r)).t,
-    'Scrap feito': sn(r.scrap_feito_em), 'Scrap feito em': r.scrap_feito_em ? dataHora(r.scrap_feito_em) : '', 'Scrap feito por': r.scrap_feito_por || '',
-    Arrumado: sn(r.arrumado_em), 'Arrumado em': r.arrumado_em ? dataHora(r.arrumado_em) : '', 'Arrumado por': r.arrumado_por || '',
+    'Relatório emitido': sn(r.relatorio_em), 'Relatório emitido em': r.relatorio_em ? dataHora(r.relatorio_em) : '', 'Relatório emitido por': r.relatorio_por || '',
     'Editado em': r.editado_em ? dataHora(r.editado_em) : '', Fotos: r.fotos ? String(r.fotos).split(',').length : 0,
     'Formulário de avaria': (r.avarias || []).map((a) => `${numAv(a)} (${dataCurta(a.em)})`).join(', '),
   }));
   const ws = XLSX.utils.json_to_sheet(dados);
-  ws['!cols'] = [16, 7, 16, 18, 36, 10, 7, 10, 8, 20, 50, 22, 12, 11, 20, 40, 22, 16, 18, 11, 16, 22, 10, 16, 22, 16, 7, 26].map((w) => ({ wch: w }));
+  ws['!cols'] = [16, 7, 16, 18, 36, 10, 7, 10, 8, 20, 50, 22, 12, 11, 20, 40, 22, 16, 18, 16, 18, 22, 16, 7, 26].map((w) => ({ wch: w }));
   ws['!autofilter'] = { ref: ws['!ref'] };
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Scrap');
