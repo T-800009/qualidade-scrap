@@ -100,10 +100,11 @@ Itens com mais de 2 dias aparecem em vermelho. O número na aba mostra quantos e
 A aba **Registros** usa a largura toda da tela e mostra cada registro numa linha só (no celular, um cartão por registro).
 - **Andamento** (faixa no topo, também no Painel): cada registro está em uma etapa, e clicar numa etapa filtra a lista:
   **Em análise** → **Relatório pendente** (com parecer, relatório ainda não emitido) → **Relatório emitido**.
-- **Coluna Relatório emitido**: um quadradinho por registro. Marcado = **Sim**, desmarcado = **Não**.
-  Guarda quem marcou e quando (passe o mouse). Qualidade e admin marcam; o operador só vê. Desmarcar pede confirmação.
-  Marcou errado? O aviso que aparece embaixo tem **Desfazer**.
-- **Marcar vários**: selecione as linhas (ou todas do filtro, pela caixa do cabeçalho) e use **Marcar relatório emitido**.
+- **Coluna Relatório emitido**: dois botões por registro, **Sim** e **Não**, sempre um aceso:
+  **Sim fica verde**, **Não fica vermelho** (todo registro começa em Não).
+  O Sim guarda quem marcou e quando (aparece embaixo; passe o mouse para ver a hora). Qualidade e admin mudam; o operador só vê.
+  Voltar para Não pede confirmação. Marcou Sim errado? O aviso que aparece embaixo tem **Desfazer**.
+- **Vários de uma vez**: selecione as linhas (ou todas do filtro, pela caixa do cabeçalho) e use **Relatório emitido: Sim / Não** na barra azul.
 - **Busca** na hora (código com ou sem hífen, descrição, defeito, operador, RA), **Filtros** (período, posto, projeto, defeito, classe,
   situação, relatório emitido, fotos, avaria) e ordenação clicando no título da coluna.
 - **Exportar Excel** sai com o que está na tela, já com as colunas Andamento e Relatório emitido (sim/não, quando e quem) e autofiltro.

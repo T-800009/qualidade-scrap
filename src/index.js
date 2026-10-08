@@ -9,7 +9,7 @@ const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><t
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-08 · logo BYD + Scrap QA';
+const VERSAO = '2026-10-08 · relatório emitido Sim/Não';
 // A página leva a versão (rodapé e aviso de versão nova)
 const APP_PAGINA = APP_HTML.replaceAll('__VERSAO__', VERSAO);
 const SESSAO_HORAS = 12;
@@ -1142,7 +1142,7 @@ async function marcarPcp(req, env) {
     const q = l.map(() => '?').join(',');
     return marcar
       ? env.DB.prepare(`UPDATE scrap SET ${colEm} = ?, ${colPor} = ? WHERE id IN (${q}) AND excluido_em IS NULL AND ${colEm} IS NULL`).bind(em, por, ...l)
-      : env.DB.prepare(`UPDATE scrap SET ${colEm} = NULL, ${colPor} = NULL WHERE id IN (${q}) AND excluido_em IS NULL`).bind(...l);
+      : env.DB.prepare(`UPDATE scrap SET ${colEm} = NULL, ${colPor} = NULL WHERE id IN (${q}) AND excluido_em IS NULL AND ${colEm} IS NOT NULL`).bind(...l);
   }));
   const alterados = res.reduce((t, r) => t + (r.meta?.changes ?? 0), 0);
   return json({ ok: true, campo: b.campo, valor: marcar, alterados, em: marcar ? em : null, por: marcar ? por : null });

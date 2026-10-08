@@ -777,21 +777,25 @@ td .proj{height:22px;font-size:12.5px}
 .c-op b{display:block;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .c-op small{color:var(--mut);font-size:12px}
 .r-meta-cel{display:none}
-/* quadradinho do relatório emitido (sim/não) */
+/* relatório emitido: Sim (verde) / Não (vermelho), sempre um dos dois aceso */
 .so-cel{display:none;font-style:normal}
-.pcp{display:flex;align-items:center;gap:8px;min-height:26px;margin:0;font-size:13px;font-weight:600;color:var(--txt);cursor:pointer;user-select:none}
-.pcp+.pcp-quem+.pcp,.pcp+.pcp{margin-top:4px}
-.pcp input{appearance:none;-webkit-appearance:none;display:grid;place-items:center;flex:none;width:19px;height:19px;margin:0;border:1.5px solid var(--mut2);border-radius:4px;background:var(--campo);cursor:pointer;transition:background-color .12s,border-color .12s}
-.pcp input::after{content:"";width:5px;height:10px;margin-top:-2px;border:solid #fff;border-width:0 2.2px 2.2px 0;transform:rotate(45deg) scale(0);transition:transform .12s}
-.pcp input:checked{background:var(--ok);border-color:var(--ok)}
-.pcp input:checked::after{transform:rotate(45deg) scale(1)}
-.pcp input:focus-visible{outline:2px solid var(--ac-fg);outline-offset:2px}
-.pcp:hover input:not(:disabled):not(:checked){border-color:var(--ac)}
-.pcp.salvando{opacity:.55;pointer-events:none}
-.pcp input:disabled{cursor:default}
-.pcp:has(input:disabled){cursor:default}
-.pcp:has(input:not(:checked)) span{color:var(--mut)}
-.pcp-quem{display:block;margin:1px 0 0 27px;color:var(--mut);font-size:11.5px;line-height:1.3}
+.sn-linha{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sn{display:inline-flex;flex:none;border:1px solid var(--line2);border-radius:6px;overflow:hidden;background:var(--campo)}
+.sn button{min-width:46px;height:28px;padding:0 10px;border:0;background:none;color:var(--mut);font:600 12.5px/1 var(--sans);transition:background-color .12s,color .12s}
+.sn button+button{border-left:1px solid var(--line2)}
+.sn button:not(.ativo):not(:disabled):hover{background:var(--s3);color:var(--txt)}
+.sn button:focus-visible{outline:2px solid var(--ac-fg);outline-offset:-2px}
+.sn .sn-sim.ativo{background:#1e8a4f;color:#fff}
+.sn .sn-nao.ativo{background:#c8102e;color:#fff}
+.sn button:disabled{cursor:default}
+.sn.salvando{opacity:.6;pointer-events:none}
+.pcp-quem{display:block;margin:4px 0 0;color:var(--mut);font-size:11.5px;line-height:1.3}
+.lote-sn{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+.lote-sn button{height:32px;min-width:56px;padding:0 12px;border-radius:6px;border:1px solid rgba(255,255,255,.45);color:#fff;font:600 13px/1 var(--sans)}
+.lote-sn .lote-sim{background:#1e8a4f}
+.lote-sn .lote-nao{background:#c8102e}
+.lote-sn button:hover{filter:brightness(1.12)}
+.lote-sn button:disabled{opacity:.6}
 .c-ck input,#rSelTodos{appearance:none;-webkit-appearance:none;display:grid;place-items:center;width:17px;height:17px;margin:0;border:1.5px solid var(--mut2);border-radius:4px;background:var(--campo);cursor:pointer;transition:background-color .12s,border-color .12s}
 .c-ck input::after,#rSelTodos::after{content:"";width:4px;height:9px;margin-top:-2px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) scale(0);transition:transform .12s}
 .c-ck input:checked,#rSelTodos:checked,#rSelTodos:indeterminate{background:var(--ac);border-color:var(--ac)}
@@ -912,10 +916,10 @@ body[data-aba="d1500"] :is(main,.rodape),body[data-aba="d1600"] :is(main,.rodape
   .r-tabela .c-sit{grid-area:sit;text-align:right}
   .r-tabela .c-sit .r-parecer,.r-tabela .c-sit .editar-sit{display:none}
   .r-tabela .c-def{grid-area:def}
-  .r-tabela .c-pcp{grid-area:pcp;display:flex;flex-wrap:wrap;gap:4px 18px}
-  .r-tabela .c-pcp .pcp{margin:0}
-  .r-tabela .c-pcp .pcp-quem{display:none}
-  .r-tabela .c-pcp .so-cel{display:inline}
+  .r-tabela .c-pcp{grid-area:pcp;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
+  .r-tabela .c-pcp .pcp-quem{margin:0}
+  .r-tabela .c-pcp .so-cel{display:inline;color:var(--mut);font-size:13px}
+  .r-tabela .sn button{min-width:58px;height:34px;font-size:13.5px}
   .r-tabela .c-acoes{grid-area:acoes}
   .r-tabela .c-acoes .acoes-reg{justify-content:flex-start}
   .r-tabela .c-acoes:empty{display:none}
@@ -1142,9 +1146,11 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
       <div class="r-ativos" id="rAtivos"></div>
       <div class="r-lote" id="rLote" hidden>
         <span><b id="rSelN">0</b> selecionado(s)</span>
-        <button type="button" class="btn" data-lote="relatorio">Marcar relatório emitido</button>
+        <span class="lote-sn">Relatório emitido:
+          <button type="button" class="lote-sim" data-lote="relatorio">Sim</button>
+          <button type="button" class="lote-nao" data-lote-tirar="relatorio">Não</button>
+        </span>
         <span class="sep"></span>
-        <button type="button" class="link-btn" data-lote-tirar="relatorio">Desmarcar relatório emitido</button>
         <button type="button" class="link-btn" id="rSelLimpar">Limpar seleção</button>
       </div>
       <div class="tabela r-tabela" id="rTabela"></div>
@@ -4143,11 +4149,12 @@ function filtrarRegistros() {
 
 function linhaRegistro(r) {
   const pode = podeMarcar(), sel = RG.sel.has(r.id);
-  // relatório emitido: quadradinho marcado = Sim, desmarcado = Não
+  // relatório emitido: Sim (verde) ou Não (vermelho), sempre um dos dois aceso
   const relatorio = () => {
     const em = r.relatorio_em, por = r.relatorio_por;
-    const dica = em ? `Relatório emitido: marcado por ${por || '—'} em ${dataHora(em)}` : pode ? 'Marcar como relatório emitido' : 'Relatório ainda não emitido';
-    return `<label class="pcp" title="${esc(dica)}"><input type="checkbox" data-pcp="relatorio" data-id="${r.id}"${em ? ' checked' : ''}${pode ? '' : ' disabled'} aria-label="Relatório emitido"><span><i class="so-cel">Relatório emitido: </i>${em ? 'Sim' : 'Não'}</span></label>`
+    const dica = em ? `Relatório emitido: Sim, marcado por ${por || '—'} em ${dataHora(em)}` : 'Relatório emitido: Não';
+    const bt = (sn, rot, on) => `<button type="button" class="sn-${sn}${on ? ' ativo' : ''}" data-sn="${sn}" data-id="${r.id}" aria-pressed="${on}"${pode ? '' : ' disabled'}>${rot}</button>`;
+    return `<div class="sn-linha" title="${esc(dica)}"><i class="so-cel">Relatório emitido</i><div class="sn" role="group" aria-label="Relatório emitido">${bt('sim', 'Sim', !!em)}${bt('nao', 'Não', !em)}</div></div>`
       + (em ? `<small class="pcp-quem">${por ? esc(primeiroNome(por)) + ', ' : ''}${dataCurta(em)}</small>` : '');
   };
   const tags = [r.fora_bom ? '<span class="proj fora">fora da BOM</span>' : '', tagSap(r), tagAvaria(r, true), botaoFotos(r)].filter(Boolean).join('');
@@ -4224,27 +4231,29 @@ async function marcarPcp(ids, campo, valor) {
   return d;
 }
 
-async function clicarPcp(input) {
-  const id = Number(input.dataset.id), campo = input.dataset.pcp, valor = input.checked, rot = ROT_PCP[campo];
+// Clique no Sim ou no Não de uma linha
+async function clicarSimNao(b) {
+  const id = Number(b.dataset.id), valor = b.dataset.sn === 'sim';
   const r = REGISTROS.find((x) => x.id === id);
-  if (!valor && !(await confirmar(`Desmarcar "${rot.toLowerCase()}"?`,
-    `${r?.material || 'O registro'} volta para Relatório pendente. Quem marcou e quando deixam de aparecer.`, 'Desmarcar'))) {
-    input.checked = true; return;
-  }
-  const lb = input.closest('.pcp');
-  lb.classList.add('salvando');
+  if (!r || !!r.relatorio_em === valor) return;   // já está assim
+  if (!valor && !(await confirmar('Mudar para "Não"?',
+    `${r.material} volta para Relatório pendente. Quem marcou e quando deixam de aparecer.`, 'Mudar para Não'))) return;
+  const grupo = b.closest('.sn');
+  grupo.querySelectorAll('button').forEach((x) => { x.classList.toggle('ativo', x === b); x.setAttribute('aria-pressed', String(x === b)); });
+  grupo.classList.add('salvando');
+  const focar = () => $(`#rTabela button[data-sn="${b.dataset.sn}"][data-id="${id}"]`)?.focus({ preventScroll: true });
   try {
-    const d = await marcarPcp([id], campo, valor);
-    if (!d) { input.checked = !valor; lb.classList.remove('salvando'); return; }
+    const d = await marcarPcp([id], 'relatorio', valor);
     renderRegistros();
-    toast(valor ? `${rot}: ${r?.material || ''}` : `Relatório desmarcado: ${r?.material || ''}`, false,
-      valor ? { rotulo: 'Desfazer', fn: async () => { try { await marcarPcp([id], campo, false); renderRegistros(); } catch (e) { toast(e.message, true); } } } : null);
-  } catch (e) { input.checked = !valor; lb.classList.remove('salvando'); toast(e.message, true); }
+    if (!d) return;
+    focar();
+    toast(`Relatório emitido: ${valor ? 'Sim' : 'Não'} · ${r.material}`, false,
+      valor ? { rotulo: 'Desfazer', fn: async () => { try { await marcarPcp([id], 'relatorio', false); renderRegistros(); } catch (e) { toast(e.message, true); } } } : null);
+  } catch (e) { renderRegistros(); toast(e.message, true); }
 }
 
 $('#rTabela').addEventListener('change', (e) => {
   const t = e.target;
-  if (t.matches('input[data-pcp]')) return clicarPcp(t);
   if (t.matches('input[data-sel]')) {
     const id = Number(t.dataset.sel);
     if (t.checked) RG.sel.add(id); else RG.sel.delete(id);
@@ -4259,6 +4268,8 @@ $('#rTabela').addEventListener('change', (e) => {
   }
 });
 $('#rTabela').addEventListener('click', (e) => {
+  const sn = e.target.closest('button[data-sn]');
+  if (sn) return clicarSimNao(sn);
   const o = e.target.closest('th[data-ord]');
   if (o) return ordenarPor(o.dataset.ord);
   if (e.target.closest('[data-limpar-tudo]')) return limparFiltrosRegistros(true);
@@ -4321,15 +4332,20 @@ $('#rLote').addEventListener('click', async (e) => {
   if (!b) return;
   const campo = b.dataset.lote || b.dataset.loteTirar, valor = !!b.dataset.lote, rot = ROT_PCP[campo];
   const ids = [...RG.sel], n = ids.length;
-  if (!valor && !(await confirmar(`Desmarcar "${rot.toLowerCase()}" em ${n} registro(s)?`,
-    'Eles voltam para Relatório pendente. Quem marcou e quando deixam de aparecer.', 'Desmarcar'))) return;
+  if (!valor) {
+    const comSim = REGISTROS.filter((r) => RG.sel.has(r.id) && r.relatorio_em).length;
+    if (!comSim) return toast(`Nenhum dos ${n} selecionado(s) está com "Sim"`);
+    if (!(await confirmar(`Mudar para "Não" em ${comSim} registro(s)?`,
+      'Eles voltam para Relatório pendente. Quem marcou e quando deixam de aparecer.', 'Mudar para Não'))) return;
+  }
   $('#rLote').querySelectorAll('button').forEach((x) => { x.disabled = true; });
   try {
     const d = await marcarPcp(ids, campo, valor);
     if (d) {
       RG.sel.clear();
       renderRegistros();
-      toast(valor ? `${rot}: ${d.alterados} registro(s) marcado(s)${d.alterados < n ? ` (${n - d.alterados} já estavam)` : ''}` : `Relatório desmarcado em ${d.alterados} registro(s)`);
+      const ja = n - d.alterados;
+      toast(`${rot}: ${valor ? 'Sim' : 'Não'} em ${d.alterados} registro(s)${ja > 0 ? ` (${ja} já estava${ja > 1 ? 'm' : ''} assim)` : ''}`);
     }
   } catch (err) { toast(err.message, true); }
   $('#rLote').querySelectorAll('button').forEach((x) => { x.disabled = false; });
