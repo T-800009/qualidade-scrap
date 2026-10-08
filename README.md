@@ -19,6 +19,7 @@ src/index.js
 src/app.html
 src/login.html
 src/palavras.js
+src/marca-byd.js
 wrangler.jsonc
 package.json
 .gitignore

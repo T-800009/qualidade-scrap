@@ -1,6 +1,7 @@
 import APP_HTML from './app.html';
 import LOGIN_HTML from './login.html';
 import { temPalavrao } from './palavras.js';
+import { MARCA_BYD_PNG } from './marca-byd.js';
 
 // Ícone da aba: selo vermelho com "QA" (o rabo do Q emenda na perna do A), igual ao selo do nome Scrap QA
 const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><title>Scrap QA</title><defs><linearGradient id="sqa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f05a5f"/><stop offset="1" stop-color="#d63a40"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="url(#sqa)"/><g fill="none" stroke="#fff" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="17.9" width="15.8" height="28.2" rx="7.9"/><path d="M25.4 35.5 36 46.1 43 17.9 50 46.1M38.2 37.3h9.6"/></g></svg>';
@@ -8,7 +9,7 @@ const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><t
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-08 · nome Scrap QA';
+const VERSAO = '2026-10-08 · logo BYD + Scrap QA';
 // A página leva a versão (rodapé e aviso de versão nova)
 const APP_PAGINA = APP_HTML.replaceAll('__VERSAO__', VERSAO);
 const SESSAO_HORAS = 12;
@@ -219,6 +220,7 @@ export default {
   },
 };
 
+let marcaByd = null;
 async function rotear(req, env) {
   const url = new URL(req.url);
   const p = url.pathname;
@@ -226,6 +228,10 @@ async function rotear(req, env) {
 
   if (p === '/favicon.svg' || p === '/favicon.ico') {
     return new Response(LOGO_SVG, { headers: { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'public, max-age=86400' } });
+  }
+  if (p === '/marca-byd.png') {   // logo da empresa (topo e login): aberto, sem senha
+    marcaByd ||= Uint8Array.from(atob(MARCA_BYD_PNG), (c) => c.charCodeAt(0));
+    return new Response(marcaByd, { headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=604800' } });
   }
   if (p === '/versao') return json({ versao: VERSAO });
   if (p === '/login' && m === 'GET') return html(LOGIN_HTML);

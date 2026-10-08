@@ -74,7 +74,10 @@ svg{flex:none}
 /* ---------- topo: faixa azul-marinho ---------- */
 .topo{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:22px;height:56px;padding:0 24px;background:var(--topo);color:var(--topo-txt);border-bottom:1px solid var(--topo-borda)}
 .marca{display:flex;align-items:center;gap:12px;min-width:max-content;color:var(--topo-txt)}
-.marca .wm{display:inline-flex;align-items:center;gap:6px;font:700 18px/1 var(--sans);letter-spacing:-.015em;color:var(--topo-txt);white-space:nowrap}
+/* logo da BYD (arquivo original, cinza-escuro) numa plaquinha branca, e o nome do sistema ao lado */
+.marca .byd{display:grid;place-items:center;height:32px;padding:0 10px;border-radius:7px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.marca .byd img{display:block;height:20px;width:auto}
+.marca .wm{display:inline-flex;align-items:center;gap:6px;padding-left:12px;border-left:1px solid var(--topo-linha);font:700 18px/1 var(--sans);letter-spacing:-.015em;color:var(--topo-txt);white-space:nowrap}
 /* "Scrap" + selo vermelho "QA": o nome do sistema é a marca */
 .marca .wm b{display:inline-grid;place-items:center;height:21px;padding:0 6px;border-radius:5px;background:var(--red);color:#fff;font:700 12.5px/1 var(--sans);letter-spacing:.05em}
 nav{display:flex;gap:2px;height:100%;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
@@ -1009,7 +1012,7 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
 </head>
 <body data-aba="registrar">
 <header class="topo">
-  <div class="marca"><span class="wm">Scrap <b>QA</b></span></div>
+  <div class="marca"><span class="byd"><img src="/marca-byd.png" alt="BYD" width="65" height="20"></span><span class="wm">Scrap <b>QA</b></span></div>
   <nav id="nav">
     <button data-tab="registrar" class="ativo">Registrar</button>
     <button data-tab="analise">Em análise<span class="nav-badge" id="badgeAnalise" hidden></span></button>
