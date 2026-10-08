@@ -75,10 +75,20 @@ Edite ou reenvie os arquivos no GitHub. Cada commit publica sozinho.
 - Se o repositório for apagado e criado de novo, é preciso desconectar e conectar o Git de novo no Cloudflare. Depois disso, o build só roda no **próximo commit**.
 
 ## Postos
-A linha tem o **posto ½** (o "posto meio", entre o 0 e o 1) e os postos **1 a 10**. O ½ aparece antes do 1 na linha do Registrar,
-nos filtros, no Painel e no Excel como **P½** (no banco ele é gravado como 0.5).
+A linha tem o **posto 0**, o **posto ½** (o "posto meio", entre o 0 e o 1) e os postos **1 a 10**, nessa ordem, na linha do Registrar,
+nos filtros, no Painel e no Excel (**P0**, **P½**, P1…). No banco o ½ é gravado como 0.5 e o 0 como 0.
 Na primeira vez que a versão com o ½ roda, a tabela de registros é refeita sozinha (o banco antigo só aceitava 1 a 10):
 todas as linhas são copiadas com os mesmos números, e as fotos e os relatórios continuam ligados.
+
+## Depósitos 1500 e 1600
+Qualidade e admin → abas **1500** e **1600** → **Anexar Excel** (como no WBYD).
+- No SAP, rode a MB52 do depósito e exporte para Excel. O site acha as colunas pelo nome, em qualquer ordem e em qualquer linha do topo:
+  Material, Texto breve material, UM básica, Utilização livre e Val.utiliz.livre (Centro, Depósito, Localização, Em controle qualid. e Estoque bloqueado, se tiver).
+- Se o arquivo tiver a coluna Depósito com vários depósitos, cada aba pega só as linhas dela.
+- Cada arquivo novo substitui o anterior daquele depósito (até 30.000 materiais; o navegador envia em partes).
+- A tela mostra os indicadores do WBYD (com saldo, sem saldo, valor do estoque) e, por peça, o projeto e a classe pelas BOMs
+  e quantos scraps ela tem no site (clique para ver os registros). **Exportar Excel** baixa a lista filtrada.
+- Os operadores não veem essas abas.
 
 ## Em análise
 Todo scrap registrado entra como **Em análise**. A Qualidade (ou o admin) dá o parecer na aba **Em análise**:

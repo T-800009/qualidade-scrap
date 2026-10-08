@@ -8,7 +8,7 @@ const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><t
 const MSG_PALAVRAO = 'Esse texto tem palavras impróprias. Reescreva de forma profissional.';
 
 // Muda a cada publicação: abra /versao no navegador para conferir o que está no ar
-const VERSAO = '2026-10-07 · posto ½ + logo WQA';
+const VERSAO = '2026-10-08 · posto 0 + depósitos 1500 e 1600';
 // A página leva a versão (rodapé e aviso de versão nova)
 const APP_PAGINA = APP_HTML.replaceAll('__VERSAO__', VERSAO);
 const SESSAO_HORAS = 12;
@@ -17,8 +17,14 @@ const BLOQUEIO_MS = 5 * 60 * 1000;
 const COOKIE = 'qs_sess';
 const enc = new TextEncoder();
 
-// Postos da linha, na ordem: ½ ("posto meio", entre o 0 e o 1) e 1 a 10. O ½ fica gravado como 0.5.
-const POSTOS = [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+// Postos da linha, na ordem: 0, ½ ("posto meio", entre o 0 e o 1) e 1 a 10. O ½ fica gravado como 0.5.
+const POSTOS = [0, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+// Depósitos com aba própria no site (saldo lido do Excel da MB52)
+const DEPOSITOS = ['1500', '1600'];
+const DEP_MAX_LINHAS = 30000;   // por depósito
+const DEP_LOTE = 3000;          // linhas por envio (o navegador manda o arquivo em partes)
+// Posto vindo da tela: vazio não vira 0 (o 0 é um posto de verdade)
+const lerPosto = (v) => (v === null || v === undefined || String(v).trim() === '' ? NaN : Number(v));
 
 // Tabela scrap: as colunas ficam aqui para a criação e a reconstrução usarem a mesma lista
 const COLUNAS_SCRAP = [
@@ -74,6 +80,15 @@ const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS idx_avaria_data ON avaria(created_at)`,
   `CREATE INDEX IF NOT EXISTS idx_avaria_chave ON avaria(chave, created_at)`,
   `CREATE TABLE IF NOT EXISTS projeto_extra (projeto TEXT PRIMARY KEY)`,
+  // Depósitos (1500, 1600): o saldo vem do Excel que a Qualidade anexa (MB52). As linhas ficam em
+  // pedaços de até 90 KB (deposito_parte); "versao" aponta o envio que está no ar, assim um envio
+  // pela metade nunca aparece misturado com o anterior.
+  `CREATE TABLE IF NOT EXISTS deposito (
+     deposito TEXT PRIMARY KEY, versao TEXT, arquivo TEXT, aba TEXT, itens INTEGER NOT NULL DEFAULT 0,
+     partes INTEGER NOT NULL DEFAULT 0, atualizado_em TEXT, enviado_por TEXT)`,
+  `CREATE TABLE IF NOT EXISTS deposito_parte (
+     deposito TEXT NOT NULL, versao TEXT NOT NULL, n INTEGER NOT NULL, linhas INTEGER NOT NULL, dados TEXT NOT NULL,
+     PRIMARY KEY (deposito, versao, n))`,
   `CREATE TABLE IF NOT EXISTS login_attempts (
      ip TEXT PRIMARY KEY, falhas INTEGER NOT NULL DEFAULT 0, bloqueado_ate INTEGER NOT NULL DEFAULT 0)`,
 ];
@@ -156,7 +171,7 @@ function garantirSchema(env) {
   return schemaOk;
 }
 
-// Posto ½: a tabela scrap antiga só aceita posto de 1 a 10 (CHECK), e o SQLite não deixa mudar um CHECK.
+// Postos 0 e ½: a tabela scrap antiga só aceita posto de 1 a 10 (CHECK), e o SQLite não deixa mudar um CHECK.
 // Então a tabela é refeita uma vez, numa transação só: cópia de todas as linhas com os mesmos ids
 // (as fotos e os relatórios continuam ligados), troca de nome e índices de volta.
 // Se der errado, o site segue funcionando como antes (só o posto ½ não grava) e tenta de novo depois.
@@ -280,6 +295,15 @@ async function rotear(req, env) {
   if (p === '/api/scrap/pcp' && m === 'POST') {
     if (!podeFoto) return json({ erro: 'Só a Qualidade e o administrador marcam o que o PCP já resolveu.' }, 403);
     return marcarPcp(req, env);
+  }
+
+  // Depósitos 1500 e 1600: a Qualidade anexa o Excel (MB52) e o site mostra o saldo com projeto e classe da BOM
+  const mDep = p.match(/^\/api\/deposito\/(\d{4})$/);
+  if (mDep) {
+    if (!podeFoto) return json({ erro: 'Só a Qualidade e o administrador veem os depósitos.' }, 403);
+    if (!DEPOSITOS.includes(mDep[1])) return json({ erro: 'Depósito não cadastrado no site' }, 404);
+    if (m === 'GET') return lerDeposito(env, mDep[1]);
+    if (m === 'POST') return receberDeposito(req, env, mDep[1]);
   }
 
   const mScrap = p.match(/^\/api\/scrap\/(\d+)$/);
@@ -725,7 +749,7 @@ async function criarScrap(req, env) {
   const b = await req.json().catch(() => null);
   if (!b) return json({ erro: 'Dados inválidos' }, 400);
 
-  const posto = Number(b.posto);
+  const posto = lerPosto(b.posto);
   let material = normCodigo(b.material).slice(0, 40);
   const quantidade = Number(String(b.quantidade ?? '').replace(',', '.'));
   const defeito = texto(b.defeito, 60);
@@ -733,9 +757,9 @@ async function criarScrap(req, env) {
   const por = texto(b.registrado_por, 60);
   const matricula = texto(b.matricula, 20).toUpperCase();
 
-  if (!POSTOS.includes(posto)) return json({ erro: 'Selecione o posto (½ ou 1 a 10)' }, 400);
-  if (posto === 0.5 && !postoMeioOk) await liberarPostoMeio(env);
-  if (posto === 0.5 && !postoMeioOk) return json({ erro: 'O posto ½ ainda não foi liberado no banco. Tente de novo em instantes.' }, 503);
+  if (!POSTOS.includes(posto)) return json({ erro: 'Selecione o posto (0, ½ ou 1 a 10)' }, 400);
+  if (posto < 1 && !postoMeioOk) await liberarPostoMeio(env);
+  if (posto < 1 && !postoMeioOk) return json({ erro: `O posto ${posto ? '½' : '0'} ainda não foi liberado no banco. Tente de novo em instantes.` }, 503);
   if (!material) return json({ erro: 'Informe o material' }, 400);
   if (!(quantidade > 0)) return json({ erro: 'Quantidade deve ser maior que zero' }, 400);
   if (quantidade > 100000) return json({ erro: 'Quantidade alta demais. Confira o valor.' }, 400);
@@ -791,8 +815,8 @@ function filtros(url) {
   const w = ['excluido_em IS NULL'], v = [];
   if (sp.get('de')) { w.push('created_at >= ?'); v.push(sp.get('de')); }
   if (sp.get('ate')) { w.push('created_at <= ?'); v.push(sp.get('ate')); }
-  const posto = Number(sp.get('posto'));
-  if (posto) { w.push('posto = ?'); v.push(posto); }
+  const posto = lerPosto(sp.get('posto'));
+  if (POSTOS.includes(posto)) { w.push('posto = ?'); v.push(posto); }
   const proj = texto(sp.get('projeto'), 40).toUpperCase();
   if (proj) { w.push('projeto = ?'); v.push(proj); }
   const mat = normCodigo(sp.get('material'));
@@ -923,7 +947,7 @@ async function editarScrap(req, env, id) {
   ).bind(id).first();
   if (!reg || reg.excluido_em) return json({ erro: 'Registro não encontrado' }, 404);
 
-  const posto = Number(b.posto);
+  const posto = lerPosto(b.posto);
   const quantidade = Number(String(b.quantidade ?? '').replace(',', '.'));
   let projeto = texto(b.projeto, 40).toUpperCase();
   const defeito = texto(b.defeito, 60);
@@ -932,9 +956,9 @@ async function editarScrap(req, env, id) {
   let classe = normClasse(b.classe);
   let descMat = reg.descricao_material || '';
   let material = reg.material, foraBom = reg.fora_bom ? 1 : 0;
-  if (!POSTOS.includes(posto)) return json({ erro: 'Posto inválido (½ ou 1 a 10)', campo: 'posto' }, 400);
-  if (posto === 0.5 && !postoMeioOk) await liberarPostoMeio(env);
-  if (posto === 0.5 && !postoMeioOk) return json({ erro: 'O posto ½ ainda não foi liberado no banco. Tente de novo em instantes.', campo: 'posto' }, 503);
+  if (!POSTOS.includes(posto)) return json({ erro: 'Posto inválido (0, ½ ou 1 a 10)', campo: 'posto' }, 400);
+  if (posto < 1 && !postoMeioOk) await liberarPostoMeio(env);
+  if (posto < 1 && !postoMeioOk) return json({ erro: `O posto ${posto ? '½' : '0'} ainda não foi liberado no banco. Tente de novo em instantes.`, campo: 'posto' }, 503);
   if (String(b.unidade ?? '').trim() && !unidade) return json({ erro: 'Unidade inválida. Use letras, ex.: PC, UN, M, KG.', campo: 'unidade' }, 400);
   if (quantidade > 100000) return json({ erro: 'Quantidade alta demais. Confira o valor.', campo: 'quantidade' }, 400);
 
@@ -1505,5 +1529,103 @@ async function avariasDoMaterial(url, env) {
   return json({
     avarias: av.results.map((a) => ({ ...a, ra: numeroRA(a) })),
     scraps: sc ? sc.results.filter((r) => chaveCodigo(r.material) === chave).slice(0, 30) : [],
+  });
+}
+
+/* ---------------- depósitos (1500 e 1600) ---------------- */
+
+// Uma linha do Excel já lida pelo navegador:
+// [material, descrição, centro, UM, utilização livre, valor livre, localização, em controle de qualidade, bloqueado]
+function linhaDeposito(l) {
+  if (!Array.isArray(l)) return null;
+  const material = normCodigo(l[0]).slice(0, 40);
+  if (!material) return null;
+  const num = (v) => (v === null || v === undefined || v === '' || !Number.isFinite(Number(v)) ? null : Number(v));
+  return [material, texto(l[1], 200), texto(l[2], 10), texto(l[3], 10).toUpperCase(), num(l[4]), num(l[5]), texto(l[6], 30),
+    num(l[7]), num(l[8])];
+}
+
+// O navegador manda o arquivo em lotes (lote 0, 1, 2…). O primeiro cria a versão; o último confere o total
+// e só então troca a versão que está no ar e apaga a anterior.
+async function receberDeposito(req, env, dep) {
+  const b = await req.json().catch(() => null);
+  if (!b || !Array.isArray(b.linhas)) return json({ erro: 'Dados inválidos' }, 400);
+  const lote = Number(b.lote);
+  if (!Number.isInteger(lote) || lote < 0 || lote > 99) return json({ erro: 'Lote inválido' }, 400);
+  if (b.linhas.length > DEP_LOTE) return json({ erro: `Máximo de ${DEP_LOTE} linhas por envio` }, 400);
+  const total = Number(b.total);
+  if (!Number.isInteger(total) || total < 1 || total > DEP_MAX_LINHAS) {
+    return json({ erro: `O arquivo precisa ter entre 1 e ${DEP_MAX_LINHAS.toLocaleString('pt-BR')} materiais` }, 400);
+  }
+  let versao = String(b.versao || '');
+  if (lote === 0) versao = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  else if (!/^[a-z0-9]{6,24}$/.test(versao)) return json({ erro: 'Envio sem versão. Anexe o arquivo de novo.' }, 400);
+
+  const linhas = b.linhas.map(linhaDeposito).filter(Boolean);
+  const partes = [];
+  let atual = [], tam = 2;
+  for (const l of linhas) {
+    const t = JSON.stringify(l).length + 1;
+    if (atual.length && tam + t > 90000) { partes.push(atual); atual = []; tam = 2; }
+    atual.push(l); tam += t;
+  }
+  if (atual.length) partes.push(atual);
+  if (partes.length) {
+    await env.DB.batch(partes.map((pt, k) => env.DB.prepare(
+      'INSERT OR REPLACE INTO deposito_parte (deposito, versao, n, linhas, dados) VALUES (?, ?, ?, ?, ?)'
+    ).bind(dep, versao, lote * 1000 + k, pt.length, JSON.stringify(pt))));
+  }
+  if (!b.ultimo) return json({ ok: true, versao });
+
+  const soma = await env.DB.prepare(
+    'SELECT COUNT(*) AS partes, COALESCE(SUM(linhas), 0) AS itens FROM deposito_parte WHERE deposito = ? AND versao = ?'
+  ).bind(dep, versao).first();
+  if (!soma.itens) return json({ erro: 'Nenhuma linha com código de material foi encontrada.' }, 400);
+  if (soma.itens !== total) {
+    return json({ erro: `O envio chegou incompleto (${soma.itens} de ${total} linhas). Anexe o arquivo de novo.` }, 409);
+  }
+  const agora = new Date().toISOString();
+  await env.DB.batch([
+    env.DB.prepare(
+      `INSERT INTO deposito (deposito, versao, arquivo, aba, itens, partes, atualizado_em, enviado_por) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT(deposito) DO UPDATE SET versao = excluded.versao, arquivo = excluded.arquivo, aba = excluded.aba,
+         itens = excluded.itens, partes = excluded.partes, atualizado_em = excluded.atualizado_em, enviado_por = excluded.enviado_por`
+    ).bind(dep, versao, texto(b.arquivo, 120), texto(b.aba, 60), soma.itens, soma.partes, agora, texto(b.por, 60)),
+    env.DB.prepare('DELETE FROM deposito_parte WHERE deposito = ? AND versao <> ?').bind(dep, versao),
+  ]);
+  return json({ ok: true, versao, itens: soma.itens, atualizado_em: agora });
+}
+
+// Saldo do depósito + projeto e classe pela BOM + quantos scraps a peça já tem no site
+async function lerDeposito(env, dep) {
+  const d = await env.DB.prepare('SELECT * FROM deposito WHERE deposito = ?').bind(dep).first();
+  if (!d || !d.versao) return json({ deposito: dep, itens: [] });
+  const partes = (await env.DB.prepare(
+    'SELECT dados FROM deposito_parte WHERE deposito = ? AND versao = ? ORDER BY n'
+  ).bind(dep, d.versao).all()).results;
+  const idx = await bomIndex(env);
+  const scraps = new Map();
+  const porMaterial = (await env.DB.prepare(
+    `SELECT material, COUNT(*) AS n, SUM(CASE WHEN status = 'analise' THEN 1 ELSE 0 END) AS pend
+       FROM scrap WHERE excluido_em IS NULL GROUP BY material`
+  ).all()).results;
+  for (const r of porMaterial) {
+    const k = chaveCodigo(r.material), a = scraps.get(k) || { n: 0, pend: 0 };
+    a.n += r.n; a.pend += r.pend || 0;
+    scraps.set(k, a);
+  }
+  const itens = [];
+  for (const pt of partes) {
+    for (const l of JSON.parse(pt.dados)) {
+      const k = chaveCodigo(l[0]);
+      const m = idx.porMaterial.get(l[0]) || idx.porChave.get(k);
+      const s = scraps.get(k);
+      // + [projetos da BOM, classe, scraps no site, scraps em análise] (posições 9 a 12)
+      const base = l.length >= 9 ? l.slice(0, 9) : [...l, ...Array(9 - l.length).fill(null)];
+      itens.push([...base, m ? [...new Set(m.linhas.map((x) => x.projeto))].join(',') : '', normClasse(m?.classe), s?.n || 0, s?.pend || 0]);
+    }
+  }
+  return json({
+    deposito: dep, arquivo: d.arquivo, aba: d.aba, atualizado_em: d.atualizado_em, enviado_por: d.enviado_por, itens,
   });
 }

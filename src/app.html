@@ -127,7 +127,7 @@ html[data-tema="claro"] .painel{box-shadow:0 1px 2px rgba(21,35,58,.05)}
 .linha-cab{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:16px}
 .linha-cab h2{margin:0;font-size:15px;font-weight:600}
 .linha-cab span{color:var(--mut);font-size:13px}
-.linha{--n:11;position:relative;display:grid;grid-template-columns:repeat(var(--n),1fr);--prog:0}
+.linha{--n:12;position:relative;display:grid;grid-template-columns:repeat(var(--n),1fr);--prog:0}
 .linha::before,.linha::after{content:"";position:absolute;top:25px;left:calc(50% / var(--n));height:2px;border-radius:2px}
 .linha::before{right:calc(50% / var(--n));background:var(--line)}
 .linha::after{width:calc((100% - 100% / var(--n)) * var(--prog));background:var(--ac);transition:width .35s cubic-bezier(.3,.7,.2,1)}
@@ -400,7 +400,7 @@ td .proj{height:22px;font-size:12.5px}
 .bf{height:100%;border-radius:2px;background:var(--ac);opacity:.55}
 .bar.lider .bf{background:var(--red);opacity:1}
 .bv{text-align:right;font:600 15px/1 var(--cond);font-variant-numeric:tabular-nums}
-.colunas{display:grid;grid-template-columns:repeat(11,1fr);gap:10px;align-items:end;height:260px;padding-top:10px}
+.colunas{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;align-items:end;height:260px;padding-top:10px}
 .coluna{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;height:100%}
 .coluna .v{font:600 14px/1 var(--cond);font-variant-numeric:tabular-nums}
 .coluna .c{width:100%;max-width:36px;border-radius:3px 3px 0 0;background:var(--ac);opacity:.5;min-height:3px;transition:height .4s cubic-bezier(.3,.7,.2,1)}
@@ -411,7 +411,7 @@ td .proj{height:22px;font-size:12.5px}
 .critico-box small{color:var(--mut);font-size:13px;font-weight:600}
 .critico-frase{margin:8px 0 0;max-width:68ch;font:500 21px/1.4 var(--sans);letter-spacing:-.005em}
 .critico-frase b{font-weight:600;color:var(--red-h)}
-.calor{display:grid;grid-template-columns:repeat(11,1fr);gap:6px;margin-top:18px}
+.calor{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:18px}
 .calor div{display:flex;flex-direction:column;gap:6px;align-items:center}
 .calor span{display:block;width:100%;height:12px;border-radius:3px;background:var(--s3)}
 .calor em{font:600 12.5px/1 var(--cond);font-style:normal;color:var(--mut)}
@@ -800,6 +800,87 @@ td .proj{height:22px;font-size:12.5px}
 .r-vazio{padding:42px 24px;text-align:center;color:var(--mut)}
 .r-vazio b{display:block;color:var(--txt);font-weight:600;margin-bottom:4px}
 .r-vazio .link-btn{margin-top:10px}
+
+/* ---------- depósitos 1500 / 1600 ---------- */
+body[data-aba="d1500"] :is(main,.rodape),body[data-aba="d1600"] :is(main,.rodape){max-width:1720px}
+.btn.btn-ac{background:var(--ac);border-color:var(--ac);color:var(--ac-on)}
+.btn.btn-ac:hover{background:var(--ac-h);border-color:var(--ac-h)}
+.dep-fonte{display:flex;align-items:center;gap:12px;padding:12px 16px;margin-bottom:14px;font-size:13.5px}
+.dep-fonte>svg{color:var(--ok)}
+.dep-fonte.velho>svg{color:var(--amb)}
+.dep-fonte b{display:block;font-weight:600;overflow-wrap:anywhere}
+.dep-fonte span{color:var(--mut)}
+.dep-fonte .link-btn{margin:0 0 0 auto;white-space:nowrap}
+.dep-kpis{margin:0 0 14px}
+.dep-kpis .kpi .dep-valor{font-size:30px;letter-spacing:-.01em}
+.dep-kpis .kpi .var{display:block;margin-top:8px;color:var(--mut);font-size:12.5px}
+.dep-sel{display:flex;align-items:center;gap:7px;margin:0;font-size:12.5px;font-weight:600;color:var(--mut)}
+.dep-sel select{width:auto;max-width:190px;height:38px;padding:0 30px 0 10px;font-size:13.5px}
+.dep-tabela{margin:0;overflow:auto;max-height:calc(100vh - 130px);min-height:200px}
+.dep-tabela table{min-width:1060px}
+.dep-tabela td{padding:9px 12px;font-size:13.5px;vertical-align:middle}
+.dep-tabela tr:hover td{background:var(--s2)}
+.dep-tabela .d-mat{width:30%}
+.dep-tabela .d-mat .cod{display:block;font:600 15px/1.2 var(--cond);letter-spacing:.2px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.dep-tabela .d-mat .desc{display:block;margin-top:2px;color:var(--mut);font-size:12.5px;line-height:1.35}
+.dep-projs{display:flex;flex-wrap:wrap;gap:4px}
+.dep-tabela .d-saldo{font:600 16px/1.2 var(--cond);font-variant-numeric:tabular-nums}
+.dep-tabela tr.sem-saldo .d-saldo{color:var(--mut2)}
+.dep-tabela tr .d-saldo.neg,.dep-tabela tr.sem-saldo .d-saldo.neg{color:var(--red-h)}
+.dep-tabela .d-un,.dep-tabela .d-local{white-space:nowrap}
+.dep-scrap{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 9px;border-radius:5px;border:1px solid var(--red-line);background:var(--red-soft);color:var(--red-h);font-size:12.5px;font-weight:600;white-space:nowrap}
+.dep-scrap:hover{border-color:var(--red)}
+.dep-scrap i{font-style:normal;color:var(--amb)}
+.dep-vazio{padding:48px 24px;text-align:center;color:var(--mut);line-height:1.55}
+.dep-vazio b{display:block;color:var(--txt);font-size:16px;font-weight:600;margin-bottom:6px}
+.dep-vazio .btn{margin-top:14px}
+/* anexar Excel */
+.dep-modal{width:min(680px,100%)}
+.md-colunas{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 14px}
+.md-col{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 9px;border-radius:5px;border:1px solid var(--line2);background:var(--s2);font-size:12.5px;color:var(--mut)}
+.md-col.ok{border-color:var(--ok-line);background:var(--ok-soft);color:var(--txt)}
+.md-col.falta{border-color:var(--red-line);background:var(--red-soft);color:var(--red-h);font-weight:600}
+.md-prev{font-size:13.5px}
+.md-resumo{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.md-resumo div{padding:9px 11px;border:1px solid var(--line);border-radius:6px;background:var(--s2)}
+.md-resumo small{display:block;color:var(--mut);font-size:12px;font-weight:600}
+.md-resumo b{font:600 20px/1.2 var(--cond);font-variant-numeric:tabular-nums}
+.md-amostra{max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+.md-amostra table{font-size:12.5px}
+.md-amostra th,.md-amostra td{padding:6px 9px}
+.md-amostra td:first-child{white-space:nowrap}
+.md-aviso,.md-erro{margin:10px 0 0;padding:9px 11px;border-radius:6px;font-size:13px;line-height:1.45}
+.md-aviso{background:var(--amb-soft);border:1px solid var(--amb-line)}
+.md-erro{background:var(--red-soft);border:1px solid var(--red-line);color:var(--red-h);font-weight:600}
+.dep-modal .prog{margin:14px 0 4px}
+@media (max-width:720px){
+  .dep-fonte{flex-wrap:wrap}
+  .dep-fonte .link-btn{margin-left:0}
+  .dep-kpis .kpi .dep-valor{font-size:24px}
+  .dep-sel{flex:1 1 140px}
+  .dep-sel select{flex:1;max-width:none}
+  .md-resumo{grid-template-columns:1fr 1fr}
+  /* tabela vira cartões no celular */
+  .dep-tabela{max-height:none}
+  .dep-tabela table{min-width:0}
+  .dep-tabela thead{display:none}
+  .dep-tabela table,.dep-tabela tbody{display:block}
+  .dep-tabela tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;row-gap:7px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .dep-tabela tr:hover td{background:none}
+  .dep-tabela td{display:block;width:auto;padding:0;border:0;min-width:0;text-align:left}
+  .dep-tabela .d-mat{grid-area:1/1/3/2;width:auto}
+  .dep-tabela .d-saldo{grid-area:1/2/2/3;text-align:right;font-size:19px}
+  .dep-tabela .d-un{grid-area:2/2/3/3;text-align:right;color:var(--mut)}
+  .dep-tabela .d-proj{grid-area:3/1/4/2}
+  .dep-tabela .d-cls{grid-area:3/2/4/3;text-align:right}
+  .dep-tabela .d-local{grid-area:4/1/5/2}
+  .dep-tabela .d-valor{grid-area:4/2/5/3;text-align:right}
+  .dep-tabela .d-extra{grid-column:auto}
+  .dep-tabela .d-extra+.d-extra{text-align:right}
+  .dep-tabela .d-scrap{grid-column:1/-1}
+  .dep-tabela td[data-rot]::before{content:attr(data-rot) " ";color:var(--mut);font-size:12px}
+  .dep-tabela td.d-scrap:has(.mut){display:none}
+}
 @media (max-width:1100px){
   .fluxo{grid-template-columns:1fr}
   .fluxo-total{flex-direction:row;justify-content:flex-start;align-items:baseline;gap:10px;padding:12px 18px;border-right:0;border-bottom:1px solid var(--line)}
@@ -938,6 +1019,8 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
     <button data-tab="relatorio">Relatório</button>
     <button data-tab="registros">Registros</button>
     <button data-tab="painel">Painel</button>
+    <button data-tab="d1500" id="navD1500" hidden>1500</button>
+    <button data-tab="d1600" id="navD1600" hidden>1600</button>
     <button data-tab="boms" id="navBoms" hidden>BOMs</button>
   </nav>
   <div class="topo-dir">
@@ -1172,7 +1255,7 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
           <label>QUANTO detectou?<input id="avQuanto" maxlength="120"></label>
         </div>
         <datalist id="avComoLista"><option value="Inspeção de linha"><option value="Inspeção de recebimento"><option value="Montagem no posto"><option value="Auditoria de qualidade"></datalist>
-        <datalist id="avOndeLista"><option value="Posto ½"><option value="Posto 01"><option value="Posto 02"><option value="Posto 03"><option value="Posto 04"><option value="Posto 05"><option value="Posto 06"><option value="Posto 07"><option value="Posto 08"><option value="Posto 09"><option value="Posto 10"><option value="Recebimento"><option value="Almoxarifado"></datalist>
+        <datalist id="avOndeLista"><option value="Posto 00"><option value="Posto ½"><option value="Posto 01"><option value="Posto 02"><option value="Posto 03"><option value="Posto 04"><option value="Posto 05"><option value="Posto 06"><option value="Posto 07"><option value="Posto 08"><option value="Posto 09"><option value="Posto 10"><option value="Recebimento"><option value="Almoxarifado"></datalist>
       </details>
 
       <details class="av-sec" id="avSecRast">
@@ -1272,6 +1355,39 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
       </div>
     </div>
     <div class="top"><div class="painel tabela" style="margin:0"><h2 style="padding:20px 22px 0;margin:0 0 6px">Materiais que mais geram scrap</h2><div id="gTop"></div></div></div>
+  </section>
+
+  <!-- DEPÓSITOS 1500 e 1600 (Qualidade e admin): saldo pelo Excel da MB52, como no WBYD -->
+  <section id="tab-dep" class="tab">
+    <div class="cab-pag">
+      <div><h1>Depósito <span id="depTit">1500</span></h1><p>Saldo do depósito pelo Excel da MB52. O projeto e a classe vêm das BOMs, e a última coluna mostra se a peça já tem scrap registrado no site.</p></div>
+      <div class="cab-acoes">
+        <button class="btn" id="depExport"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Exportar Excel</button>
+        <button class="btn btn-ac" id="depAnexar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0-4 4m4-4 4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Anexar Excel</button>
+        <input type="file" id="depArq" accept=".xlsx,.xls,.xlsm,.csv" hidden>
+      </div>
+    </div>
+    <div class="painel dep-fonte" id="depFonte" hidden></div>
+    <div class="painel kpis dep-kpis" id="depKpis" hidden></div>
+    <div class="painel r-painel">
+      <div class="r-barra">
+        <div class="r-busca">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="depBusca" type="search" placeholder="Buscar código SAP, descrição, projeto ou localização" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-label="Buscar no depósito">
+        </div>
+        <div class="atalhos" id="depFiltro" role="group" aria-label="Saldo">
+          <button class="atalho sel" data-f="">Todos</button>
+          <button class="atalho" data-f="saldo">Com saldo</button>
+          <button class="atalho" data-f="zero">Sem saldo</button>
+          <button class="atalho" data-f="scrap">Com scrap</button>
+        </div>
+        <label class="dep-sel">Projeto<select id="depProjeto"></select></label>
+        <label class="dep-sel">Classe<select id="depClasse"><option value="">Todas</option><option>A</option><option>B</option><option>C</option><option value="-">Sem classe</option></select></label>
+        <span class="info" id="depInfo" aria-live="polite"></span>
+      </div>
+      <div class="tabela dep-tabela" id="depTabela"></div>
+      <div class="r-mais" id="depMais" hidden><button type="button" class="btn" id="depMaisBt"></button></div>
+    </div>
   </section>
 
   <!-- BOMS (admin) -->
@@ -1439,6 +1555,23 @@ html:not([data-tema="claro"]) #toast{background:#e6ebf3;color:#0b1220}
   </div>
 </div>
 
+<!-- anexar o Excel (MB52) de um depósito -->
+<div class="modal" id="modalDep" hidden>
+  <div class="modal-caixa larga dep-modal" role="dialog" aria-modal="true" aria-labelledby="mdTit">
+    <div class="linha-sinal"></div>
+    <h2 id="mdTit">Anexar Excel do depósito</h2>
+    <p id="mdArq"></p>
+    <label>Aba da planilha<select id="mdAba"></select></label>
+    <div class="md-colunas" id="mdColunas"></div>
+    <div class="md-prev" id="mdPrev"></div>
+    <div class="prog" id="mdProgBox" hidden><div id="mdProg"></div></div>
+    <div class="modal-acoes">
+      <button type="button" class="btn" id="mdCancelar">Cancelar</button>
+      <button type="button" class="btn-prim" id="mdSalvar" disabled>Salvar</button>
+    </div>
+  </div>
+</div>
+
 <!-- relatório(s) de avaria de um material (selo "Formulário de avaria" nos registros) -->
 <div class="modal" id="modalAv" hidden>
   <div class="modal-caixa av-modal" role="dialog" aria-modal="true" aria-labelledby="mavTit">
@@ -1518,8 +1651,9 @@ const store = (tipo) => ({
 const ls = store('localStorage'), ss = store('sessionStorage');
 const hojeStr = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 const pad = (n) => String(n).padStart(2, '0');
-// Postos da linha, na ordem: ½ ("posto meio", entre o 0 e o 1) e 1 a 10. O ½ é gravado como 0.5.
-const POSTOS = [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+// Postos da linha, na ordem: 0, ½ ("posto meio", entre o 0 e o 1) e 1 a 10. O ½ é gravado como 0.5.
+// Atenção: o posto 0 é um posto de verdade; "sem posto" é null (nunca testar com !est.posto).
+const POSTOS = [0, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const nomePosto = (p) => (Number(p) === 0.5 ? '½' : String(p));
 const tagPosto = (p) => 'P' + nomePosto(p);
 const ondePosto = (p) => 'Posto ' + (Number(p) === 0.5 ? '½' : pad(p));
@@ -1605,7 +1739,7 @@ function mostrarAba(aba, opts = {}) {
   const b = document.querySelector(`#nav button[data-tab="${aba}"]`);
   if (!b || b.hidden) return;
   document.querySelectorAll('#nav button').forEach((x) => x.classList.toggle('ativo', x === b));
-  document.querySelectorAll('.tab').forEach((s) => s.classList.toggle('ativo', s.id === 'tab-' + aba));
+  document.querySelectorAll('.tab').forEach((s) => s.classList.toggle('ativo', s.id === 'tab-' + (DEP_ABA[aba] ? 'dep' : aba)));
   document.body.dataset.aba = aba;
   try { history.replaceState(null, '', aba === 'registrar' ? location.pathname : '?aba=' + aba); } catch {}
   if (aba === 'registrar') { exigirOperador(); carregarHoje(); }
@@ -1614,6 +1748,7 @@ function mostrarAba(aba, opts = {}) {
   if (aba === 'relatorio') abrirRelatorio(opts);
   if (aba === 'painel') { if (PER.p) aplicarPeriodo('p', PER.p); carregarPainel(); }
   if (aba === 'boms') carregarProjetosBom();
+  if (DEP_ABA[aba]) abrirDeposito(DEP_ABA[aba]);
 }
 
 async function carregarProjetos() {
@@ -1752,7 +1887,8 @@ $('#opChip').addEventListener('click', async () => {
 });
 
 /* ---------- postos ---------- */
-const est = { posto: POSTOS.includes(Number(ls.get('qs_posto'))) ? Number(ls.get('qs_posto')) : null, busca: null, projeto: null, foraBom: false, seq: 0, porPosto: {}, criticos: [], bump: null };
+const postoSalvo = ls.get('qs_posto');
+const est = { posto: postoSalvo !== null && postoSalvo !== '' && POSTOS.includes(Number(postoSalvo)) ? Number(postoSalvo) : null, busca: null, projeto: null, foraBom: false, seq: 0, porPosto: {}, criticos: [], bump: null };
 const ICONE_AVISO = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0ZM12 9v4M12 17h.01"/></svg>';
 
 function montarPostos() {
@@ -1760,12 +1896,12 @@ function montarPostos() {
   $('#postos').style.setProperty('--prog', i > 0 ? i / (POSTOS.length - 1) : 0);
   $('#postos').innerHTML = POSTOS.map((n) => {
     const q = est.porPosto[n];
-    const cls = (est.posto === n ? 'sel' : est.posto && n < est.posto ? 'passou' : '') + (est.criticos.includes(n) ? ' critico' : '') + (n === 0.5 ? ' meio' : '');
+    const cls = (est.posto === n ? 'sel' : est.posto != null && n < est.posto ? 'passou' : '') + (est.criticos.includes(n) ? ' critico' : '') + (n === 0.5 ? ' meio' : '');
     return `<button class="posto ${cls}" data-p="${n}" aria-pressed="${est.posto === n}"${n === 0.5 ? ' title="Posto ½ (meio), entre o posto 0 e o posto 1"' : ''}>
       <span class="no">${nomePosto(n)}${q ? `<span class="qt${est.bump === n ? ' bump' : ''}" title="${q} registro(s) hoje">${q}</span>` : ''}</span>
       <span class="nome">Posto ${nomePosto(n)}</span></button>`;
   }).join('');
-  $('#hojeTit').textContent = est.posto ? `Hoje no posto ${nomePosto(est.posto)}` : 'Hoje';
+  $('#hojeTit').textContent = est.posto != null ? `Hoje no posto ${nomePosto(est.posto)}` : 'Hoje';
   est.bump = null;
 }
 
@@ -1937,7 +2073,7 @@ async function prepararFoto(arquivo, info) {
   g.fillStyle = '#fff';
   g.font = `600 ${fs}px "IBM Plex Sans", system-ui, sans-serif`;
   g.textBaseline = 'middle';
-  const partes = [(info.em || new Date()).toLocaleString('pt-BR'), info.posto ? 'Posto ' + nomePosto(info.posto) : info.rotulo,
+  const partes = [(info.em || new Date()).toLocaleString('pt-BR'), info.posto != null ? 'Posto ' + nomePosto(info.posto) : info.rotulo,
     info.material, info.projeto, OP ? 'Qualidade: ' + OP.nome : ''].filter(Boolean);
   g.fillText(partes.join('   ·   '), Math.round(fs * 1), h - faixa / 2, w - fs * 2);
   return c.toDataURL('image/jpeg', 0.78);
@@ -2107,7 +2243,7 @@ $('#salvar').addEventListener('click', async () => {
     posto: est.posto, material, quantidade: $('#qtd').value, defeito: $('#defeito').value,
     descricao_problema: $('#problema').value.trim(), registrado_por: OP.nome, matricula: OP.matricula, projeto: est.projeto,
   };
-  if (!est.posto) return toast('Escolha o posto na linha', true);
+  if (est.posto == null) return toast('Escolha o posto na linha', true);
   if (!material) { $('#mat').focus(); return toast('Digite o código do material', true); }
   if (!est.busca) return toast('Aguarde a busca do material terminar', true);
   if (est.foraBom) {
@@ -2171,7 +2307,7 @@ async function apagarRegistro(id, rotulo, depois) {
 let ULTIMOS = [];
 async function carregarUltimos() {
   const el = $('#ultimos');
-  if (!est.posto) { el.innerHTML = '<div class="vazio"><b>Escolha um posto</b>Toque no posto da linha para começar.</div>'; $('#hojeTotal').textContent = ''; return; }
+  if (est.posto == null) { el.innerHTML = '<div class="vazio"><b>Escolha um posto</b>Toque no posto da linha para começar.</div>'; $('#hojeTotal').textContent = ''; return; }
   try {
     const d = await api('/api/scrap?' + qs({ posto: est.posto, de: inicioHojeISO() }));
     ULTIMOS = d.registros;
@@ -4693,6 +4829,7 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'Escape' && !$('#modalEdit').hidden) $('#modalEdit').hidden = true;
   else if (e.key === 'Escape' && !$('#modalDec').hidden) $('#modalDec').hidden = true;
   else if (e.key === 'Escape' && !$('#modalBom').hidden) $('#modalBom').hidden = true;
+  else if (e.key === 'Escape' && !$('#modalDep').hidden && !MD.enviando) $('#modalDep').hidden = true;
   else if (!$('#galeria').hidden) {
     if (e.key === 'Escape') fecharGaleria();
     if (e.key === 'ArrowLeft' && GAL.lista.length > 1) passoGaleria(-1);
@@ -4702,12 +4839,331 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'Escape' && !$('#modalAv').hidden) $('#modalAv').hidden = true;
 });
 
+/* ---------- depósitos 1500 e 1600 ----------
+   Como no WBYD: a Qualidade anexa o Excel da MB52 de cada depósito e o site mostra o saldo.
+   O servidor junta o projeto e a classe pela BOM e quantos scraps a peça já tem no site. */
+const DEP_ABA = { d1500: '1500', d1600: '1600' };
+const DEP_LOTE = 2500;   // linhas por envio
+const DEP_POR_PAGINA = 200;
+const DEP = { dep: '', dados: null, itens: [], extras: { cq: false, bloq: false }, filtro: '', limite: DEP_POR_PAGINA, seq: 0, cache: {} };
+const moeda = (v) => Number(v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const moedaCurta = (v) => {
+  const n = Number(v || 0), a = Math.abs(n), f = (x) => x.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+  return a >= 1e6 ? `R$ ${f(n / 1e6)} mi` : a >= 1e5 ? `R$ ${f(n / 1e3)} mil` : moeda(n);
+};
+const numDep = (v) => (v == null ? '—' : fmt(v));
+
+async function abrirDeposito(dep) {
+  if (DEP.dep !== dep) {
+    DEP.limite = DEP_POR_PAGINA;
+    $('#depBusca').value = '';
+    $('#depClasse').value = '';
+    marcarFiltroDep('');
+  }
+  DEP.dep = dep;
+  $('#depTit').textContent = dep;
+  const seq = ++DEP.seq;
+  if (DEP.cache[dep]) usarDeposito(DEP.cache[dep]);
+  else {
+    DEP.dados = null; DEP.itens = [];
+    $('#depFonte').hidden = $('#depKpis').hidden = $('#depMais').hidden = true;
+    $('#depInfo').textContent = '';
+    $('#depTabela').innerHTML = '<div class="dep-vazio">Carregando o depósito…</div>';
+  }
+  try {
+    const d = await api('/api/deposito/' + dep);
+    if (seq !== DEP.seq || DEP.dep !== dep) return;
+    DEP.cache[dep] = d;
+    usarDeposito(d);
+  } catch (e) {
+    if (seq === DEP.seq && !DEP.cache[dep]) $('#depTabela').innerHTML = `<div class="dep-vazio">${esc(e.message)}</div>`;
+  }
+}
+
+function usarDeposito(d) {
+  DEP.dados = d;
+  // [material, descrição, centro, UM, utilização livre, valor, localização, em CQ, bloqueado, projetos, classe, scraps, em análise]
+  DEP.itens = d.itens.map((l) => ({
+    material: l[0], descricao: l[1] || '', centro: l[2] || '', un: l[3] || '', saldo: l[4], valor: l[5], local: l[6] || '',
+    cq: l[7], bloq: l[8], projetos: l[9] ? String(l[9]).split(',') : [], classe: l[10] || '', scraps: l[11] || 0, pend: l[12] || 0,
+  }));
+  DEP.extras = { cq: DEP.itens.some((it) => it.cq != null), bloq: DEP.itens.some((it) => it.bloq != null) };
+  const projs = [...new Set(DEP.itens.flatMap((it) => it.projetos))].sort();
+  const atual = $('#depProjeto').value;
+  preencherSelect($('#depProjeto'), [...projs, { v: '-', t: 'Fora das BOMs' }], 'Todos');
+  $('#depProjeto').value = projs.includes(atual) || atual === '-' ? atual : '';
+  renderDeposito();
+}
+
+function marcarFiltroDep(f) {
+  DEP.filtro = f;
+  document.querySelectorAll('#depFiltro .atalho').forEach((b) => b.classList.toggle('sel', b.dataset.f === f));
+}
+
+function itensDep() {
+  const termo = normBusca($('#depBusca').value.trim()), cod = termo.replace(/[^A-Z0-9]/g, '');
+  const proj = $('#depProjeto').value, cls = $('#depClasse').value;
+  return DEP.itens.filter((it) => {
+    if (DEP.filtro === 'saldo' && !(it.saldo > 0)) return false;
+    if (DEP.filtro === 'zero' && it.saldo > 0) return false;
+    if (DEP.filtro === 'scrap' && !it.scraps) return false;
+    if (proj === '-' ? it.projetos.length : (proj && !it.projetos.includes(proj))) return false;
+    if (cls === '-' ? it.classe : (cls && it.classe !== cls)) return false;
+    if (!termo) return true;
+    if (cod.length >= 3 && chaveCod(it.material).includes(cod)) return true;
+    return normBusca([it.material, it.descricao, it.local, it.centro, ...it.projetos].join(' | ')).includes(termo);
+  });
+}
+
+function renderDeposito() {
+  const d = DEP.dados, itens = DEP.itens, dep = DEP.dep, ex = DEP.extras;
+  // de onde veio o saldo
+  const temArquivo = !!(d && d.arquivo);
+  $('#depFonte').hidden = !temArquivo;
+  if (temArquivo) {
+    const dias = Math.floor((Date.now() - Date.parse(d.atualizado_em)) / 864e5);
+    $('#depFonte').classList.toggle('velho', dias >= 7);
+    $('#depFonte').innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14l2 2 4-4"/></svg>
+      <div><b>${esc(d.arquivo)}</b><span>Aba ${esc(d.aba || '—')} · anexado em ${dataHora(d.atualizado_em)}${d.enviado_por ? ' por ' + esc(d.enviado_por) : ''}${dias >= 1 ? ` · há ${dias} ${dias === 1 ? 'dia' : 'dias'}` : ''}</span></div>
+      ${podeFoto() ? '<button type="button" class="link-btn" id="depTrocar">Anexar arquivo novo</button>' : ''}`;
+  }
+  // indicadores (os mesmos do WBYD, mais as peças com scrap no site)
+  $('#depKpis').hidden = !itens.length;
+  if (itens.length) {
+    const comSaldo = itens.filter((it) => it.saldo > 0).length, negativos = itens.filter((it) => it.saldo < 0).length;
+    const valor = itens.reduce((t, it) => t + (Number(it.valor) || 0), 0), semValor = itens.filter((it) => it.valor == null).length;
+    const comScrap = itens.filter((it) => it.scraps).length, pend = itens.filter((it) => it.pend).length;
+    $('#depKpis').innerHTML = `
+      <div class="kpi"><small>Com saldo disponível</small><div>${fmt(comSaldo)}</div><span class="var">de ${fmt(itens.length)} materiais</span></div>
+      <div class="kpi"><small>Sem saldo</small><div>${fmt(itens.length - comSaldo)}</div><span class="var">${negativos ? `${fmt(negativos)} com saldo negativo` : 'Zerados no arquivo'}</span></div>
+      <div class="kpi"><small>Valor do estoque</small><div class="dep-valor" title="${moeda(valor)}">${semValor === itens.length ? '—' : moedaCurta(valor)}</div><span class="var">${semValor === itens.length ? 'O arquivo não tem a coluna de valor' : semValor ? `${fmt(semValor)} sem valor no arquivo` : 'Soma do valor livre'}</span></div>
+      <div class="kpi"><small>Com scrap no site</small><div>${fmt(comScrap)}</div><span class="var">${pend ? `${fmt(pend)} com registro em análise` : 'Peças com registro de scrap'}</span></div>`;
+  }
+  if (!itens.length) {
+    $('#depInfo').textContent = '';
+    $('#depMais').hidden = true;
+    if (DEP.dados) {
+      $('#depTabela').innerHTML = `<div class="dep-vazio"><b>Nenhum Excel anexado no depósito ${dep}</b>
+        No SAP, rode a MB52 do depósito ${dep}, exporte para Excel e anexe aqui.<br>
+        O site lê Material, Texto breve material, UM básica, Utilização livre e Val.utiliz.livre (Centro, Depósito e Localização, se tiver).
+        ${podeFoto() ? '<br><button type="button" class="btn btn-ac" id="depAnexar2">Anexar Excel</button>' : ''}</div>`;
+    }
+    return;
+  }
+  const lista = itensDep(), vis = lista.slice(0, DEP.limite);
+  $('#depInfo').textContent = `${fmt(lista.length)} de ${fmt(itens.length)} materiais`;
+  $('#depTabela').innerHTML = lista.length ? `<table><thead><tr>
+      <th class="d-mat">Material</th><th>Projeto</th><th>Classe</th><th>Localização</th>
+      <th class="n">Utilização livre</th><th>UM</th>${ex.cq ? '<th class="n">Em CQ</th>' : ''}${ex.bloq ? '<th class="n">Bloqueado</th>' : ''}
+      <th class="n">Valor livre</th><th>Scrap no site</th></tr></thead><tbody>
+    ${vis.map((it) => `<tr class="${it.saldo > 0 ? '' : 'sem-saldo'}">
+      <td class="d-mat"><span class="cod">${esc(it.material)}</span><span class="desc">${esc(it.descricao) || 'Sem descrição'}${it.centro ? ' · Centro ' + esc(it.centro) : ''}</span></td>
+      <td class="d-proj"><div class="dep-projs">${it.projetos.length ? it.projetos.map((p) => `<span class="proj">${esc(p)}</span>`).join('') : '<span class="proj fora">fora BOM</span>'}</div></td>
+      <td class="d-cls">${it.projetos.length ? clsHtml(it.classe, true) : ''}</td>
+      <td class="d-local"${it.local ? ' data-rot="Local:"' : ''}>${esc(it.local)}</td>
+      <td class="n d-saldo${it.saldo < 0 ? ' neg' : ''}">${numDep(it.saldo)}</td>
+      <td class="d-un">${esc(it.un)}</td>
+      ${ex.cq ? `<td class="n d-extra" data-rot="Em CQ:">${numDep(it.cq)}</td>` : ''}${ex.bloq ? `<td class="n d-extra" data-rot="Bloqueado:">${numDep(it.bloq)}</td>` : ''}
+      <td class="n d-valor">${it.valor == null ? '' : moeda(it.valor)}</td>
+      <td class="d-scrap">${it.scraps ? `<button type="button" class="dep-scrap" data-mat="${esc(it.material)}" title="Ver os registros dessa peça">${fmt(it.scraps)} ${it.scraps === 1 ? 'registro' : 'registros'}${it.pend ? ` <i>· ${fmt(it.pend)} em análise</i>` : ''}</button>` : '<span class="mut">—</span>'}</td>
+    </tr>`).join('')}</tbody></table>`
+    : '<div class="dep-vazio"><b>Nenhum material nesse filtro</b>Mude a busca ou os filtros.</div>';
+  const resto = lista.length - vis.length;
+  $('#depMais').hidden = resto <= 0;
+  $('#depMaisBt').textContent = `Mostrar mais ${fmt(Math.min(resto, DEP_POR_PAGINA))} (faltam ${fmt(resto)})`;
+}
+
+// Registros de todos os tempos de uma peça do depósito
+function verRegistrosDoMaterial(material) {
+  [...R_SERV, ...R_TELA].forEach((id) => { $('#' + id).value = ''; });
+  RG.etapa = ''; RG.mostrar = 200;
+  aplicarPeriodo('r', '');
+  $('#rDe').value = ''; $('#rAte').value = '';
+  $('#rBusca').value = material;
+  mostrarAba('registros');
+}
+
+let tBuscaDep;
+$('#depBusca').addEventListener('input', () => {
+  clearTimeout(tBuscaDep);
+  tBuscaDep = setTimeout(() => { DEP.limite = DEP_POR_PAGINA; renderDeposito(); }, 140);
+});
+$('#depFiltro').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-f]');
+  if (!b) return;
+  marcarFiltroDep(b.dataset.f); DEP.limite = DEP_POR_PAGINA; renderDeposito();
+});
+['#depProjeto', '#depClasse'].forEach((id) => $(id).addEventListener('change', () => { DEP.limite = DEP_POR_PAGINA; renderDeposito(); }));
+$('#depMaisBt').addEventListener('click', () => { DEP.limite += DEP_POR_PAGINA; renderDeposito(); });
+$('#depAnexar').addEventListener('click', () => $('#depArq').click());
+$('#depFonte').addEventListener('click', (e) => { if (e.target.id === 'depTrocar') $('#depArq').click(); });
+$('#depTabela').addEventListener('click', (e) => {
+  if (e.target.closest('#depAnexar2')) return $('#depArq').click();
+  const b = e.target.closest('button.dep-scrap');
+  if (b) verRegistrosDoMaterial(b.dataset.mat);
+});
+
+$('#depExport').addEventListener('click', () => {
+  const lista = itensDep(), ex = DEP.extras;
+  if (!lista.length) return toast('Nada para exportar nesse filtro', true);
+  const ws = XLSX.utils.json_to_sheet(lista.map((it) => ({
+    Material: it.material, 'Texto breve material': it.descricao, Centro: it.centro, 'Depósito': DEP.dep,
+    Projeto: it.projetos.join(', '), Classe: it.classe, 'Localização': it.local, 'Utilização livre': it.saldo, 'UM básica': it.un,
+    ...(ex.cq ? { 'Em controle qualid.': it.cq } : {}), ...(ex.bloq ? { 'Estoque bloqueado': it.bloq } : {}),
+    'Val.utiliz.livre': it.valor, 'Scraps no site': it.scraps, 'Em análise': it.pend,
+  })));
+  ws['!cols'] = [16, 42, 8, 9, 18, 7, 14, 14, 9, ...(ex.cq ? [12] : []), ...(ex.bloq ? [12] : []), 14, 12, 10].map((w) => ({ wch: w }));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, DEP.dep);
+  XLSX.writeFile(wb, `deposito_${DEP.dep}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+});
+
+/* anexar o Excel (MB52): as colunas são achadas pelo nome, em qualquer ordem e em qualquer linha do topo */
+const DEP_COLS = [
+  { k: 'material', nome: 'Material', obrig: true, alias: ['Material', 'SAP', 'Código SAP', 'Código', 'Part Number', 'Nº material', 'Número do material', 'Material Number'] },
+  { k: 'descricao', nome: 'Texto breve', alias: ['Texto breve material', 'Texto breve do material', 'Texto breve', 'Descrição', 'Descrição do material', 'Denominação', 'Material Description'] },
+  { k: 'centro', nome: 'Centro', alias: ['Centro', 'Plant', 'WERKS'] },
+  { k: 'deposito', nome: 'Depósito', alias: ['Depósito', 'Storage Location', 'SLoc', 'LGORT'] },
+  { k: 'un', nome: 'UM básica', alias: ['UM básica', 'UMB', 'UM', 'Unidade', 'Unidade de medida básica', 'Base Unit of Measure', 'BUn'] },
+  { k: 'saldo', nome: 'Utilização livre', obrig: true, alias: ['Utilização livre', 'Util.livre', 'Qtd Livre', 'Quantidade', 'Estoque de utilização livre', 'Unrestricted', 'Unrestricted use', 'Saldo', 'Saldo livre'] },
+  { k: 'valor', nome: 'Valor livre', alias: ['Val.utiliz.livre', 'Valor utiliz. livre', 'Valor utilização livre', 'Valor Livre', 'Valor', 'Value Unrestricted'] },
+  { k: 'local', nome: 'Localização', alias: ['Localização', 'Locação', 'Posição no depósito', 'Storage Bin'] },
+  { k: 'cq', nome: 'Em CQ', alias: ['Em controle qualid.', 'Em controle de qualidade', 'Controle de qualidade', 'Em contr.qualid.', 'Quality Inspection', 'Estoque em CQ'] },
+  { k: 'bloq', nome: 'Bloqueado', alias: ['Bloqueado', 'Estoque bloqueado', 'Blocked', 'Blocked Stock'] },
+];
+const normCab = (v) => String(v ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+const ALIAS_DEP = DEP_COLS.map((c) => ({ ...c, set: new Set(c.alias.map(normCab)) }));
+// número do Excel: aceita 1.234,56 e o negativo do SAP com o sinal no fim (10-)
+function numPlanilha(v) {
+  if (v === null || v === undefined || v === '') return null;
+  if (typeof v === 'number') return Number.isFinite(v) ? v : null;
+  let s = String(v).trim().replace(/R\$|\s/g, ''), neg = false;
+  if (s.endsWith('-')) { neg = true; s = s.slice(0, -1); }
+  if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+  const n = s === '' ? NaN : Number(s);
+  return Number.isFinite(n) ? (neg ? -n : n) : null;
+}
+const MD = { wb: null, arquivo: '', leitura: null, enviando: false };
+
+function lerAbaDep(nome) {
+  const ws = MD.wb.Sheets[nome];
+  const L = ws ? XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: '' }) : [];
+  const temCol = (linha, k) => { const set = ALIAS_DEP.find((c) => c.k === k).set; return linha.some((c) => set.has(normCab(c))); };
+  let h = L.slice(0, 30).findIndex((r) => temCol(r, 'material') && temCol(r, 'saldo'));
+  if (h < 0) h = L.slice(0, 30).findIndex((r) => temCol(r, 'material'));
+  const cab = h >= 0 ? L[h].map(normCab) : [];
+  const col = {};
+  for (const c of ALIAS_DEP) { const i = cab.findIndex((x) => c.set.has(x)); if (i >= 0) col[c.k] = i; }
+  const faltam = DEP_COLS.filter((c) => c.obrig && col[c.k] == null).map((c) => c.nome);
+  if (faltam.length) return { ok: false, col, faltam, linhas: [], outros: new Map() };
+  const linhas = [], outros = new Map();
+  for (const r of L.slice(h + 1)) {
+    const bruto = r[col.material];
+    const material = (typeof bruto === 'number' ? String(bruto) : String(bruto ?? '')).trim();
+    if (!material) continue;
+    if (col.deposito != null) {   // MB52 com vários depósitos: só entra o desta aba
+      const d = String(r[col.deposito] ?? '').trim().replace(/\.0+$/, '');
+      if (d && d !== DEP.dep) { outros.set(d, (outros.get(d) || 0) + 1); continue; }
+    }
+    const t = (k) => (col[k] == null ? '' : String(r[col[k]] ?? '').trim());
+    const v = (k) => (col[k] == null ? null : numPlanilha(r[col[k]]));
+    linhas.push([material, t('descricao'), t('centro'), t('un').toUpperCase(), v('saldo'), v('valor'), t('local'), v('cq'), v('bloq')]);
+  }
+  return { ok: true, col, faltam, linhas, outros };
+}
+
+async function abrirArquivoDep(f) {
+  if (f.size > 25e6) return toast('Use um arquivo de até 25 MB', true);
+  try { MD.wb = XLSX.read(await f.arrayBuffer(), { type: 'array' }); }
+  catch (err) { return toast('Não foi possível ler o arquivo: ' + err.message, true); }
+  MD.arquivo = f.name;
+  $('#mdTit').textContent = `Anexar Excel do depósito ${DEP.dep}`;
+  $('#mdArq').textContent = f.name;
+  const nomes = MD.wb.SheetNames;
+  const pref = nomes.find((n) => normCab(n) === DEP.dep) || nomes.find((n) => normCab(n) === 'mb52')
+    || nomes.find((n) => lerAbaDep(n).linhas.length) || nomes[0];
+  preencherSelect($('#mdAba'), nomes);
+  $('#mdAba').value = pref;
+  $('#mdProgBox').hidden = true;
+  $('#mdProg').style.width = '0';
+  prepararDep();
+  $('#modalDep').hidden = false;
+}
+
+function prepararDep() {
+  const r = lerAbaDep($('#mdAba').value), dep = DEP.dep;
+  MD.leitura = r;
+  $('#mdColunas').innerHTML = DEP_COLS.filter((c) => c.obrig || r.col[c.k] != null)
+    .map((c) => `<span class="md-col ${r.col[c.k] != null ? 'ok' : 'falta'}">${r.col[c.k] != null ? '✓' : '✕'} ${esc(c.nome)}</span>`).join('');
+  const salvar = $('#mdSalvar');
+  salvar.disabled = true;
+  salvar.textContent = 'Salvar';
+  if (!r.ok) {
+    $('#mdPrev').innerHTML = `<p class="md-erro">Essa aba não tem ${r.faltam.join(' e ')} no cabeçalho. Escolha a aba da MB52 ou confira o arquivo.</p>`;
+    return;
+  }
+  const outros = [...r.outros].sort((a, b) => b[1] - a[1]);
+  if (!r.linhas.length) {
+    const nosso = outros.find(([d]) => DEP_ABA['d' + d]);
+    $('#mdPrev').innerHTML = `<p class="md-erro">${outros.length
+      ? `Esse arquivo é do depósito ${outros.map(([d]) => esc(d)).join(', ')}, não do ${dep}.${nosso ? ` Anexe na aba ${nosso[0]}.` : ''}`
+      : 'Nenhuma linha com código de material.'}</p>`;
+    return;
+  }
+  const L = r.linhas, comSaldo = L.filter((l) => l[4] > 0).length, valor = L.reduce((t, l) => t + (Number(l[5]) || 0), 0);
+  const antes = DEP.dados?.itens?.length || 0;
+  $('#mdPrev').innerHTML = `<div class="md-resumo">
+      <div><small>Materiais</small><b>${fmt(L.length)}</b></div>
+      <div><small>Com saldo</small><b>${fmt(comSaldo)}</b></div>
+      <div><small>Valor livre</small><b>${r.col.valor != null ? moedaCurta(valor) : '—'}</b></div></div>
+    <div class="md-amostra"><table><thead><tr><th>Material</th><th>Texto breve</th><th class="n">Utiliz. livre</th><th>UM</th></tr></thead><tbody>
+      ${L.slice(0, 6).map((l) => `<tr><td>${esc(l[0])}</td><td>${esc(l[1])}</td><td class="n">${numDep(l[4])}</td><td>${esc(l[3])}</td></tr>`).join('')}</tbody></table></div>
+    ${outros.length ? `<p class="md-aviso">O arquivo também tem ${outros.map(([d, n]) => `${fmt(n)} ${n === 1 ? 'linha' : 'linhas'} do depósito ${esc(d)}`).join(', ')}. Aqui entram só as do ${dep}.</p>` : ''}
+    ${antes ? `<p class="md-aviso">Este arquivo substitui os ${fmt(antes)} materiais anexados antes no ${dep}.</p>` : ''}
+    ${L.length > 30000 ? '<p class="md-erro">Máximo de 30.000 materiais por depósito.</p>' : ''}`;
+  salvar.disabled = L.length > 30000;
+  salvar.textContent = `Salvar ${fmt(L.length)} ${L.length === 1 ? 'material' : 'materiais'} no ${dep}`;
+}
+
+async function enviarDep() {
+  const L = MD.leitura?.linhas, dep = DEP.dep;
+  if (!L?.length || MD.enviando) return;
+  MD.enviando = true;
+  $('#mdSalvar').disabled = $('#mdCancelar').disabled = true;
+  $('#mdProgBox').hidden = false;
+  $('#mdProg').style.width = '4%';
+  try {
+    let versao = '';
+    const lotes = Math.ceil(L.length / DEP_LOTE);
+    for (let i = 0; i < lotes; i++) {
+      const d = await api('/api/deposito/' + dep, { method: 'POST', body: JSON.stringify({
+        lote: i, versao, ultimo: i === lotes - 1, total: L.length, arquivo: MD.arquivo, aba: $('#mdAba').value,
+        por: OP?.nome || (ROLE === 'admin' ? 'Administrador' : 'Qualidade'), linhas: L.slice(i * DEP_LOTE, (i + 1) * DEP_LOTE),
+      }) });
+      versao = d.versao;
+      $('#mdProg').style.width = Math.round(((i + 1) / lotes) * 100) + '%';
+    }
+    $('#modalDep').hidden = true;
+    toast(`Depósito ${dep} atualizado: ${fmt(L.length)} ${L.length === 1 ? 'material' : 'materiais'}`);
+    delete DEP.cache[dep];
+    if (DEP.dep === dep) abrirDeposito(dep);
+  } catch (e) { toast(e.message, true); }
+  MD.enviando = false;
+  $('#mdSalvar').disabled = $('#mdCancelar').disabled = false;
+}
+
+$('#depArq').addEventListener('change', (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) abrirArquivoDep(f); });
+$('#mdAba').addEventListener('change', prepararDep);
+$('#mdSalvar').addEventListener('click', enviarDep);
+$('#mdCancelar').addEventListener('click', () => { if (!MD.enviando) $('#modalDep').hidden = true; });
+
 /* ---------- início ---------- */
 (async () => {
   mostrarOperador();
   montarPostos();
   try { ROLE = (await api('/api/me')).role; } catch {}
   $('#navBoms').hidden = ROLE !== 'admin';
+  $('#navD1500').hidden = $('#navD1600').hidden = !podeFoto();
   $('#avEntrada').hidden = !podeFoto();
   exigirOperador();
   await carregarProjetos();
